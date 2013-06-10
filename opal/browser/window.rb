@@ -44,15 +44,15 @@ $window   = Browser::Window.new(`window`)
 $document = $window.document
 
 module Kernel
-  def Window (what)
+  def Window(what)
     Browser::Window.new(what)
   end
 
-  def alert (text)
+  def alert(text)
     $window.alert(text)
   end
 
-  def log (what)
+  def log(what)
     `#{$window.to_n}.console.log(what)`
   end
 end
