@@ -125,7 +125,7 @@ class Request < Native
     end
 
     if binary?
-      if required? 'typed-array'
+      if Buffer.supported?
         `#@native.responseType = 'arraybuffer'`
       else
         `#@native.overrideMimeType('text/plain; charset=x-user-defined')`
