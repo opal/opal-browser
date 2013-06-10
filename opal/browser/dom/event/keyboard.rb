@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; module DOM; class Event < Native
 
 class Keyboard < Event
   def alt?

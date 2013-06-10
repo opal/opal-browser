@@ -1,6 +1,6 @@
 require 'struct'
 
-module Browser; module DOM; class Event
+module Browser; module DOM; class Event < Native
 
 class Mouse < Event
   Position = Struct.new(:x, :y)
