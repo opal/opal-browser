@@ -13,7 +13,7 @@ class Binary < Native
     end
   end
 
-  def [] (index)
+  def [](index)
     @type == :string ? `#@data.charCodeAt(index) & 0xff` : @data[index]
   end
 end
