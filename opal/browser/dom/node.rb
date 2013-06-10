@@ -42,35 +42,35 @@ class Node < Native
     }
   end
 
-  def == (other)
+  def ==(other)
     `#@native === #{Native.try_convert(other)}`
   end
 
-  def / (*paths)
+  def /(*paths)
     paths.map { |path| xpath(path) }.flatten.uniq
   end
 
-  def << (node)
+  def <<(node)
     add_child(node)
   end
 
-  def <=> (other)
+  def <=>(other)
     raise NotImplementedError
   end
-  
-  def > (selector)
+
+  def >(selector)
     css "> #{selector}"
   end
 
-  def [] (name)
+  def [](name)
     `#@native.getAttribute(#{name.to_s}) || nil`
   end
 
-  def []= (name, value)
+  def []=(name, value)
     `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
   end
 
-  def add_child (node)
+  def add_child(node)
     if NodeSet === node
       node.each {|node|
         add_child(node)
@@ -80,21 +80,21 @@ class Node < Native
     end
   end
 
-  def add_next_sibling (node)
+  def add_next_sibling(node)
     `#@native.parentNode.insertBefore(node, #@native.nextSibling)`
   end
 
-  def add_previous_sibling (node)
+  def add_previous_sibling(node)
     `#@native.parentNode.insertBefore(node, #@native)`
   end
 
   alias after add_next_sibling
 
-  def at (path)
+  def at(path)
     xpath(path).first
   end
 
-  def at_css (*rules)
+  def at_css(*rules)
     rules.each {|rule|
       found = css(rule).first
 
@@ -104,7 +104,7 @@ class Node < Native
     nil
   end
 
-  def at_xpath (*paths)
+  def at_xpath(*paths)
     paths.each {|path|
       found = xpath(path).first
 
@@ -114,7 +114,7 @@ class Node < Native
     nil
   end
 
-  def attr (name)
+  def attr(name)
     attributes[name]
   end
 
@@ -128,7 +128,7 @@ class Node < Native
     Hash[attribute_nodes.map { |node| [node.name, node] }]
   end
 
-  def ancestors (expression = nil)
+  def ancestors(expression = nil)
     return NodeSet.new(document) unless respond_to?(:parent) && parent
 
     parents = [parent]
@@ -170,7 +170,7 @@ class Node < Native
     NodeSet.new(document, Array(`#@native.childNodes`))
   end
 
-  def children= (node)
+  def children=(node)
     raise NotImplementedError
   end
 
@@ -182,11 +182,11 @@ class Node < Native
     `#@native.nodeValue`
   end
 
-  def content= (value)
+  def content=(value)
     `#@native.nodeValue = value`
   end
 
-  def css (path)
+  def css(path)
     NodeSet.new(document, Array(`#@native.querySelectorAll(path)`).map { |e| DOM(e) })
   end
 
@@ -226,17 +226,17 @@ class Node < Native
     # TODO: implement this properly
   end
 
-  def inner_html (*args)
+  def inner_html(*args)
     `#@native.innerHTML`
   end
 
-  def inner_html= (value)
+  def inner_html=(value)
     `#@native.innerHTML = value`
   end
 
   alias inner_text inner_html
 
-  def key? (name)
+  def key?(name)
     !!self[name]
   end
 
@@ -248,7 +248,7 @@ class Node < Native
     element_children.last
   end
 
-  def matches? (expression)
+  def matches?(expression)
     ancestors.last.search(expression).include?(self)
   end
 
@@ -256,7 +256,7 @@ class Node < Native
     `#@native.nodeName || nil`
   end
 
-  def name= (value)
+  def name=(value)
     `#@native.nodeName = #{value.to_s}`
   end
 
@@ -279,7 +279,7 @@ class Node < Native
   alias next_sibling next
 
   alias node_name name
-  
+
   alias node_name= name=
 
   def node_type
@@ -322,18 +322,18 @@ class Node < Native
 
   alias previous_sibling previous
 
-  def remove_attribute (name)
+  def remove_attribute(name)
     `#@native.removeAttribute(name)`
   end
 
   # TODO: implement for NodeSet
-  def replace (node)
+  def replace(node)
     `#@native.parentNode.replaceChild(#@native, #{Native.try_convert(node)})`
 
     node
   end
 
-  def search (*what)
+  def search(*what)
     NodeSet.new(document, what.map {|what|
       xpath(what).to_a.concat(css(what).to_a)
     }.flatten.uniq)
@@ -347,7 +347,7 @@ class Node < Native
     node_type == TEXT_NODE
   end
 
-  def traverse (&block)
+  def traverse(&block)
     raise NotImplementedError
   end
 
@@ -357,7 +357,7 @@ class Node < Native
     attribute_nodes.map { |n| n.value }
   end
 
-  def xpath (path)
+  def xpath(path)
     result = []
 
     %x{
@@ -374,7 +374,7 @@ class Node < Native
 
   # event related stuff
 
-  def on (what, namespace = nil, &block)
+  def on(what, namespace = nil, &block)
     raise ArgumentError, 'no block has been passed' unless block
 
     what     = Event.normalize(what)
@@ -393,7 +393,7 @@ class Node < Native
     self
   end
 
-  def avoid (what, namespace = nil)
+  def avoid(what, namespace = nil)
     what = Event.normalize(what)
 
     if namespace
@@ -439,7 +439,7 @@ class Node < Native
     end
   end
 
-  def fire (what, data, bubble = false)
+  def fire(what, data, bubble = false)
     %x{
       var event = document.createEvent('HTMLEvents');
 

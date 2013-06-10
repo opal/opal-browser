@@ -6,7 +6,7 @@ class Event < Native
     hover: 'mouseover'
   }
 
-  def self.normalize (name)
+  def self.normalize(name)
     Normalization[name] || name
   end
 

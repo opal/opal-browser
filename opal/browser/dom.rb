@@ -11,7 +11,7 @@ require 'browser/dom/document'
 require 'browser/dom/event'
 
 module Kernel
-  def DOM (what)
+  def DOM(what)
     if String === what
       %x{
         var doc;

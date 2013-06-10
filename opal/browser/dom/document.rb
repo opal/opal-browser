@@ -37,7 +37,7 @@ class Document < Node
     DOM(`#@native.documentElement`)
   end
 
-  def root= (element)
+  def root=(element)
     `#@native.documentElement = #{element.to_native}`
   end
 end
