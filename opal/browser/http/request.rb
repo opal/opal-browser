@@ -97,7 +97,7 @@ class Request < Native
       url += (url.include?('?') ? '&' : '?') + rand.to_s
     end
 
-    `#@native.open(#{@method.upcase}, #{url}, #{@asynchronous.to_native}, #{@user.to_native}, #{@password.to_native})`
+    `#@native.open(#{@method.upcase}, #{url}, #{@asynchronous.to_n}, #{@user.to_n}, #{@password.to_n})`
 
     opened!
 
