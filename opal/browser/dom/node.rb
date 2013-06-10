@@ -15,7 +15,7 @@ class Node < Native
   NOTATION_NODE               = 12
 
   def self.new(value = undefined)
-    if value
+    if value && self == Node
       @classes ||= [nil, Element, Attribute, Text, CDATA, nil, nil, nil, Comment, Document]
 
       if klass = @classes[`value.nodeType`]
@@ -25,9 +25,9 @@ class Node < Native
       end
     elsif self == Node
       raise ArgumentError, 'cannot instantiate a non derived Node object'
+    else
+      super
     end
-
-    super
   end
 
   def initialize(*)
