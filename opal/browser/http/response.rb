@@ -1,3 +1,5 @@
+require 'struct'
+
 module Browser; module HTTP
 
 class Response < Native

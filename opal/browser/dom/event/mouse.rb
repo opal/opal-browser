@@ -1,3 +1,5 @@
+require 'struct'
+
 module Browser; module DOM; class Event
 
 class Mouse < Event
