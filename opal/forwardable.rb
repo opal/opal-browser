@@ -11,7 +11,7 @@ module Forwardable
 
   def def_instance_delegators(accessor, *methods)
     methods.each {|method|
-      next if %[__send__ __id__].member?(method)
+      next if %w[__send__ __id__].include?(method)
 
       def_instance_delegator(accessor, method)
     }
@@ -47,7 +47,7 @@ module SingleForwardable
 
   def def_single_delegators(accessor, *methods)
     methods.each {|method|
-      next if %w[__send__ __id__].member? method
+      next if %w[__send__ __id__].include? method
 
       def_single_delegator(accessor, method)
     }
