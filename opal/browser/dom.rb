@@ -28,7 +28,7 @@ module Kernel
 
       DOM(`doc`)
     else
-      Browser::DOM::Node.from_native(Native.normalize(what))
+      Browser::DOM::Node.new(what)
     end
   end
 end

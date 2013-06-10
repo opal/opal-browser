@@ -43,7 +43,7 @@ class Node < Native
   end
 
   def == (other)
-    `#@native === #{Native.normalize(other)}`
+    `#@native === #{Native.try_convert(other)}`
   end
 
   def / (*paths)
@@ -76,7 +76,7 @@ class Node < Native
         add_child(node)
       }
     else
-      `#@native.appendChild(#{Native.normalize(node)})`
+      `#@native.appendChild(#{Native.try_convert(node)})`
     end
   end
 
@@ -291,7 +291,7 @@ class Node < Native
   end
 
   def parent= (node)
-    `#@native.parentNode = #{Native.normalize(node)}`
+    `#@native.parentNode = #{Native.try_convert(node)}`
   end
 
   def parse (text, options = {})
@@ -328,7 +328,7 @@ class Node < Native
 
   # TODO: implement for NodeSet
   def replace (node)
-    `#@native.parentNode.replaceChild(#@native, #{Native.normalize(node)})`
+    `#@native.parentNode.replaceChild(#@native, #{Native.try_convert(node)})`
 
     node
   end
