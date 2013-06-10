@@ -1,4 +1,4 @@
-module Browser; class Window
+module Browser; class Window < Native
 
 class Timeout < Native
   attr_reader :after
