@@ -2,7 +2,7 @@ module Browser; module HTTP
 
 class Request < Native
   def self.open(method, url, &block)
-    request = new &block
+    request = new(&block)
 
     request.open(method, url)
     request.send
@@ -30,12 +30,12 @@ class Request < Native
     @completed    = false
     @callbacks    = {}
 
-    instance_eval &block
+    instance_eval(&block)
   end
 
   def asynchronous?; @asynchronous;  end
   def synchronous?; !@asynchronous; end
-  
+
   def asynchronous!; @asynchronous = true;  end
   def synchronous!;  @asynchronous = false; end
 
