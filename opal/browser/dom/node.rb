@@ -379,11 +379,11 @@ class Node < Native
 
     what     = Event.normalize(what)
     callback = `function (event) {
-      event = #{Event.from_native(`event`)};
+      event = #{Event.new(`event`)};
 
-      #{Kernel.DOM(`this`).instance_exec `event`, &block};
+      #{block.call(`event`, DOM(`this`))}
 
-      return #{`event`.stopped?};
+      return !#{`event`.stopped?};
     }`
 
     callbacks[what][namespace].push callback
