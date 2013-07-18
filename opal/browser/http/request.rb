@@ -136,12 +136,12 @@ class Request < Native
       `#@native.overrideMimeType(#@mime_type)`
     end
 
-    data_arg = data || @parameters ? Parameters[data || @parameters].to_str : `null`
-    `#@native.send(#{data_arg})`
-
     sent!
 
     @response = Response.new(self)
+
+    data_arg = data || @parameters ? Parameters[data || @parameters].to_str : `null`
+    `#@native.send(#{data_arg})`
   end
 
   def abort
