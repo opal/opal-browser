@@ -136,7 +136,8 @@ class Request < Native
       `#@native.overrideMimeType(#@mime_type)`
     end
 
-    `#@native.send(#{data || @parameters ? Parameters[data || @parameters].to_str : `null`})`
+    data_arg = data || @parameters ? Parameters[data || @parameters].to_str : `null`
+    `#@native.send(#{data_arg})`
 
     sent!
 
