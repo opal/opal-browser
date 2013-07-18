@@ -10,7 +10,8 @@ class Request < Native
 
   DefaultHeaders = Headers[{
     'X-Requested-With' => 'XMLHttpRequest',
-    'X-Opal-Version'   => OPAL_VERSION,
+    # Waiting for opal to add RUBY_ENGINE VERSION
+    # 'X-Ruby-Engine-Version'   => RUBY_ENGINE_VERSION,
     'Accept'           => 'text/javascript, text/html, application/xml, text/xml, */*'
   }]
 
@@ -136,11 +137,12 @@ class Request < Native
       `#@native.overrideMimeType(#@mime_type)`
     end
 
-    `#@native.send(#{data || @parameters ? Parameters[data || @parameters].to_str : `null`})`
-
     sent!
 
     @response = Response.new(self)
+
+    data_arg = data || @parameters ? Parameters[data || @parameters].to_str : `null`
+    `#@native.send(#{data_arg})`
   end
 
   def abort

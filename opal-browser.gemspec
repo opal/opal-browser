@@ -14,4 +14,5 @@ Gem::Specification.new {|s|
 
 	s.add_dependency 'opal', '>= 0.3.44'
 	s.add_development_dependency 'opal-spec'
+	s.add_development_dependency 'rake'
 }
