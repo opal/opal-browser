@@ -10,8 +10,7 @@ class Request < Native
 
   DefaultHeaders = Headers[{
     'X-Requested-With' => 'XMLHttpRequest',
-    # Waiting for opal to add RUBY_ENGINE VERSION
-    # 'X-Ruby-Engine-Version'   => RUBY_ENGINE_VERSION,
+    'X-Opal-Version'   => RUBY_ENGINE_VERSION,
     'Accept'           => 'text/javascript, text/html, application/xml, text/xml, */*'
   }]
 
