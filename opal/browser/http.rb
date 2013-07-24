@@ -7,24 +7,28 @@ require 'browser/http/response'
 module Browser
 
 module HTTP
+  def self.send(method, url, data = nil, &block)
+    Request.new(&block).open(method, url).send(data)
+  end
+
   def self.get(url, &block)
-    Request.new(&block).open(:get, url).send
+    send(:get, url, &block)
   end
 
   def self.head(url, &block)
-    Request.new(&block).open(:head, url).send
+    send(:head, url, &block)
   end
 
   def self.post(url, data = nil, &block)
-    Request.new(&block).open(:post, url).send(data)
+    send(:post, url, data, &blocK)
   end
 
   def self.put(url, data = nil, &block)
-    Request.new(&block).open(:put, url).send(data)
+    send(:put, url, data, &block)
   end
 
   def self.delete(url, data = nil, &block)
-    Request.new(&block).open(:delete, url).send(data)
+    send(:delete, url, data, &block)
   end
 end
 
