@@ -4,6 +4,8 @@ require 'json'
 module Browser; module HTTP
 
 class Response < Native
+  Status = Struct.new(:code, :text)
+
   attr_reader :request
 
   def initialize(request)
@@ -17,7 +19,7 @@ class Response < Native
   end
 
   def status
-    Struct.new(:code, :text).new(`#@native.status || nil`, `#@native.statusText || nil`)
+    Status.new(`#@native.status || nil`, `#@native.statusText || nil`)
   end
 
   def success?
