@@ -1,4 +1,5 @@
 require 'struct'
+require 'json'
 
 module Browser; module HTTP
 
@@ -40,6 +41,18 @@ class Response < Native
       }
 
       return result;
+    }
+  end
+
+  def json
+    %x{
+      var result = #@native.responseText;
+
+      if (!result) {
+        return nil;
+      }
+
+      return #{JSON.parse(`result`)};
     }
   end
 
