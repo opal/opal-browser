@@ -1,4 +1,3 @@
-require 'struct'
 require 'json'
 
 module Browser; module HTTP
