@@ -381,7 +381,7 @@ class Node < Native
     callback = `function (event) {
       event = #{Event.new(`event`)};
 
-      #{block.call(`event`, DOM(`this`))}
+      #{block.call(`event`, Kernel.DOM(`this`))}
 
       return !#{`event`.stopped?};
     }`
