@@ -67,7 +67,7 @@ class Response < Native
       }
     }
 
-    Document(`result`)
+    DOM(`result`)
   end
 
   def binary
