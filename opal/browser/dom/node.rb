@@ -287,7 +287,7 @@ class Node < Native
   end
 
   def parent
-    DOM(`#@native.parentNode`) # if defined? `#@native.parentNode`
+    DOM(`#@native.parentNode`) if `#@native.parentNode`
   end
 
   def parent= (node)
