@@ -204,12 +204,12 @@ class NodeSet
     each { |n| n.on(*args, &block) }
   end
 
-  def avoid(*args)
-    each { |n| n.avoid(*args) }
+  def off(*args)
+    each { |n| n.off(*args) }
   end
 
-  def fire(*args)
-    each { |n| n.fire(*args) }
+  def trigger(*args)
+    each { |n| n.trigger(*args) }
   end
 end
 
