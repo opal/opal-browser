@@ -365,9 +365,7 @@ class Node < Native
         var tmp = (#@native.ownerDocument || #@native).evaluate(
           path, #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
-        for (var i = 0, length = tmp.snapshotLength; i < length; i++) {
-          result.push(#{DOM(`tmp.snapshotItem(i)`)});
-        }
+        result = #{Array(`tmp`, :snapshotItem, :snapshotLength)};
       } catch (e) { }
     }
 
