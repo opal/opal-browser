@@ -333,10 +333,10 @@ class Node < Native
     node
   end
 
-  def search(*what)
-    NodeSet.new(document, what.map {|what|
-      xpath(what).to_a.concat(css(what).to_a)
-    }.flatten.uniq)
+  def search(*selectors)
+    NodeSet.new document, selectors.map {|selector|
+      xpath(selector).to_a.concat(css(selector).to_a)
+    }.flatten.uniq
   end
 
   alias set_attribute []=
