@@ -393,7 +393,7 @@ class Node < Native
     self
   end
 
-  def avoid(what, namespace = nil)
+  def off(what, namespace = nil)
     what = Event.normalize(what)
 
     if namespace
@@ -439,7 +439,7 @@ class Node < Native
     end
   end
 
-  def fire(what, data, bubble = false)
+  def trigger(what, data, bubble = false)
     %x{
       var event = document.createEvent('HTMLEvents');
 
