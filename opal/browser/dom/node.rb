@@ -361,12 +361,14 @@ class Node < Native
     result = []
 
     %x{
-      var tmp = (#@native.ownerDocument || #@native).evaluate(
-        path, #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      try {
+        var tmp = (#@native.ownerDocument || #@native).evaluate(
+          path, #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
-      for (var i = 0, length = tmp.snapshotLength; i < length; i++) {
-        result.push(#{DOM(`tmp.snapshotItem(i)`)});
-      }
+        for (var i = 0, length = tmp.snapshotLength; i < length; i++) {
+          result.push(#{DOM(`tmp.snapshotItem(i)`)});
+        }
+      } catch (e) { }
     }
 
     NodeSet.new(document, result)
