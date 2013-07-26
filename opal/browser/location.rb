@@ -1,12 +1,6 @@
-require 'forwardable'
-
 module Browser
 
 class Location < Native
-  extend Forwardable
-
-  def_delegators :@native, :hash, :host, :hostname, :href, :pathname, :port, :protocol, :search
-
   def assign(url)
     `#@native.assign(#{url.to_s})`
   end
@@ -20,8 +14,21 @@ class Location < Native
   end
 
   def to_s
-  `#@native.toString()`
+    `#@native.toString()`
   end
+
+  %w[hash host hostname href pathname port protocol search].each {|name|
+    define_method name do
+      `#@native[#{name}]`
+    end
+
+    define_method "#{name}=" do |value|
+      `#@native[#{name}] = #{value}`
+    end
+  }
+
+  alias path pathname
+  alias path= pathaname=
 end
 
 end
