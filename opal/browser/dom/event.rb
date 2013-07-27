@@ -1,13 +1,15 @@
 module Browser; module DOM
 
 class Event < Native
-  Normalization = {
-    load:  'DOMContentLoaded',
-    hover: 'mouseover'
-  }
+  def self.normalizations
+    @normalizations ||= Hash.new(
+      load:  'DOMContentLoaded',
+      hover: 'mouse:over'
+    ) { |_, k| k }
+  end
 
   def self.normalize(name)
-    Normalization[name] || name
+    normalizations[name].sub(':', '')
   end
 
   def self.new(value)
