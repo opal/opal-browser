@@ -1,13 +1,17 @@
 require 'browser'
 
-DOCUMENT = DOM('
-  <html>
-  <head>
-    <title>test</title>
-  </head>
+module OpalSpec
+  class Example
+    def self.html(string)
+      html = "<div id='spec'>#{string}</div>"
 
-  <body>
-  <div id="lol"></div>
-  </body>
-  </html>
-')
+      before {
+        @html = DOM(html).append_to($document.body)
+      }
+
+      after {
+        @html.remove
+      }
+    end
+  end
+end
