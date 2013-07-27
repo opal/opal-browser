@@ -40,6 +40,8 @@ class Event < Native
   def stopped?; !!@stopped; end
 
   def stop!
+    `#@native.stopPropagation()` if `#@native.stopPropagation`
+
     @stopped = true
   end
 end
