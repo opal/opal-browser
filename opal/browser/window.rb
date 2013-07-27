@@ -1,5 +1,6 @@
 require 'browser/location'
 require 'browser/navigator'
+require 'browser/history'
 require 'browser/cookies'
 require 'browser/dom'
 
@@ -19,6 +20,10 @@ class Window < Native
 
   def navigator
     Navigator.new(`#@native.navigator`) if `#@native.navigator`
+  end
+
+  def history
+    History.new(`#@native.history`) if `#@native.history`
   end
 
   def document
