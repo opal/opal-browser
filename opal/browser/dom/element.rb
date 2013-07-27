@@ -5,17 +5,7 @@ class Element < Node
     $document.create_element(tag)
   end
 
-  def initialize(*)
-    super
-
-    %x{
-      if (!#@native.callbacks) {
-        #@native.callbacks = #{Hash.new {|h, k|
-          h[k] = Hash.new { |h, k| h[k] = [] }
-        }}
-      }
-    }
-  end
+  include Event::Target
 
   def add_class(name)
     `#@native.className = #{class_names.push(name).uniq.join ' '}`
@@ -145,87 +135,6 @@ class Element < Node
     }
 
     NodeSet.new(document, result)
-  end
-
-  def callbacks
-    `#@native.callbacks`
-  end
-
-  def on(what, namespace = nil, &block)
-    raise ArgumentError, 'no block has been passed' unless block
-
-    what     = Event.normalize(what)
-    callback = `function (event) {
-      event = #{Event.new(`event`)};
-
-      #{block.call(`event`, Kernel.DOM(`this`))}
-
-      return !#{`event`.stopped?};
-    }`
-
-    callbacks[what][namespace].push callback
-
-    `#@native.addEventListener(what, callback)`
-
-    self
-  end
-
-  def off(what, namespace = nil)
-    what = Event.normalize(what)
-
-    if namespace
-      if Proc === namespace
-        callbacks[what].each {|event, namespaces|
-          namespaces.each {|name, callbacks|
-            callbacks.reject! {|callback|
-              if namespace == callback
-                `#@native.removeEventListener(what, callback)`; true
-              end
-            }
-          }
-        }
-      else
-        callbacks[what][namespace].clear
-      end
-    else
-      if Proc === what
-        callbacks[what].each {|event, namespaces|
-          namespaces.each {|name, callbacks|
-            callbacks.reject! {|callback|
-              if what == callback
-                `#@native.removeEventListener(what, callback)`; true
-              end
-            }
-          }
-        }
-      else
-        callbacks[what].clear
-
-        callbacks.each {|event, namespaces|
-          namespaces.each {|name, callbacks|
-            if what == name
-              callbacks.each {|callback|
-                `#@native.removeEventListener(what, callback)`
-              }
-
-              callbacks.clear
-            end
-          }
-        }
-      end
-    end
-  end
-
-  def trigger(what, data, bubble = false)
-    %x{
-      var event = document.createEvent('HTMLEvents');
-
-      event.initEvent('dataavailable', bubble, true);
-      event.eventName = what;
-      event.data      = data;
-
-      return self.dispatchEvent(event);
-    }
   end
 
   def inspect

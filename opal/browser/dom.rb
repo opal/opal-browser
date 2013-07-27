@@ -1,3 +1,4 @@
+require 'browser/dom/event'
 require 'browser/dom/node_set'
 require 'browser/dom/node'
 require 'browser/dom/attribute'
@@ -7,8 +8,6 @@ require 'browser/dom/cdata'
 require 'browser/dom/comment'
 require 'browser/dom/element'
 require 'browser/dom/document'
-
-require 'browser/dom/event'
 
 module Kernel
   def DOM(what)

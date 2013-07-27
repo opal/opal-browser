@@ -10,6 +10,8 @@ require 'browser/window/timeout'
 module Browser
 
 class Window < Native
+  include DOM::Event::Target
+
   def alert(text)
     `#@native.alert(text)`
   end
