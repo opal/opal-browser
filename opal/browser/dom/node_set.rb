@@ -7,7 +7,9 @@ class NodeSet
 
   def initialize(document, list = [])
     @document = document
-    @internal = list
+    @internal = list.map {|e|
+      DOM(e)
+    }
   end
 
   Enumerable.instance_methods.each {|name|
@@ -41,7 +43,7 @@ class NodeSet
   end
 
   def add_class(name)
-    each { |e| e.add_class(name) }
+    select(&:element?).each { |e| e.add_class(name) }
   end
 
   def after(node)
@@ -189,7 +191,7 @@ class NodeSet
   end
 
   def text
-    to_a.map { |n| n.text }.join
+    to_a.map(&:text).join
   end
 
   def to_a

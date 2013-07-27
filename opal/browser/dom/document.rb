@@ -2,7 +2,11 @@ require 'browser/location'
 
 module Browser; module DOM
 
-class Document < Node
+class Document < Element
+  def create_element(name)
+    DOM(`#@native.createElement(name)`)
+  end
+
   def [](what)
     %x{
       var result = #@native.getElementById(what);

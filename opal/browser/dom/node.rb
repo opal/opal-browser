@@ -30,24 +30,8 @@ class Node < Native
     end
   end
 
-  def initialize(*)
-    super
-
-    %x{
-      if (!#@native.callbacks) {
-        #@native.callbacks = #{Hash.new {|h, k|
-          h[k] = Hash.new { |h, k| h[k] = [] }
-        }}
-      }
-    }
-  end
-
   def ==(other)
     `#@native === #{Native.try_convert(other)}`
-  end
-
-  def /(*paths)
-    paths.map { |path| xpath(path) }.flatten.uniq
   end
 
   def <<(node)
@@ -60,14 +44,6 @@ class Node < Native
 
   def >(selector)
     css "> #{selector}"
-  end
-
-  def [](name)
-    `#@native.getAttribute(#{name.to_s}) || nil`
-  end
-
-  def []=(name, value)
-    `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
   end
 
   def add_child(node)
@@ -90,44 +66,6 @@ class Node < Native
 
   alias after add_next_sibling
 
-  def at(path)
-    xpath(path).first
-  end
-
-  def at_css(*rules)
-    rules.each {|rule|
-      found = css(rule).first
-
-      return found if found
-    }
-
-    nil
-  end
-
-  def at_xpath(*paths)
-    paths.each {|path|
-      found = xpath(path).first
-
-      return found if found
-    }
-
-    nil
-  end
-
-  def attr(name)
-    attributes[name]
-  end
-
-  alias attribute attr
-
-  def attribute_nodes
-    Array(`#@native.attributes`)
-  end
-
-  def attributes
-    Hash[attribute_nodes.map { |node| [node.name, node] }]
-  end
-
   def ancestors(expression = nil)
     return NodeSet.new(document) unless respond_to?(:parent) && parent
 
@@ -143,19 +81,15 @@ class Node < Native
 
     root = parents.last
 
-    NodeSet.new(document, parents.select {|parent|
+    NodeSet.new document, parents.select {|parent|
       root.search(selector).include?(parent)
-    })
+    }
   end
 
   alias before add_previous_sibling
 
   def blank?
     raise NotImplementedError
-  end
-
-  def callbacks
-    `#@native.callbacks`
   end
 
   def cdata?
@@ -186,16 +120,12 @@ class Node < Native
     `#@native.nodeValue = value`
   end
 
-  def css(path)
-    NodeSet.new(document, Array(`#@native.querySelectorAll(path)`).map { |e| DOM(e) })
-  end
-
   def document
     DOM(`#@native.ownerDocument`)
   end
 
-  def each
-    attributes.each { |name, value| yield value }
+  def document?
+    node_type == DOCUMENT_NODE
   end
 
   def elem?
@@ -218,10 +148,6 @@ class Node < Native
     node_type == DOCUMENT_FRAGMENT_NODE
   end
 
-  alias get []
-
-  alias get_attribute attr
-
   def hash
     # TODO: implement this properly
   end
@@ -235,14 +161,6 @@ class Node < Native
   end
 
   alias inner_text inner_html
-
-  def key?(name)
-    !!self[name]
-  end
-
-  def keys
-    attributes.keys
-  end
 
   def last_element_child
     element_children.last
@@ -322,24 +240,12 @@ class Node < Native
 
   alias previous_sibling previous
 
-  def remove_attribute(name)
-    `#@native.removeAttribute(name)`
-  end
-
   # TODO: implement for NodeSet
   def replace(node)
     `#@native.parentNode.replaceChild(#@native, #{Native.try_convert(node)})`
 
     node
   end
-
-  def search(*selectors)
-    NodeSet.new document, selectors.map {|selector|
-      xpath(selector).to_a.concat(css(selector).to_a)
-    }.flatten.uniq
-  end
-
-  alias set_attribute []=
 
   alias text inner_text
 
@@ -352,104 +258,6 @@ class Node < Native
   end
 
   alias type node_type
-
-  def values
-    attribute_nodes.map { |n| n.value }
-  end
-
-  def xpath(path)
-    result = []
-
-    %x{
-      try {
-        var tmp = (#@native.ownerDocument || #@native).evaluate(
-          path, #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-
-        result = #{Array(`tmp`, :snapshotItem, :snapshotLength)};
-      } catch (e) { }
-    }
-
-    NodeSet.new(document, result)
-  end
-
-  # event related stuff
-
-  def on(what, namespace = nil, &block)
-    raise ArgumentError, 'no block has been passed' unless block
-
-    what     = Event.normalize(what)
-    callback = `function (event) {
-      event = #{Event.new(`event`)};
-
-      #{block.call(`event`, Kernel.DOM(`this`))}
-
-      return !#{`event`.stopped?};
-    }`
-
-    callbacks[what][namespace].push callback
-
-    `#@native.addEventListener(what, callback)`
-
-    self
-  end
-
-  def off(what, namespace = nil)
-    what = Event.normalize(what)
-
-    if namespace
-      if Proc === namespace
-        callbacks[what].each {|event, namespaces|
-          namespaces.each {|name, callbacks|
-            callbacks.reject! {|callback|
-              if namespace == callback
-                `#@native.removeEventListener(what, callback)`; true
-              end
-            }
-          }
-        }
-      else
-        callbacks[what][namespace].clear
-      end
-    else
-      if Proc === what
-        callbacks[what].each {|event, namespaces|
-          namespaces.each {|name, callbacks|
-            callbacks.reject! {|callback|
-              if what == callback
-                `#@native.removeEventListener(what, callback)`; true
-              end
-            }
-          }
-        }
-      else
-        callbacks[what].clear
-
-        callbacks.each {|event, namespaces|
-          namespaces.each {|name, callbacks|
-            if what == name
-              callbacks.each {|callback|
-                `#@native.removeEventListener(what, callback)`
-              }
-
-              callbacks.clear
-            end
-          }
-        }
-      end
-    end
-  end
-
-  def trigger(what, data, bubble = false)
-    %x{
-      var event = document.createEvent('HTMLEvents');
-
-      event.initEvent('dataavailable', bubble, true);
-      event.eventName = what;
-      event.data      = data;
-
-      return self.dispatchEvent(event);
-    }
-  end
 end
 
 end; end
