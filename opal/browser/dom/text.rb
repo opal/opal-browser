@@ -10,7 +10,7 @@ class Text < CharacterData
   end
 
   def inspect
-    "#<DOM::Text: #{value}>"
+    "#<DOM::Text: #{data}>"
   end
 end
 
