@@ -16,7 +16,7 @@ class Node < Native
 
   def self.new(value = undefined)
     if value && self == Node
-      @classes ||= [nil, Element, Attribute, Text, CDATA, nil, nil, nil, Comment, Document]
+      @classes ||= [nil, Element, Attribute, Text, CDATA, nil, nil, nil, Comment, Document, nil, DocumentFragment]
 
       if klass = @classes[`value.nodeType`]
         klass.new(value)
@@ -51,8 +51,12 @@ class Node < Native
       node.each {|node|
         add_child(node)
       }
+
+      self
     else
       `#@native.appendChild(#{Native.try_convert(node)})`
+
+      self
     end
   end
 
@@ -65,6 +69,12 @@ class Node < Native
   end
 
   alias after add_next_sibling
+
+  def append_to(element)
+    element.add_child(self)
+
+    self
+  end
 
   def ancestors(expression = nil)
     return NodeSet.new(document) unless respond_to?(:parent) && parent
@@ -87,6 +97,16 @@ class Node < Native
   end
 
   alias before add_previous_sibling
+
+  def remove
+    parent.remove_child(self)
+  end
+
+  def remove_child(element)
+    `#@native.removeChild(#{Native.try_convert(element)})`
+
+    self
+  end
 
   def blank?
     raise NotImplementedError
@@ -205,7 +225,7 @@ class Node < Native
   end
 
   def parent
-    DOM(`#@native.parentNode`) if defined?(`#@native.parentNode`)
+    DOM(`#@native.parentNode`) if `#@native.parentNode != null`
   end
 
   def parent= (node)

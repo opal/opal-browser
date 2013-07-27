@@ -41,6 +41,14 @@ class Document < Element
     DOM(`#@native.documentElement`)
   end
 
+  def head
+    xpath('//head').first
+  end
+
+  def body
+    xpath('//body').first
+  end
+
   def root=(element)
     `#@native.documentElement = #{element.to_native}`
   end
