@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe Browser::DOM::Node do
   describe "#==" do
-    html <<-HTML
-      <div id="lol"></div>
-    HTML
+    html '<div id="lol"></div>'
 
     it 'should work when the other argument is the native counterpart' do
       $document["lol"].should == `document.getElementById("lol")`
@@ -27,26 +25,18 @@ describe Browser::DOM::Node do
   end
 
   describe "#element?" do
-    html <<-HTML
-      <div id="lol">
-        <div id="omg"></div>
-      </div>
-    HTML
+    html '<div id="lol"></div>'
 
     it "should be true for <div id='lol'>" do
-      $document["#omg"].element?.should be_true
+      $document["#lol"].element?.should be_true
     end
   end
 
   describe "#text?" do
-    html <<-HTML
-      <div id="herp">
-        derp
-      </div>
-    HTML
+    html '<div id="omg">lol</div>'
 
-    it "should be true for the first child of <div id='herp'>" do
-      $document["#herp"].child.text?.should be_true
+    it "should be true for the first child of <div id='lol'>" do
+      $document["#omg"].child.text?.should be_true
     end
   end
 

@@ -1,143 +1,227 @@
+require 'browser/dom/event/base'
+
+require 'browser/dom/event/ui'
+require 'browser/dom/event/mouse'
+require 'browser/dom/event/keyboard'
+require 'browser/dom/event/focus'
+require 'browser/dom/event/wheel'
+require 'browser/dom/event/composition'
+require 'browser/dom/event/animation'
+require 'browser/dom/event/audio_processing'
+require 'browser/dom/event/before_unload'
+require 'browser/dom/event/composition'
+require 'browser/dom/event/clipboard'
+require 'browser/dom/event/device_light'
+require 'browser/dom/event/device_motion'
+require 'browser/dom/event/device_orientation'
+require 'browser/dom/event/device_proximity'
+require 'browser/dom/event/drag'
+require 'browser/dom/event/gamepad'
+require 'browser/dom/event/hash_change'
+require 'browser/dom/event/progress'
+require 'browser/dom/event/page_transition'
+require 'browser/dom/event/pop_state'
+require 'browser/dom/event/storage'
+require 'browser/dom/event/touch'
+require 'browser/dom/event/sensor'
+require 'browser/dom/event/custom'
+
 module Browser; module DOM
 
 class Event < Native
-  def self.normalizations
-    return @normalizations if @normalizations
+  def self.names
+    return @names if @names
 
-    @normalizations = Hash.new { |_, k| k }
-    @normalizations.merge!({
+    @names = Hash.new { |_, k| k }
+    @names.merge!({
       load:  'DOMContentLoaded',
       hover: 'mouse:over'
     })
   end
 
-  def self.normalize(name)
-    normalizations[name].sub(':', '')
+  def self.name(name)
+    names[name].sub(':', '')
   end
 
-  def self.new(value)
-    %x{
-      if (value instanceof MouseEvent) {
-        return #{Mouse.new(value)};
-      }
-      else if (value instanceof KeyboardEvent) {
-        return #{Keyboard.new(value)};
-      }
-      else if (value instanceof MutationEvent) {
-        return #{Mutation.new(value)};
-      }
-      else {
-        return #{super(value)};
-      }
+  def self.classes
+    @classes ||= {
+      Animation         => $$[:AnimationEvent],
+      AudioProcessing   => $$[:AudioProcessingEvent],
+      BeforeUnload      => $$[:BeforeUnloadEvent],
+      Composition       => $$[:CompositionEvent],
+      Clipboard         => $$[:ClipboardEvent],
+      DeviceLight       => $$[:DeviceLightEvent],
+      DeviceMotion      => $$[:DeviceMotionEvent],
+      DeviceOrientation => $$[:DeviceOrientationEvent],
+      DeviceProximity   => $$[:DeviceProximityEvent],
+      Drag              => $$[:DragEvent],
+      Gamepad           => $$[:GamepadEvent],
+      HashChange        => $$[:HashChangeEvent],
+      Progress          => $$[:ProgressEvent],
+      PageTransition    => $$[:PageTransitionEvent],
+      PopState          => $$[:PopStateEvent],
+      Storage           => $$[:StorageEvent],
+      Touch             => $$[:TouchEvent],
+      Sensor            => $$[:SensorEvent],
+      Mouse             => $$[:MouseEvent],
+      Keyboard          => $$[:KeyboardEvent],
+      Focus             => $$[:FocusEvent],
+      Wheel             => $$[:WheelEvent],
+      Event             => $$[:Event],
+      Custom            => $$[:CustomEvent]
     }
   end
 
-  def name
-    `#@native.eventName`
+  def self.class_for(name)
+    type = case name(name)
+      when 'animationend', 'animationiteration', 'animationstart'
+        Animation
+
+      when 'audioprocess'
+        AudioProcessing
+
+      when 'beforeunload'
+        BeforeUnload
+
+      when 'compositionend', 'compositionstart', 'compositionupdate'
+        Composition
+
+      when 'copy', 'cut'
+        Clipboard
+
+      when 'devicelight'
+        DeviceLight
+
+      when 'devicemotion'
+        DeviceMotion
+
+      when 'deviceorientation'
+        DeviceOrientation
+
+      when 'deviceproximity'
+        DeviceProximity
+
+      when 'drag', 'dragend', 'dragleave', 'dragover', 'dragstart', 'drop'
+        Drag
+
+      when 'gamepadconnected', 'gamepaddisconnected'
+        Gamepad
+
+      when 'hashchange'
+        HashChange
+
+      when 'load', 'loadend', 'loadstart'
+        Progress
+
+      when 'pagehide', 'pageshow'
+        PageTransition
+
+      when 'popstate'
+        PopState
+
+      when 'storage'
+        Storage
+
+      when 'touchcancel', 'touchend', 'touchleave', 'touchmove', 'touchstart'
+        Touch
+
+      when 'compassneedscalibration', 'userproximity'
+        Sensor
+
+      when 'click', 'contextmenu', 'dblclick', 'mousedown', 'mouseenter',
+           'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
+           'show'
+        Mouse
+
+      when 'keydown', 'keypress', 'keyup'
+        Keyboard
+
+      when 'blur', 'focus', 'focusin', 'focusout'
+        Focus
+
+      when 'wheel'
+        Wheel
+
+      when 'abort', 'afterprint', 'beforeprint', 'cached', 'canplay', 'canplaythrough',
+           'change', 'chargingchange', 'chargingtimechange', 'checking', 'close',
+           'dischargingtimechange', 'DOMContentLoaded', 'downloading', 'durationchange',
+           'emptied', 'ended', 'error', 'fullscreenchange', 'fullscreenerror', 'input',
+           'invalid', 'levelchange', 'loadeddata', 'loadedmetadata', 'noupdate', 'obsolete',
+           'offline', 'online', 'open', 'orientationchange', 'pause', 'pointerlockchange',
+           'pointerlockerror', 'play', 'playing', 'ratechange', 'readystatechange', 'reset',
+           'seeked', 'seeking', 'stalled', 'submit', 'success', 'suspend', 'timeupdate',
+           'updateready', 'visibilitychange', 'volumechange', 'waiting'
+        Event
+
+      else
+        Custom
+    end
+
+    if type != Event && type.supported?
+      type
+    else
+      Event
+    end
   end
 
-  def data
-    `#@native.data`
+  def self.create(name, *args, &block)
+    name  = name(name)
+    klass = class_for(name)
+
+    event = if klass == self || !klass.supported?
+      new(`new window.Event(#{name}, #{Definition.new(&block)})`)
+    else
+      klass.create(name, &block)
+    end
+
+    event.arguments = args
+
+    event
+  end
+
+  def self.new(value)
+    klass, _ = classes.find {|_, constructor|
+      constructor && `#{value} instanceof #{constructor.to_n}`
+    }
+
+    if !klass || klass == self
+      super(value)
+    else
+      klass.new(value)
+    end
+  end
+
+  attr_accessor :arguments
+  attr_reader   :target
+
+  def initialize(native, target = nil)
+    super(native)
+
+    if target
+      @target = `target == window ? #{$window} : #{::Kernel.DOM(`target`)}`
+    end
+
+    @arguments = []
+  end
+
+  alias_native :bubbles?, :bubbles
+  alias_native :cancelable?, :cancelable
+  alias_native :name, :type
+  alias_native :data, :data
+  alias_native :phase, :eventPhase
+  alias_native :at, :timeStamp
+
+  def target
+    DOM(`#@native.target`)
   end
 
   def stopped?; !!@stopped; end
 
   def stop!
-    `#@native.stopPropagation()` if `#@native.stopPropagation`
+    `#@native.stopPropagation()` if defined?(`#@native.stopPropagation`)
 
     @stopped = true
-  end
-
-  module Target
-    def callbacks
-      return `#@native.callbacks` if defined?(`#@native.callbacks`)
-
-      `#@native.callbacks = #{Hash.new {|h, k|
-        h[k] = Hash.new { |h, k| h[k] = [] }
-      }}`
-    end
-
-    def on(what, namespace = nil, &block)
-      raise ArgumentError, 'no block has been passed' unless block
-
-      what     = Event.normalize(what)
-      callback = `function (event) {
-        event = #{::Browser::DOM::Event.new(`event`)};
-
-        #{block.call(`event`, `this == window ? #{$window} : #{::Kernel.DOM(`this`)}`)}
-
-        return !#{`event`.stopped?};
-      }`
-
-      callbacks[what][namespace].push callback
-
-      `#@native.addEventListener(what, callback)`
-
-      self
-    end
-
-    def off(what, namespace = nil)
-      what = Event.normalize(what)
-
-      if namespace
-        if Proc === namespace
-          callbacks[what].each {|event, namespaces|
-            namespaces.each {|name, callbacks|
-              callbacks.reject! {|callback|
-                if namespace == callback
-                  `#@native.removeEventListener(what, callback)`; true
-                end
-              }
-            }
-          }
-        else
-          callbacks[what][namespace].clear
-        end
-      else
-        if Proc === what
-          callbacks[what].each {|event, namespaces|
-            namespaces.each {|name, callbacks|
-              callbacks.reject! {|callback|
-                if what == callback
-                  `#@native.removeEventListener(what, callback)`; true
-                end
-              }
-            }
-          }
-        else
-          callbacks[what].clear
-
-          callbacks.each {|event, namespaces|
-            namespaces.each {|name, callbacks|
-              if what == name
-                callbacks.each {|callback|
-                  `#@native.removeEventListener(what, callback)`
-                }
-
-                callbacks.clear
-              end
-            }
-          }
-        end
-      end
-    end
-
-    def trigger(what, data, bubble = false)
-      %x{
-        var event = document.createEvent('HTMLEvents');
-
-        event.initEvent('dataavailable', bubble, true);
-        event.eventName = what;
-        event.data      = data;
-
-        return #@native.dispatchEvent(event);
-      }
-    end
   end
 end
 
 end; end
-
-require 'browser/dom/event/mouse'
-require 'browser/dom/event/keyboard'
-require 'browser/dom/event/mutation'

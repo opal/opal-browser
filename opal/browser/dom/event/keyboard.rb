@@ -1,6 +1,44 @@
 module Browser; module DOM; class Event < Native
 
-class Keyboard < Event
+class Keyboard < UI
+  def self.supported?
+    not $$[:KeyboardEvent].nil?
+  end
+
+  class Definition < UI::Definition
+    def alt!
+      `#@native.altKey = true`
+    end
+
+    def ctrl!
+      `#@native.ctrlKey = true`
+    end
+
+    def meta!
+      `#@native.metaKey = true`
+    end
+
+    def shift!
+      `#@native.shiftKey = true`
+    end
+
+    def key=(key)
+      `#@native.key = #@native.keyCode = #@native.which = #{key}`
+    end
+
+    def char=(char)
+      `#@native.char = #@native.charCode = #{char}`
+    end
+
+    def repeat!
+      `#@native.repeat = true`
+    end
+  end
+
+  def self.create(name, &block)
+    new(`new KeyboardEvent(#{name}, #{Definition.new(&block)})`)
+  end
+
   def alt?
     `#@native.altKey`
   end
@@ -17,11 +55,31 @@ class Keyboard < Event
     `#@native.shiftKey`
   end
 
-  def code
-    `#@native.keyCode || #@native.which`
+  def repeat?
+    `#@native.repeat`
   end
 
-  alias to_i code
+  def key
+    `#@native.key || #@native.keyCode || #@native.which`
+  end
+
+  def char
+    `#@native.char || #@native.charCode`
+  end
+
+  alias to_i key
+
+  def down?
+    name.downcase == 'keydown'
+  end
+
+  def press?
+    name.downcase == 'keypress'
+  end
+
+  def up?
+    name.downcase == 'keyup'
+  end
 end
 
 end; end; end
