@@ -32,6 +32,10 @@ class History < Native
   def current
     $window.location.pathname
   end
+
+  def state
+    `#@native.state`
+  end
 end
 
 end

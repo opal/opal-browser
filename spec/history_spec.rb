@@ -34,4 +34,14 @@ describe Browser::History do
       $window.history.back
     end
   end
+
+  describe '#state' do
+    it 'gets the right state' do
+      $window.history.push('/wut', 42)
+      $window.history.state.should == 42
+      $window.history.push('/omg', 23)
+      $window.history.state.should == 23
+      $window.history.back(2)
+    end
+  end
 end
