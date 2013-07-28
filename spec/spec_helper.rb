@@ -3,10 +3,8 @@ require 'browser'
 module OpalSpec
   class Example
     def self.html(string)
-      html = "<div id='spec'>#{string}</div>"
-
       before {
-        @html = DOM(html).append_to($document.body)
+        @html = DOM("<div id='opal-browser-spec'>#{string}</div>").append_to($document.body)
       }
 
       after {
