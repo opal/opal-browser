@@ -37,6 +37,14 @@ class Document < Element
     Location.new(`#@native.location`) if `#@native.location`
   end
 
+  def title
+    `#@native.title`
+  end
+
+  def title=(value)
+    `#@native.title = value`
+  end
+
   def root
     DOM(`#@native.documentElement`)
   end
