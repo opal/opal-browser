@@ -7,6 +7,8 @@ class Element < Node
 
   include Event::Target
 
+  alias_native :id, :id
+
   def add_class(name)
     `#@native.className = #{class_names.push(name).uniq.join ' '}`
 
@@ -17,9 +19,7 @@ class Element < Node
     `#@native.className = #{class_names.delete(name).join ' '}`
   end
 
-  def class_name
-    `#@native.className`
-  end
+  alias_native :class_name, :className
 
   def class_names
     `#@native.className`.split(/\s+/)
