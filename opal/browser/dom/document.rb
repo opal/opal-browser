@@ -60,6 +60,10 @@ class Document < Element
   def root=(element)
     `#@native.documentElement = #{element.to_native}`
   end
+
+  def inspect
+    "#<DOM::Document:#{object_id}>"
+  end
 end
 
 end; end
