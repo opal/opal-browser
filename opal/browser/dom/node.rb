@@ -42,30 +42,28 @@ class Node < Native
     raise NotImplementedError
   end
 
-  def >(selector)
-    css "> #{selector}"
-  end
-
   def add_child(node)
     if NodeSet === node
       node.each {|node|
         add_child(node)
       }
-
-      self
     else
       `#@native.appendChild(#{Native.try_convert(node)})`
-
-      self
     end
+
+    self
   end
 
   def add_next_sibling(node)
     `#@native.parentNode.insertBefore(node, #@native.nextSibling)`
+
+    self
   end
 
   def add_previous_sibling(node)
     `#@native.parentNode.insertBefore(node, #@native)`
+
+    self
   end
 
   alias after add_next_sibling
@@ -155,7 +153,7 @@ class Node < Native
   alias element? elem?
 
   def element_children
-    NodeSet.new(document, children.select { |n| n.element? })
+    children.select(&:element?)
   end
 
   alias elements element_children
@@ -199,19 +197,17 @@ class Node < Native
   end
 
   def next
-    DOM(`#@native.nextSibling`)
+    DOM(`#@native.nextSibling`) if `#@native.nextSibling != null`
   end
 
   def next_element
-    %x{
-      var current = this.nextSibling;
+    current = self.next
 
-      while (current && current.nodeType != Node.ELEMENT_NODE) {
-        current = current.nextSibling;
-      }
+    while current && !current.element?
+      current = current.next
+    end
 
-      return current ? #{DOM(`current`)} : nil;
-    }
+    current
   end
 
   alias next_sibling next
@@ -241,21 +237,19 @@ class Node < Native
   end
 
   def previous
-    DOM(`#@native.previousSibling`)
+    DOM(`#@native.previousSibling`) if `#@native.previousSibling != null`
   end
 
   alias previous= add_previous_sibling
 
   def previous_element
-    %x{
-      var current = this.previousSibling;
+    current = self.previous
 
-      while (current && current.nodeType != Node.ELEMENT_NODE) {
-        current = current.previousSibling;
-      }
+    while current && !current.element?
+      current = current.previous
+    end
 
-      return current ? #{DOM(`current`)} : nil;
-    }
+    current
   end
 
   alias previous_sibling previous
