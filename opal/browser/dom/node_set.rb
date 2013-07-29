@@ -1,8 +1,6 @@
 module Browser; module DOM
 
 class NodeSet
-  include Enumerable
-
   attr_reader :document
 
   def initialize(document, list = [])
@@ -13,10 +11,14 @@ class NodeSet
   end
 
   Enumerable.instance_methods.each {|name|
-    define_method name do
-      result = super
+    define_method name do |*args, &block|
+      result = @internal.__send__(name, *args, &block)
 
-      Array === result ? NodeSet.new(document, result) : result
+      if Array === result
+        NodeSet.new(document, result)
+      else
+        result
+      end
     end
   }
 
