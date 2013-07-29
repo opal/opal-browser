@@ -88,7 +88,7 @@ class Node < Native
     root = parents.last
 
     NodeSet.new document, parents.select {|parent|
-      root.search(selector).include?(parent)
+      root.search(expression).include?(parent)
     }
   end
 
