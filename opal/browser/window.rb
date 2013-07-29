@@ -51,10 +51,6 @@ $window   = Browser::Window.new(`window`)
 $document = $window.document
 
 module Kernel
-  def Window(what)
-    Browser::Window.new(what)
-  end
-
   def alert(text)
     $window.alert(text)
   end
