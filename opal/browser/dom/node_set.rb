@@ -202,6 +202,10 @@ class NodeSet
 
   alias to_ary to_a
 
+  def inspect
+    "#<DOM::NodeSet: #{@internal.inspect[1 .. -2]}"
+  end
+
   # event related stuff
 
   def on(*args, &block)
