@@ -29,7 +29,11 @@ module Kernel
   end
 
   def DOM(what, document = $document)
-    if String === what
+    if Native === what
+      Browser::DOM::Node.new(what)
+    elsif Browser::DOM::Node === what
+      what
+    elsif String === what
       %x{
         var doc = #{Native.try_convert(document)}.createElement('div');
         doc.innerHTML = what;
@@ -37,7 +41,7 @@ module Kernel
         return #{DOM(`doc.childNodes.length == 1 ? doc.childNodes[0] : doc`)};
       }
     else
-      Browser::DOM::Node.new(what)
+      raise ArgumentError, "argument not DOM convertible"
     end
   end
 end
