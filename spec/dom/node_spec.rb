@@ -1,6 +1,39 @@
 require 'spec_helper'
 
 describe Browser::DOM::Node do
+  describe "#==" do
+    html <<-HTML
+      <div id="lol"></div>
+    HTML
+
+    it 'should work when the other argument is the native counterpart' do
+      $document["lol"].should == `document.getElementById("lol")`
+    end
+
+    it 'should work when the other argument is the same DOM::Node' do
+      el = $document["lol"]
+      el.should == el
+    end
+
+    it 'should work when the other argument is another DOM::Node' do
+      $document["lol"].should == $document["lol"]
+    end
+  end
+
+  describe "#ancestors" do
+    html <<-HTML
+      <div><span><strong><em id="lol"></em></strong></span></div>
+    HTML
+
+    it 'should get all ancestors' do
+      ancestors = $document["lol"].ancestors
+
+      ancestors[0].name.should == 'STRONG'
+      ancestors[1].name.should == 'SPAN'
+      ancestors[2].name.should == 'DIV'
+    end
+  end
+
   describe "#document?" do
     it "should be true for document" do
       $document.document?.should be_true
