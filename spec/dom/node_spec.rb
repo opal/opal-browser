@@ -20,20 +20,6 @@ describe Browser::DOM::Node do
     end
   end
 
-  describe "#ancestors" do
-    html <<-HTML
-      <div><span><strong><em id="lol"></em></strong></span></div>
-    HTML
-
-    it 'should get all ancestors' do
-      ancestors = $document["lol"].ancestors
-
-      ancestors[0].name.should == 'STRONG'
-      ancestors[1].name.should == 'SPAN'
-      ancestors[2].name.should == 'DIV'
-    end
-  end
-
   describe "#document?" do
     it "should be true for document" do
       $document.document?.should be_true
@@ -61,6 +47,38 @@ describe Browser::DOM::Node do
 
     it "should be true for the first child of <div id='herp'>" do
       $document["#herp"].child.text?.should be_true
+    end
+  end
+
+  describe "#ancestors" do
+    html <<-HTML
+      <div><span><strong><em id="incest"></em></strong></span></div>
+    HTML
+
+    it 'should get all ancestors' do
+      ancestors = $document["incest"].ancestors
+
+      ancestors[0].name.should == 'STRONG'
+      ancestors[1].name.should == 'SPAN'
+      ancestors[2].name.should == 'DIV'
+    end
+
+    it 'should get only the selected ancestors' do
+      $document["incest"].ancestors('strong').length.should == 1
+    end
+  end
+
+  describe '#child' do
+    html <<-HTML
+      <div id="test-1"><div id="test-2"></div></div>
+    HTML
+
+    it 'gets the first child properly' do
+      $document["test-1"].child.id.should == "test-2"
+    end
+
+    it 'returns nil if there is no child' do
+      $document["test-2"].child.should be_nil
     end
   end
 
