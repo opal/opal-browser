@@ -270,6 +270,10 @@ class Node < Native
   end
 
   alias type node_type
+
+  def inspect
+    "#<DOM::Node: #{name}>"
+  end
 end
 
 end; end
