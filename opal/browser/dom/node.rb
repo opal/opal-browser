@@ -75,13 +75,11 @@ class Node < Native
   end
 
   def ancestors(expression = nil)
-    return NodeSet.new(document) unless respond_to?(:parent) && parent
+    return NodeSet.new(document) unless parent
 
     parents = [parent]
 
-    while parents.last.respond_to?(:parent)
-      break unless parent = parents.last.parent
-
+    while parent = parents.last.parent
       parents << parent
     end
 
