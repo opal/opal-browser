@@ -168,7 +168,7 @@ class Event < Native
     name  = name(name)
     klass = class_for(name)
 
-    event = if klass == self || !klass.supported?
+    event = if klass == self
       new(`new window.Event(#{name}, #{Definition.new(&block)})`)
     else
       klass.create(name, &block)
