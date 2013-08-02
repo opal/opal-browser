@@ -191,8 +191,7 @@ class Event < Native
     end
   end
 
-  attr_accessor :arguments
-  attr_reader   :target
+  attr_reader :target
 
   def initialize(native, target = nil)
     super(native)
@@ -200,8 +199,14 @@ class Event < Native
     if target
       @target = `target == window ? #{$window} : #{::Kernel.DOM(`target`)}`
     end
+  end
 
-    @arguments = []
+  def arguments
+    `#@native.arguments || []`
+  end
+
+  def arguments=(args)
+    `#@native.arguments = #{args}`
   end
 
   alias_native :bubbles?, :bubbles

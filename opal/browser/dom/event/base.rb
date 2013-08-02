@@ -18,18 +18,23 @@ class Definition < Native
 end
 
 module Target
-  def callbacks
-    return `#@native.callbacks` if defined?(`#@native.callbacks`)
-
-    `#@native.callbacks = #{Hash.new {|h, k|
-      h[k] = Hash.new { |h, k| h[k] = [] }
-    }}`
+  def new_id
+    `#@native.$last_id++`
   end
 
-  def on(what, namespace = nil, &block)
+  def callbacks
+    return `#@native.$callbacks` if `#@native.$callbacks != null`
+
+    `#@native.$callbacks = #{Hash.new}`
+    `#@native.$last_id   = 0`;
+
+    `#@native.$callbacks`
+  end
+
+  def on(name, &block)
     raise ArgumentError, 'no block has been passed' unless block
 
-    what     = Event.name(what)
+    name     = Event.name(name)
     callback = `function (event) {
       event = #{::Browser::DOM::Event.new(`event`)};
 
@@ -38,56 +43,39 @@ module Target
       return !#{`event`.stopped?};
     }`
 
-    callbacks[what][namespace].push callback
+    id            = new_id
+    callbacks[id] = [name, callback]
 
-    `#@native.addEventListener(what, callback)`
+    `#@native.addEventListener(#{name}, #{callback})`
 
-    self
+    id
   end
 
-  def off(what, namespace = nil)
-    what = Event.name(what)
+  def off(what = nil)
+    if String === what
+      what = Event.name(what)
 
-    if namespace
-      if Proc === namespace
-        callbacks[what].each {|event, namespaces|
-          namespaces.each {|name, callbacks|
-            callbacks.reject! {|callback|
-              if namespace == callback
-                `#@native.removeEventListener(what, callback)`; true
-              end
-            }
-          }
-        }
-      else
-        callbacks[what][namespace].clear
-      end
+      callbacks.delete_if {|_, event|
+        name, callback = event
+
+        if name == what
+          `#@native.removeEventListener(#{name}, #{callback}, false)`
+
+          true
+        end
+      }
+    elsif Integer === what
+      name, callback = callbacks.delete(what)
+
+      `#@native.removeEventListener(#{name}, #{callback}, false)`
     else
-      if Proc === what
-        callbacks[what].each {|event, namespaces|
-          namespaces.each {|name, callbacks|
-            callbacks.reject! {|callback|
-              if what == callback
-                `#@native.removeEventListener(what, callback)`; true
-              end
-            }
-          }
-        }
-      else
-        callbacks[what].clear
+      callbacks.each {|id, event|
+        name, callback = event
 
-        callbacks.each {|event, namespaces|
-          namespaces.each {|name, callbacks|
-            if what == name
-              callbacks.each {|callback|
-                `#@native.removeEventListener(what, callback)`
-              }
+        `#@native.removeEventListener(#{name}, #{callback}, false)`
+      }
 
-              callbacks.clear
-            end
-          }
-        }
-      end
+      callbacks.clear
     end
   end
 
