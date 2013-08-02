@@ -87,5 +87,25 @@ describe Browser::DOM::Event do
       elem.trigger :click
       count.should == 2
     end
+
+    it "removes only the passed handler" do
+      count = 0
+      elem  = $document["event-spec"]
+
+      id = elem.on :click do
+        count += 1
+      end
+
+      elem.on :click do
+        count += 1
+      end
+
+      elem.trigger :click
+      count.should == 2
+
+      elem.off id
+      elem.trigger :click
+      count.should == 3
+    end
   end
 end
