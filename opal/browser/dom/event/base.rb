@@ -19,7 +19,9 @@ end
 
 module Target
   def new_id
-    `#@native.$last_id++`
+    return `++#@native.$last_id` if `#@native.$last_id != null`
+
+    `#@native.$last_id = 0`
   end
 
   def callbacks
