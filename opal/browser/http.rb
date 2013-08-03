@@ -43,7 +43,7 @@ module HTTP
   end
 
   def self.post!(url, data = nil, &block)
-    send!(:post, url, data, &blocK)
+    send!(:post, url, data, &block)
   end
 
   def self.put!(url, data = nil, &block)
