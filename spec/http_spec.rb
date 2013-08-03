@@ -27,7 +27,6 @@ describe Browser::HTTP do
 
   describe '.post' do
     async 'sends parameters properly' do
-      begin
       Browser::HTTP.post('/test', lol: 'wut') {|req|
         req.on :success do |resp|
           run_async {
@@ -41,9 +40,12 @@ describe Browser::HTTP do
           }
         end
       }
-      rescue Exception => e
-        log e.inspect
-      end
+    end
+  end
+
+  describe '.post!' do
+    it 'sends parameters properly' do
+      Browser::HTTP.post!('/test', lol: 'wut').text.should == 'ok'
     end
   end
 end
