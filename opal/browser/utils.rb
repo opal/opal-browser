@@ -1,17 +1,17 @@
 class String
 	def encode_uri_component
-		`encodeURIComponent(self)`
+		`encodeURIComponent(#{self})`
 	end
 
 	def encode_uri
-		`encodeURI(self)`
+		`encodeURI(#{self})`
 	end
 
 	def decode_uri_component
-		`decodeURIComponent(self)`
+		`decodeURIComponent(#{self})`
 	end
 
 	def decode_uri
-		`decodeURI(self)`
+		`decodeURI(#{self})`
 	end
 end

@@ -18,6 +18,7 @@ class Request < Native
   attr_accessor :method, :url, :asynchronous, :user, :password, :mime_type, :content_type, :encoding
 
   def initialize(&block)
+
     super(`new XMLHttpRequest()`)
 
     @headers      = Headers[DefaultHeaders]
@@ -30,14 +31,14 @@ class Request < Native
     @completed    = false
     @callbacks    = {}
 
-    instance_eval(&block)
+    block.call(self) if block
   end
 
   def asynchronous?; @asynchronous;  end
   def synchronous?; !@asynchronous; end
 
   def asynchronous!; @asynchronous = true;  end
-  def synchronous!;  @asynchronous = false; end
+  def synchronous!;  @asynchronous = false; `console.log("PENIS")` end
 
   def binary?; @binary;        end
   def binary!; @binary = true; end
@@ -53,6 +54,10 @@ class Request < Native
 
   def completed?; @completed;        end
   def completed!; @completed = true; end
+
+  def parameters(hash)
+    @parameters = hash
+  end
 
   def on(what, &block)
     @callbacks[what] = block
@@ -85,11 +90,11 @@ class Request < Native
   def open(method = nil, url = nil, asynchronous = nil, user = nil, password = nil)
     raise 'the request has already been opened' if opened?
 
-    @method       = method       if method
-    @url          = url          if url
-    @asynchronous = asynchronous if asynchronous
-    @user         = user         if user
-    @password     = password     if password
+    @method       = method       unless method.nil?
+    @url          = url          unless url.nil?
+    @asynchronous = asynchronous unless asynchronous.nil?
+    @user         = user         unless user.nil?
+    @password     = password     unless password.nil?
 
     url = @url
 
@@ -97,7 +102,7 @@ class Request < Native
       url += (url.include?('?') ? '&' : '?') + rand.to_s
     end
 
-    `#@native.open(#{@method.upcase}, #{url}, #{@asynchronous.to_n}, #{@user.to_n}, #{@password.to_n})`
+    `#@native.open(#{@method.to_s.upcase}, #{url.to_s}, #{@asynchronous}, #{@user.to_n}, #{@password.to_n})`
 
     opened!
 
@@ -140,8 +145,21 @@ class Request < Native
 
     @response = Response.new(self)
 
-    data_arg = data || @parameters ? Parameters[data || @parameters].to_str : `null`
-    `#@native.send(#{data_arg})`
+    if data.nil?
+      data = `null`
+    elsif data.is_a?(Hash) || @parameters
+      data = (data || @parameters).map {|vals|
+        vals.map(&:encode_uri_component).join('=')
+      }.join('&')
+
+      unless content_type
+        `#@native.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')`
+      end
+    end
+
+    `#@native.send(#{data})`
+
+    @response
   end
 
   def abort

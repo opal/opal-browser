@@ -1,6 +1,5 @@
 require 'browser/http/binary'
 require 'browser/http/headers'
-require 'browser/http/parameters'
 require 'browser/http/request'
 require 'browser/http/response'
 
@@ -20,7 +19,7 @@ module HTTP
   end
 
   def self.post(url, data = nil, &block)
-    send(:post, url, data, &blocK)
+    send(:post, url, data, &block)
   end
 
   def self.put(url, data = nil, &block)
