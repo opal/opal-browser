@@ -10,12 +10,14 @@
 
 require 'json'
 
-module Browser; class Window < Native
+module Browser
 
 class Storage < Hash
   attr_reader :name
 
   def initialize(window, name)
+    super()
+
     @window = window
     @name   = name
 
@@ -25,7 +27,7 @@ class Storage < Hash
   end
 
   def encoded_name
-    "__opal.storage.#{@name}"
+    "$opal.storage.#{@name}"
   end
 
   def autosave?;    @autosave;         end
@@ -42,9 +44,9 @@ class Storage < Hash
 
   %w([] []= delete clear).each {|name|
     define_method name do |*args|
-      super
-
-      save if autosave?
+      super.tap {
+        save if autosave?
+      }
     end
   }
 
@@ -69,21 +71,21 @@ class Storage < Hash
   elsif `document.body.addBehavior`
     def init
       %x{
-        self.element = #@window.document.createElement('link');
-        self.element.addBehavior('#default#userData');
+        #@element = #@window.document.createElement('link');
+        #@element.addBehavior('#default#userData');
 
-        #@window.document.getElementsByTagName('head')[0].appendChild(self.element);
+        #@window.document.getElementsByTagName('head')[0].appendChild(#@element);
 
-        self.element.load(#{encoded_name});
+        #@element.load(#{encoded_name});
       }
 
-      replace `self.element.getAttribute(#{encoded_name}) || '{}'`
+      replace `#@element.getAttribute(#{encoded_name}) || '{}'`
     end
 
     def save
       %x{
-        self.element.setAttribute(#{encoded_name}, #{JSON.dump(self)});
-        self.element.save(#{encoded_name});
+        #@element.setAttribute(#{encoded_name}, #{JSON.dump(self)});
+        #@element.save(#{encoded_name});
       }
     end
   else
@@ -97,7 +99,7 @@ class Storage < Hash
     def save
       @document.cookies[encoded_name] = self
     end
-  end rescue nil
+  end
 end
 
 class SessionStorage < Storage
@@ -110,12 +112,14 @@ class SessionStorage < Storage
   end
 end
 
-def storage(name = :default)
-  Storage.new($window.to_n, name)
+class Window < Native
+  def storage(name = :default)
+    Storage.new(to_n, name)
+  end
+
+  def session_storage(name = :default)
+    SessionStorage.new(to_n, name)
+  end
 end
 
-def session_storage(name = :default)
-  SessionStorage.new($window.to_n, name)
 end
-
-end; end
