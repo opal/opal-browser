@@ -20,7 +20,6 @@ class Request
   attr_accessor :method, :url, :asynchronous, :user, :password, :mime_type, :content_type, :encoding
 
   def initialize(&block)
-
     super(`new XMLHttpRequest()`)
 
     @headers      = Headers[DefaultHeaders]
@@ -40,7 +39,7 @@ class Request
   def synchronous?; !@asynchronous; end
 
   def asynchronous!; @asynchronous = true;  end
-  def synchronous!;  @asynchronous = false; `console.log("PENIS")` end
+  def synchronous!;  @asynchronous = false; end
 
   def binary?; @binary;        end
   def binary!; @binary = true; end
