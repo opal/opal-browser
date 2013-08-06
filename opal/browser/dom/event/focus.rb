@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event < Native
+module Browser; module DOM; class Event
 
 class Focus < UI
   def self.supported?

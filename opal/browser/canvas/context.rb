@@ -10,15 +10,19 @@
 
 module Browser; class Canvas
 
-class Context < Native
-	@implementations = {}
+class Context
+  include Native::Base
+
+  def self.implementations
+	  @implementations ||= {}
+  end
 
 	def self.define(name, &block)
-		@implementations[name.to_s.downcase] = Class.new(Context, &block)
+		implementations[name.to_s.downcase] = Class.new(Context, &block)
 	end
 
 	def self.[](name)
-		@implementations[name.to_s.downcase]
+		implementations[name.to_s.downcase]
 	end
 
 	attr_reader :element

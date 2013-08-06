@@ -2,7 +2,9 @@ require 'json'
 
 module Browser; module HTTP
 
-class Response < Native
+class Response
+  include Native::Base
+
   Status = Struct.new(:code, :text)
 
   attr_reader :request

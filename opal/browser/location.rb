@@ -1,6 +1,8 @@
 module Browser
 
-class Location < Native
+class Location
+  include Native::Base
+
   def assign(url)
     `#@native.assign(#{url.to_s})`
   end

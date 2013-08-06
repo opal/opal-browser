@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event < Native
+module Browser; module DOM; class Event
 
 # TODO: handle transfers
 class Drag < Event
@@ -7,7 +7,9 @@ class Drag < Event
   end
 
   class Definition < Definition
-    class Client < Native
+    class Client
+      include Native::Base
+
       def x=(value)
         `#@native.clientX = #{value}`
       end
@@ -17,7 +19,9 @@ class Drag < Event
       end
     end
 
-    class Screen < Native
+    class Screen
+      include Native::Base
+
       def x=(value)
         `#@native.screenX = #{value}`
       end

@@ -1,6 +1,8 @@
 module Browser
 
-class History < Native
+class History
+  include Native::Base
+
   alias_native :length, :length
 
   def back(number = 1)

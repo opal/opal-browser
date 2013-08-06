@@ -1,6 +1,8 @@
-module Browser; class Window < Native
+module Browser; class Window
 
-class Timeout < Native
+class Timeout
+  include Native::Base
+
   attr_reader :after
 
   def initialize(window, time, &block)

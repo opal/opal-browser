@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event < Native
+module Browser; module DOM; class Event
 
 class DeviceOrientation < Event
   def self.supported?

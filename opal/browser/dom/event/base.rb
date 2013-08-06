@@ -1,6 +1,8 @@
-module Browser; module DOM; class Event < Native
+module Browser; module DOM; class Event
 
-class Definition < Native
+class Definition
+  include Native::Base
+
   def self.new(&block)
     data = super(`{}`)
     block.call(data) if block

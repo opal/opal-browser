@@ -30,7 +30,9 @@ require 'browser/dom/event/close'
 
 module Browser; module DOM
 
-class Event < Native
+class Event
+  include Native::Base
+
   def self.names
     return @names if @names
 
@@ -204,7 +206,7 @@ class Event < Native
   def initialize(native, target = nil)
     super(native)
 
-    @target = Target.convert(target)
+    @target = Target.convert(target || `#@native.target`)
   end
 
   def arguments
@@ -221,10 +223,6 @@ class Event < Native
   alias_native :data, :data
   alias_native :phase, :eventPhase
   alias_native :at, :timeStamp
-
-  def target
-    DOM(`#@native.target`)
-  end
 
   def stopped?; !!@stopped; end
 

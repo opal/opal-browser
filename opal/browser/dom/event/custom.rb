@@ -1,6 +1,6 @@
 require 'ostruct'
 
-module Browser; module DOM; class Event < Native
+module Browser; module DOM; class Event
 
 class Custom < Event
   def self.supported?

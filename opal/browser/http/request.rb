@@ -1,6 +1,8 @@
 module Browser; module HTTP
 
-class Request < Native
+class Request
+  include Native::Base
+
   def self.open(method, url, &block)
     request = new(&block)
 

@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event < Native
+module Browser; module DOM; class Event
 
 class Animation < Event
   def self.supported?

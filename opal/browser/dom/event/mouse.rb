@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event < Native
+module Browser; module DOM; class Event
 
 class Mouse < UI
   def self.supported?
@@ -6,7 +6,9 @@ class Mouse < UI
   end
 
   class Definition < UI::Definition
-    class Client < Native
+    class Client
+      include Native::Base
+
       def x=(value)
         `#@native.clientX = #{value}`
       end
@@ -16,7 +18,9 @@ class Mouse < UI
       end
     end
 
-    class Layer < Native
+    class Layer
+      include Native::Base
+
       def x=(value)
         `#@native.layerX = #{value}`
       end
@@ -26,7 +30,9 @@ class Mouse < UI
       end
     end
 
-    class Offset < Native
+    class Offset
+      include Native::Base
+
       def x=(value)
         `#@native.offsetX = #{value}`
       end
@@ -36,7 +42,9 @@ class Mouse < UI
       end
     end
 
-    class Page < Native
+    class Page
+      include Native::Base
+
       def x=(value)
         `#@native.pageX = #{value}`
       end
@@ -46,7 +54,9 @@ class Mouse < UI
       end
     end
 
-    class Screen < Native
+    class Screen
+      include Native::Base
+
       def x=(value)
         `#@native.screenX = #{value}`
       end
@@ -56,7 +66,9 @@ class Mouse < UI
       end
     end
 
-    class Ancestor < Native
+    class Ancestor
+      include Native::Base
+
       def x=(value)
         `#@native.x = #{value}`
       end

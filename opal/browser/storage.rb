@@ -112,7 +112,7 @@ class SessionStorage < Storage
   end
 end
 
-class Window < Native
+class Window
   def storage(name = :default)
     Storage.new(to_n, name)
   end

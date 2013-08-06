@@ -1,6 +1,8 @@
-module Browser; class Window < Native
+module Browser; class Window
 
-class Interval < Native
+class Interval
+  include Native::Base
+
   attr_reader :every
 
   def initialize(window, time, &block)

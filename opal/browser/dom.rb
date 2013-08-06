@@ -29,7 +29,7 @@ module Kernel
   end
 
   def DOM(what, document = $document)
-    if Native === what
+    if native?(what)
       Browser::DOM::Node.new(what)
     elsif Browser::DOM::Node === what
       what

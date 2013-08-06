@@ -9,7 +9,8 @@ require 'browser/window/timeout'
 
 module Browser
 
-class Window < Native
+class Window
+  include Native::Base
   include DOM::Event::Target
 
   def alert(text)

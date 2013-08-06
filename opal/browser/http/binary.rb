@@ -1,6 +1,8 @@
 module Browser; module HTTP
 
-class Binary < Native
+class Binary
+  include Native::Base
+
   def initialize(*)
     super
 

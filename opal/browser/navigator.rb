@@ -1,6 +1,8 @@
 module Browser
 
-class Navigator < Native
+class Navigator
+  include Native::Base
+
   def code
     `#@native.appCodeName`
   end
