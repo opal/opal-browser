@@ -25,6 +25,8 @@ require 'browser/dom/event/storage'
 require 'browser/dom/event/touch'
 require 'browser/dom/event/sensor'
 require 'browser/dom/event/custom'
+require 'browser/dom/event/message'
+require 'browser/dom/event/close'
 
 module Browser; module DOM
 
@@ -127,6 +129,12 @@ class Event < Native
 
       when 'compassneedscalibration', 'userproximity'
         Sensor
+
+      when 'message'
+        Message
+
+      when 'close'
+        Close
 
       when 'click', 'contextmenu', 'dblclick', 'mousedown', 'mouseenter',
            'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
