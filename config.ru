@@ -1,44 +1,45 @@
 require 'bundler'
 Bundler.require
 
-map '/' do
-  run Opal::Server.new { |s|
-    s.main = 'opal/spec/sprockets_runner'
-    s.append_path 'spec'
-    s.debug = false
-  }
-end
+apps = []
+apps << Opal::Server.new { |s|
+  s.main = 'opal/spec/sprockets_runner'
+  s.append_path 'spec'
+  s.debug = false
+}
 
-map '/spec/http/' do
-  run Class.new(Sinatra::Base) {
-    get '/test' do
-      "lol"
+apps << Class.new(Sinatra::Base) {
+  get '/http' do
+    "lol"
+  end
+
+  post '/http' do
+    if params['lol'] == 'wut'
+      "ok"
+    else
+      "fail"
     end
+  end
 
-    post '/test' do
-      if params['lol'] == 'wut'
-        "ok"
-      else
-        "fail"
+  put '/http' do
+    if params['lol'] == 'wut'
+      "ok"
+    else
+      "fail"
+    end
+  end
+
+  delete '/http' do
+    "lol"
+  end
+
+  get '/socket' do
+    request.websocket do |ws|
+      ws.onopen do
+        ws.send 'lol'
       end
     end
+  end
+}
 
-    put '/test' do
-      if params['lol'] == 'wut'
-        "ok"
-      else
-        "fail"
-      end
-    end
-
-    delete '/test' do
-      "lol"
-    end
-  }.new
-end
-
-map '/spec/ws/' do
-  run Class.new(Rack::WebSocket::Application) {
-
-  }.new
-end
+run Rack::Cascade.new(apps)

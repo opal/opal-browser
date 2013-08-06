@@ -4,7 +4,7 @@ gemspec
 gem 'rake'
 gem 'rack'
 gem 'sinatra'
-gem 'websocket-rack', require: 'rack/websocket'
+gem 'sinatra-websocket'
 
 gem 'opal', github: 'opal/opal'
 gem 'opal-spec'
