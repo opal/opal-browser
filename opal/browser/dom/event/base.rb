@@ -18,6 +18,25 @@ class Definition < Native
 end
 
 module Target
+  def self.convert(value)
+    %x{
+      if (#{value} == window) {
+        return #{$window};
+      }
+      else if (#{value} instanceof WebSocket) {
+        return #{Socket.new(value)};
+      }
+      else {
+        try {
+          return #{DOM(value)};
+        }
+        catch (e) {
+          return nil;
+        }
+      }
+    }
+  end
+
   def new_id
     return `++#@native.$last_id` if `#@native.$last_id != null`
 

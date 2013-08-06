@@ -204,9 +204,7 @@ class Event < Native
   def initialize(native, target = nil)
     super(native)
 
-    if target
-      @target = `target == window ? #{$window} : #{::Kernel.DOM(`target`)}`
-    end
+    @target = Target.convert(target)
   end
 
   def arguments
