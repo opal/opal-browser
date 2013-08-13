@@ -137,18 +137,16 @@ class Element < Node
     NodeSet.new(document, result)
   end
 
-  def style(data = {})
-    if data
-      style = Native(`#@native.style`)
+  def style(data = nil)
+    style = Style::Definition.new(`#@native.style`)
 
-      data.each {|name, value|
-        style.__send__ "#{name}=", value
-      }
+    return style unless data
 
-      self
-    else
-      Native(`#@native.style`)
-    end
+    (data || {}).each {|name, value|
+      style[name] = value
+    }
+
+    self
   end
 
   def inspect

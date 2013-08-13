@@ -1,4 +1,5 @@
 require 'browser/dom/event'
+require 'browser/dom/style'
 require 'browser/dom/node_set'
 require 'browser/dom/node'
 require 'browser/dom/attribute'
