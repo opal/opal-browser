@@ -15,7 +15,7 @@ class Custom < Event
   end
 
   def initialize(native)
-    super(native)
+    super(native); @native = native # TODO: remove this when super is fixed
 
     @detail = Hash.new(`#{native}.detail`)
   end
