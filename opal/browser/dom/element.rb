@@ -137,6 +137,20 @@ class Element < Node
     NodeSet.new(document, result)
   end
 
+  def style(data = {})
+    if data
+      style = Native(`#@native.style`)
+
+      data.each {|name, value|
+        style.__send__ "#{name}=", value
+      }
+
+      self
+    else
+      Native(`#@native.style`)
+    end
+  end
+
   def inspect
     "#<DOM::Element: #{name}>"
   end
