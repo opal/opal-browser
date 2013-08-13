@@ -57,6 +57,8 @@ module Kernel
   end
 
   def log(what)
-    `#{$window.to_n}.console.log(what)`
+    `#{$window.to_n}.console.log(#{what})`
+
+    what
   end
 end
