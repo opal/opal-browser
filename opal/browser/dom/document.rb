@@ -3,8 +3,12 @@ require 'browser/location'
 module Browser; module DOM
 
 class Document < Element
-  def create_element(name)
-    DOM(`#@native.createElement(name)`)
+  def create_element(name, options = {})
+    if ns = options[:namespace]
+      DOM(`#@native.createElementNS(#{ns}, #{name})`)
+    else
+      DOM(`#@native.createElement(name)`)
+    end
   end
 
   def [](what)

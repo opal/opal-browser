@@ -1,8 +1,8 @@
 module Browser; module DOM
 
 class Element < Node
-  def self.create(tag)
-    $document.create_element(tag)
+  def self.create(*args)
+    $document.create_element(*args)
   end
 
   include Event::Target
