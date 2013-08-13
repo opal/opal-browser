@@ -29,14 +29,14 @@ describe Browser::DOM::Event do
       count = 0
       elem  = $document["event-spec"]
 
-      elem.on 'huehue' do
+      elem.on :huehue do
         count += 1
       end
 
       count.should == 0
-      elem.trigger 'huehue'
+      elem.trigger :huehue
       count.should == 1
-      elem.trigger 'huehue'
+      elem.trigger :huehue
       count.should == 2
     end
 
@@ -92,7 +92,7 @@ describe Browser::DOM::Event do
       count = 0
       elem  = $document["event-spec"]
 
-      id = elem.on :click do
+      cb = elem.on :click do
         count += 1
       end
 
@@ -103,7 +103,7 @@ describe Browser::DOM::Event do
       elem.trigger :click
       count.should == 2
 
-      elem.off id
+      cb.off
       elem.trigger :click
       count.should == 3
     end

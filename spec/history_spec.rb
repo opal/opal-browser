@@ -23,12 +23,12 @@ describe Browser::History do
       $window.history.push('/wut')
       $window.history.current.should == '/wut'
 
-      $window.on 'pop:state' do
+      $window.on 'pop:state' do |e|
         run_async {
           $window.history.current.should == '/'
         }
 
-        $window.off('pop:state')
+        e.off
       end
 
       $window.history.back
