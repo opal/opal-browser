@@ -140,13 +140,17 @@ class Element < Node
   def style(data = nil)
     style = Style::Definition.new(`#@native.style`)
 
-    return style unless data
+    if data.is_a?(String)
+      style.replace(data)
 
-    (data || {}).each {|name, value|
-      style[name] = value
-    }
+      self
+    elsif data.is_a?(Enumerable)
+      style.assign(data)
 
-    self
+      self
+    else
+      style
+    end
   end
 
   def inspect

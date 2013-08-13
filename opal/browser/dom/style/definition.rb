@@ -8,6 +8,20 @@ class Definition
     Rule.new(`#@native.parentRule`) if defined?(`#@native.parentRule`)
   end
 
+  def assign(data)
+    data.each {|name, value|
+      self[name] = value
+    }
+
+    self
+  end
+
+  def replace(string)
+    `#@native.cssText = #{string}`
+
+    self
+  end
+
   def method_missing(id, *args)
     if id.ends_with? '!'
       `#@native.setProperty(#{id[0 .. -2]}, #{args.first}, true)`
