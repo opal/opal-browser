@@ -1,9 +1,13 @@
 require 'browser/http'
 
 describe Browser::HTTP do
+  let :path do
+    '/http'
+  end
+
   describe '.get' do
     async 'fetches a path' do
-      Browser::HTTP.get('/http') {|req|
+      Browser::HTTP.get(path) {|req|
         req.on :success do |resp|
           run_async {
             resp.text.should == 'lol'
@@ -21,13 +25,13 @@ describe Browser::HTTP do
 
   describe '.get!' do
     it 'fetches a path' do
-      Browser::HTTP.get!('/http').text.should == 'lol'
+      Browser::HTTP.get!(path).text.should == 'lol'
     end
   end
 
   describe '.post' do
     async 'sends parameters properly' do
-      Browser::HTTP.post('/http', lol: 'wut') {|req|
+      Browser::HTTP.post(path, lol: 'wut') {|req|
         req.on :success do |resp|
           run_async {
             resp.text.should == 'ok'
@@ -45,13 +49,13 @@ describe Browser::HTTP do
 
   describe '.post!' do
     it 'sends parameters properly' do
-      Browser::HTTP.post!('/http', lol: 'wut').text.should == 'ok'
+      Browser::HTTP.post!(path, lol: 'wut').text.should == 'ok'
     end
   end
 
   describe '.put' do
     async 'sends parameters properly' do
-      Browser::HTTP.put('/http', lol: 'wut') {|req|
+      Browser::HTTP.put(path, lol: 'wut') {|req|
         req.on :success do |resp|
           run_async {
             resp.text.should == 'ok'
@@ -69,13 +73,13 @@ describe Browser::HTTP do
 
   describe '.put!' do
     it 'sends parameters properly' do
-      Browser::HTTP.put!('/http', lol: 'wut').text.should == 'ok'
+      Browser::HTTP.put!(path, lol: 'wut').text.should == 'ok'
     end
   end
 
   describe '.delete' do
     async 'fetches a path' do
-      Browser::HTTP.delete('/http') {|req|
+      Browser::HTTP.delete(path) {|req|
         req.on :success do |resp|
           run_async {
             resp.text.should == 'lol'
@@ -93,7 +97,7 @@ describe Browser::HTTP do
 
   describe '.delete!' do
     it 'fetches a path' do
-      Browser::HTTP.delete!('/http').text.should == 'lol'
+      Browser::HTTP.delete!(path).text.should == 'lol'
     end
   end
 end
