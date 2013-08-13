@@ -38,6 +38,10 @@ apps << Class.new(Sinatra::Base) {
       ws.onopen do
         ws.send 'lol'
       end
+
+      ws.onmessage do |msg|
+        ws.send msg
+      end
     end
   end
 }
