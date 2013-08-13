@@ -189,24 +189,29 @@ class Event
     event
   end
 
-  def self.new(value)
+  def self.new(value, *args)
     klass, _ = classes.find {|_, constructor|
       constructor && `#{value} instanceof #{constructor.to_n}`
     }
 
     if !klass || klass == self
-      super(value)
+      super(value, *args)
     else
-      klass.new(value)
+      klass.new(value, *args)
     end
   end
 
-  attr_reader :target
+  attr_reader :target, :callback
 
-  def initialize(native, target = nil)
+  def initialize(native, callback = nil)
     super(native)
 
-    @target = Target.convert(target || `#@native.target`)
+    @target    = Target.convert(`#@native.target`)
+    @callback, = callback # TODO: change this when super is fixed
+  end
+
+  def off
+    @callback.off if @callback
   end
 
   def arguments

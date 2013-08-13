@@ -39,63 +39,76 @@ module Target
     }
   end
 
-  def new_id
-    return `++#@native.$last_id` if `#@native.$last_id != null`
+  class Callback
+    attr_reader :target, :name
 
-    `#@native.$last_id = 0`
+    def initialize(target, name, &block)
+      %x{
+        callback = #{self};
+        func     = function(event) {
+          event = #{::Browser::DOM::Event.new(`event`, `callback`)};
+
+          #{block.call(`event`, *`event`.arguments)};
+
+          return !#{`event`.stopped?};
+        }
+      }
+
+      @function = `func`
+      @target   = target
+      @name     = name
+    end
+
+    def off
+      target.off(self)
+    end
+
+    def to_n
+      @function
+    end
   end
 
   def callbacks
-    return `#@native.$callbacks` if `#@native.$callbacks != null`
+    %x{
+      if (!#@native.$callbacks) {
+        #@native.$callbacks = [];
+      }
 
-    `#@native.$callbacks = #{Hash.new}`
-    `#@native.$last_id   = 0`;
-
-    `#@native.$callbacks`
+      return #@native.$callbacks;
+    }
   end
 
   def on(name, &block)
     raise ArgumentError, 'no block has been passed' unless block
 
     name     = Event.name(name)
-    callback = `function (event) {
-      event = #{::Browser::DOM::Event.new(`event`)};
+    callback = Callback.new(self, name, &block)
 
-      #{block.call(`event`, *`event`.arguments)};
+    callbacks.push(callback)
 
-      return !#{`event`.stopped?};
-    }`
+    `#@native.addEventListener(#{name}, #{callback.to_n})`
 
-    id            = new_id
-    callbacks[id] = [name, callback]
-
-    `#@native.addEventListener(#{name}, #{callback})`
-
-    id
+    callback
   end
 
   def off(what = nil)
     if String === what
       what = Event.name(what)
 
-      callbacks.delete_if {|_, event|
-        name, callback = event
-
-        if name == what
-          `#@native.removeEventListener(#{name}, #{callback}, false)`
+      callbacks.delete_if {|callback|
+        if callback.name == what
+          `#@native.removeEventListener(#{name}, #{callback.to_n}, false)`
 
           true
         end
       }
-    elsif Integer === what
-      name, callback = callbacks.delete(what)
+    elsif Callback === what
+      callbacks.delete(what)
 
-      `#@native.removeEventListener(#{name}, #{callback}, false)`
+      `#@native.removeEventListener(#{what.name}, #{what.to_n}, false)`
     else
-      callbacks.each {|id, event|
-        name, callback = event
-
-        `#@native.removeEventListener(#{name}, #{callback}, false)`
+      callbacks.each {|callback|
+        `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
       }
 
       callbacks.clear
