@@ -179,6 +179,7 @@ class Node
   end
 
   alias inner_text inner_html
+  alias inner_text= inner_html=
 
   def last_element_child
     element_children.last
@@ -262,6 +263,7 @@ class Node
   end
 
   alias text inner_text
+  alias text= inner_text=
 
   def text?
     node_type == TEXT_NODE
