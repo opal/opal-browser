@@ -32,11 +32,11 @@ class Element < Node
   alias attribute attr
 
   def attribute_nodes
-    Array(`#@native.attributes`)
+    Array(`#@native.attributes`, :item).map { |e| DOM(e) }
   end
 
   def attributes
-    Hash[attribute_nodes.map { |node| [node.name, node] }]
+    Attributes.new(self)
   end
 
   def [](name)
@@ -155,6 +155,38 @@ class Element < Node
 
   def inspect
     "#<DOM::Element: #{name}>"
+  end
+
+  class Attributes
+    include Enumerable
+
+    def initialize(element)
+      @element = element
+    end
+
+    def each(&block)
+      return enum_for :each unless block_given?
+
+      @element.attribute_nodes.each {|attr|
+        yield attr.name, attr.value
+      }
+
+      self
+    end
+
+    def [](name)
+      @element[name]
+    end
+
+    def []=(name, value)
+      @element[name] = value
+    end
+
+    def merge!(hash)
+      hash.each {|name, value|
+        @element[name] = value
+      }
+    end
   end
 end
 
