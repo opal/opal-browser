@@ -170,16 +170,21 @@ class Node
     # TODO: implement this properly
   end
 
-  def inner_html(*args)
+  def inner_html(*)
     `#@native.innerHTML`
   end
 
   def inner_html=(value)
-    `#@native.innerHTML = value`
+    `#@native.innerHTML = #{value}`
   end
 
-  alias inner_text inner_html
-  alias inner_text= inner_html=
+  def inner_text(*)
+    `#@native.textContent`
+  end
+
+  def inner_text=(value)
+    `#@native.textContent = #{value}`
+  end
 
   def last_element_child
     element_children.last
