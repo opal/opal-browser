@@ -11,6 +11,10 @@ class Document < Element
     end
   end
 
+  def create_text(content)
+    DOM(`#@native.createTextNode(#{content})`)
+  end
+
   def [](what)
     %x{
       var result = #@native.getElementById(what);
