@@ -25,48 +25,57 @@ class Element < Node
     `#@native.className`.split(/\s+/)
   end
 
-  def attr(name)
-    attributes[name]
-  end
-
   alias attribute attr
 
   def attribute_nodes
     Array(`#@native.attributes`, :item).map { |e| DOM(e) }
   end
 
-  def attributes
-    Attributes.new(self)
+  def attributes(options = {})
+    Attributes.new(self, options)
   end
 
-  def [](name)
-    `#@native.getAttribute(#{name.to_s}) || nil`
+  def get(name, options = {})
+    if namespace = options[:namespace]
+      `#@native.getAttributeNS(#{namespace.to_s}, #{name.to_s}) || nil`
+    else
+      `#@native.getAttribute(#{name.to_s}) || nil`
+    end
   end
 
-  def []=(name, value)
-    `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+  def set(name, value, options = {})
+    if namespace = options[:namespace]
+      `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
+    else
+      `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+    end
   end
 
-  alias get []
+  alias [] get
+  alias []= set
 
-  alias get_attribute attr
+  alias attr get
+  alias attribute get
 
-  alias set_attribute []=
+  alias get_attribute get
+  alias set_attribute set
 
   def key?(name)
     !!self[name]
   end
 
   def keys
-    attributes.keys
+    attributes_nodesmap(&:name)
   end
 
   def values
-    attribute_nodes.map { |n| n.value }
+    attribute_nodes.map(&:value)
   end
 
-  def each
-    attributes.each { |name, value| yield value }
+  def each(options = {}, &block)
+    return enum_for :each, options unless block
+
+    attributes(options).each(&block)
   end
 
   def remove_attribute(name)
@@ -160,8 +169,11 @@ class Element < Node
   class Attributes
     include Enumerable
 
-    def initialize(element)
-      @element = element
+    attr_reader :namespace
+
+    def initialize(element, options)
+      @element   = element
+      @namespace = options[:namespace]
     end
 
     def each(&block)
@@ -175,17 +187,19 @@ class Element < Node
     end
 
     def [](name)
-      @element[name]
+      @element.get_attribute(name, namespace: @namespace)
     end
 
     def []=(name, value)
-      @element[name] = value
+      @element.set_attribute(name, value, namespace: @namespace)
     end
 
     def merge!(hash)
       hash.each {|name, value|
-        @element[name] = value
+        self[name] = value
       }
+
+      self
     end
   end
 end
