@@ -92,7 +92,13 @@ module Target
   end
 
   def off(what = nil)
-    if String === what
+    case what
+    when Callback
+      callbacks.delete(what)
+
+      `#@native.removeEventListener(#{what.name}, #{what.to_n}, false)`
+
+    when String
       what = Event.name(what)
 
       callbacks.delete_if {|callback|
@@ -102,10 +108,16 @@ module Target
           true
         end
       }
-    elsif Callback === what
-      callbacks.delete(what)
 
-      `#@native.removeEventListener(#{what.name}, #{what.to_n}, false)`
+    when Regexp
+      callbacks.delete_if {|callback|
+        if callback.name =~ what
+          `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
+
+          true
+        end
+      }
+
     else
       callbacks.each {|callback|
         `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
