@@ -72,22 +72,18 @@ class Request
     proc {|event|
       state = %w[uninitialized loading loaded interactive complete][`#@native.readyState`]
 
-      begin
-        if state == :complete
-          completed!
+      @callbacks[state].(response) if @callbacks[state]
 
-          @callbacks[response.status.code].(response) if @callbacks[response.status.code]
+      if state == :complete
+        completed!
 
-          if response.success?
-            @callbacks[:success].(response) if @callbacks[:success]
-          else
-            @callbacks[:failure].(response) if @callbacks[:failure]
-          end
+        @callbacks[response.status.code].(response) if @callbacks[response.status.code]
+
+        if response.success?
+          @callbacks[:success].(response) if @callbacks[:success]
+        else
+          @callbacks[:failure].(response) if @callbacks[:failure]
         end
-
-        @callbacks[state].(response) if @callbacks[state]
-      rescue Exception => e
-        @callbacks[:exception].(request, state, e) if @callbacks[:exception]
       end
     }.to_n
   end
