@@ -22,7 +22,11 @@ class Socket
       super(`new WebSocket(#{url.to_s}, #{protocol.to_n})`)
     end
 
-    block.call(self) if block
+    if block.arity == 0
+      instance_exec(&block)
+    else
+      block.call(self)
+    end if block
   end
 
   alias_native :protocol, :protocol
