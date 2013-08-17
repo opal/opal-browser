@@ -100,7 +100,7 @@ class Request
     url = @url
 
     unless cachable?
-      url += (url.include?('?') ? '&' : '?') + rand.to_s
+      url += (url.include?(??) ? ?& : ??) + rand.to_s
     end
 
     `#@native.open(#{@method.to_s.upcase}, #{url.to_s}, #{@asynchronous}, #{@user.to_n}, #{@password.to_n})`
@@ -150,8 +150,8 @@ class Request
       data = `null`
     elsif data.is_a?(Hash) || @parameters
       data = (data || @parameters).map {|vals|
-        vals.map(&:encode_uri_component).join('=')
-      }.join('&')
+        vals.map(&:encode_uri_component).join(?=)
+      }.join(?&)
 
       unless content_type
         `#@native.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')`
