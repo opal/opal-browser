@@ -7,6 +7,16 @@ class Element < Node
 
   include Event::Target
 
+  converter {|value|
+    # TODO: oneline rescue
+
+    begin
+      DOM(value)
+    rescue
+      nil
+    end
+  }
+
   alias_native :id, :id
 
   def add_class(name)

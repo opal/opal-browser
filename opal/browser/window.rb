@@ -13,6 +13,10 @@ class Window
   include Native::Base
   include DOM::Event::Target
 
+  converter {|value|
+    $window if `#{value} == window`
+  }
+
   def alert(text)
     `#@native.alert(text)`
   end

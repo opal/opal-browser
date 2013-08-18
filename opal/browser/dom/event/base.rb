@@ -20,22 +20,29 @@ class Definition
 end
 
 module Target
+  def self.converters
+    @converters ||= []
+  end
+
+  def self.register(&block)
+    converters << block
+  end
+
   def self.convert(value)
-    %x{
-      if (#{value} == window) {
-        return #{$window};
-      }
-      else if (#{value} instanceof WebSocket) {
-        return #{Socket.new(value)};
-      }
-      else {
-        try {
-          return #{DOM(value)};
-        }
-        catch (e) {
-          return nil;
-        }
-      }
+    converters.each {|block|
+      if result = block.call(value)
+        return result
+      end
+    }
+
+    nil
+  end
+
+  def self.included(klass)
+    klass.instance_eval {
+      def self.converter(&block)
+        DOM::Event::Target.register(&block)
+      end
     }
   end
 

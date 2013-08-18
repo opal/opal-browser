@@ -15,6 +15,10 @@ class Socket
   include IO::Writable
   include DOM::Event::Target
 
+  converter {|value|
+    Socket.new(value) if `window.WebSocket && #{value} instanceof WebSocket`
+  }
+
   def initialize(url, protocol = nil, &block)
     if native?(url)
       super(url)
