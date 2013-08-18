@@ -106,15 +106,19 @@ module Target
       `#@native.removeEventListener(#{what.name}, #{what.to_n}, false)`
 
     when String
-      what = Event.name(what)
+      if what.include?(?*) or what.include?(??)
+        off(Regexp.new(what.gsub(/\*/, '.*?').gsub(/\?/, '.')))
+      else
+        what = Event.name(what)
 
-      callbacks.delete_if {|callback|
-        if callback.name == what
-          `#@native.removeEventListener(#{name}, #{callback.to_n}, false)`
+        callbacks.delete_if {|callback|
+          if callback.name == what
+            `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
 
-          true
-        end
-      }
+            true
+          end
+        }
+      end
 
     when Regexp
       callbacks.delete_if {|callback|
