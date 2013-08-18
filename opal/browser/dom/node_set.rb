@@ -158,6 +158,12 @@ class NodeSet
     @internal.push node
   end
 
+  def <<(node)
+    @internal.push node
+
+    self
+  end
+
   def remove
     raise NotImplementedError
   end
