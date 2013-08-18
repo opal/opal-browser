@@ -42,6 +42,10 @@ class EventSource
   def alive?
     state == :open
   end
+
+  def close
+    `#@native.close()`
+  end
 end
 
 end
