@@ -29,6 +29,8 @@ module Target
   end
 
   def self.convert(value)
+    return value unless native?(value)
+
     converters.each {|block|
       if result = block.call(value)
         return result
