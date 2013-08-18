@@ -21,6 +21,7 @@ describe Browser::EventSource do
           e.data.should == 'lol'
         }
 
+        e.off
         es.close
       end
     end
@@ -33,6 +34,7 @@ describe Browser::EventSource do
           e.data.should == 'omg'
         }
 
+        e.off
         es.close
       end
     end

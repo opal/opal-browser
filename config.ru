@@ -33,6 +33,20 @@ apps << Class.new(Sinatra::Base) {
     "lol"
   end
 
+  get '/events' do
+    headers 'Content-Type' => 'text/event-stream'
+
+    stream do |out|
+      sleep 0.2
+
+      out << "data: lol\n" << "\n"
+      out << "event: custom\n" << "data: omg\n" << "\n"
+      out << "data: wut\n" << "\n"
+
+      sleep 10
+    end
+  end
+
   get '/socket' do
     request.websocket do |ws|
       ws.onopen do
