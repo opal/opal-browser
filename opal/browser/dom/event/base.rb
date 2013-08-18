@@ -107,7 +107,7 @@ module Target
 
     when String
       if what.include?(?*) or what.include?(??)
-        off(Regexp.new(what.gsub(/\*/, '.*?').gsub(/\?/, '.')))
+        off(Regexp.new(what.gsub(/\*/, '.*?').gsub(/\?/, ?.)))
       else
         what = Event.name(what)
 

@@ -44,7 +44,7 @@ class Event
   end
 
   def self.name(name)
-    names[name].gsub(':', '')
+    names[name].gsub(?:, '')
   end
 
   def self.classes
