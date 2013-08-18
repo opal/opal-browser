@@ -40,7 +40,7 @@ module Target
 
   def self.included(klass)
     klass.instance_eval {
-      def self.converter(&block)
+      def self.target(&block)
         DOM::Event::Target.register(&block)
       end
     }

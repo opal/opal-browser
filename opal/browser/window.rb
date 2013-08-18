@@ -13,7 +13,7 @@ class Window
   include Native::Base
   include DOM::Event::Target
 
-  converter {|value|
+  target {|value|
     $window if `#{value} == window`
   }
 

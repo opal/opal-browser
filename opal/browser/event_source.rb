@@ -4,7 +4,7 @@ class EventSource
   include Native::Base
   include DOM::Event::Target
 
-  converter {|value|
+  target {|value|
     EventSource.new(value) if `window.EventSource && #{value} instanceof EventSource`
   }
 

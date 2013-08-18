@@ -7,7 +7,7 @@ class Element < Node
 
   include Event::Target
 
-  converter {|value|
+  target {|value|
     # TODO: oneline rescue
 
     begin

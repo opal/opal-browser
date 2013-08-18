@@ -15,7 +15,7 @@ class Socket
   include IO::Writable
   include DOM::Event::Target
 
-  converter {|value|
+  target {|value|
     Socket.new(value) if `window.WebSocket && #{value} instanceof WebSocket`
   }
 
