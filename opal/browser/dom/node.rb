@@ -202,6 +202,10 @@ class Node
     `#@native.nodeName = #{value.to_s}`
   end
 
+  def namespace
+    `#@native.namespaceURI || nil`
+  end
+
   def next
     DOM(`#@native.nextSibling`) if `#@native.nextSibling != null`
   end
