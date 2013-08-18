@@ -16,14 +16,14 @@ class Socket
   include DOM::Event::Target
 
   target {|value|
-    Socket.new(value) if `window.WebSocket && #{value} instanceof WebSocket`
+    Socket.new(value) if `window.WebSocket && #{value} instanceof window.WebSocket`
   }
 
   def initialize(url, protocol = nil, &block)
     if native?(url)
       super(url)
     else
-      super(`new WebSocket(#{url.to_s}, #{protocol.to_n})`)
+      super(`new window.WebSocket(#{url.to_s}, #{protocol.to_n})`)
     end
 
     if block.arity == 0
