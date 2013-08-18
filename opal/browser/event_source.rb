@@ -5,14 +5,14 @@ class EventSource
   include DOM::Event::Target
 
   target {|value|
-    EventSource.new(value) if `window.EventSource && #{value} instanceof EventSource`
+    EventSource.new(value) if `window.EventSource && #{value} instanceof window.EventSource`
   }
 
   def initialize(path, &block)
     if native?(path)
       super(path)
     else
-      super(`new EventSource(path)`)
+      super(`new window.EventSource(path)`)
     end
 
     if block.arity == 0
