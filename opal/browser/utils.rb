@@ -15,3 +15,15 @@ class String
 		`decodeURI(#{self})`
 	end
 end
+
+class Proc
+  def defer(*args)
+    %x{
+      var func = #{self};
+
+      setTimeout(function() {
+        #{`func`.call(*args)};
+      });
+    }
+  end
+end
