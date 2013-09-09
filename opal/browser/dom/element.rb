@@ -32,7 +32,7 @@ class Element < Node
   alias_native :class_name, :className
 
   def class_names
-    `#@native.className`.split(/\s+/)
+    `#@native.className`.split(/\s+/).reject(&:empty?)
   end
 
   alias attribute attr
