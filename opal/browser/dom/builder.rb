@@ -1,6 +1,25 @@
 module Browser; module DOM
 
 class Builder < BasicObject
+  class Element < BasicObject
+    def initialize(builder, element)
+      @builder = builder
+      @element = element
+    end
+
+    def method_missing(name, &block)
+      if name.end_with? ?!
+        @element[:id] = name[0 .. -2]
+      else
+        @element.add_class name
+      end
+
+      @builder.extend!(@element, &block) if block
+
+      self
+    end
+  end
+
   def initialize(document, element = nil, &block)
     @document = document
     @element  = element
@@ -30,11 +49,21 @@ class Builder < BasicObject
   def namespace!(name, &block)
     @namespace = name
 
+    extend!(&block)
+  end
+
+  def extend!(element = nil, &block)
+    old, @current = @current, element if element
+
     if block.arity == 0
       instance_exec(&block)
     else
       block.call(self)
     end
+
+    @current = old if element
+
+    self
   end
 
   def <<(what)
@@ -53,30 +82,34 @@ class Builder < BasicObject
     attributes = args.shift || {}
 
     if block
-      parent, @current = @current, create_element!(name, attributes)
+      parent  = @current
+      element = create_element!(name, attributes)
 
       if content
-        @current << create_text!(content)
+        element << create_text!(content)
       end
 
+      @current = element
       result = if block.arity == 0
         instance_eval(&block)
       else
         block.call(self)
       end
+      @current = parent
 
       if String === result
-        @current << create_text!(result)
+        element.inner_html result
       end
 
-      (parent || @roots) << @current
-
-      @current = parent
+      (parent || @roots) << element
     else
-      (@current || @roots) << create_element!(name, attributes).tap {|el|
-        el << create_text!(content) if content
-      }
+      element  = create_element!(name, attributes)
+      element << create_text!(content) if content
+
+      (@current || @roots) << element
     end
+
+    Element.new(self, element)
   end
 
 private
