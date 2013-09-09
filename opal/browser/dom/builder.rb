@@ -98,7 +98,7 @@ class Builder < BasicObject
       @current = parent
 
       if String === result
-        element.inner_html result
+        element.inner_html = result
       end
 
       (parent || @roots) << element
