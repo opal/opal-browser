@@ -3,6 +3,7 @@ require 'browser/navigator'
 require 'browser/history'
 require 'browser/cookies'
 require 'browser/dom'
+require 'browser/css'
 
 require 'browser/window/interval'
 require 'browser/window/timeout'

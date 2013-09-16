@@ -157,7 +157,7 @@ class Element < Node
   end
 
   def style(data = nil)
-    style = Style::Definition.new(`#@native.style`)
+    style = CSS::Declaration.new(`#@native.style`)
 
     if data.is_a?(String)
       style.replace(data)

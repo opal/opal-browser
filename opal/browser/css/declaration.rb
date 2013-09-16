@@ -1,6 +1,6 @@
-module Browser; module DOM; module Style
+module Browser; module CSS
 
-class Definition
+class Declaration
   include Native::Base
   include Enumerable
 
@@ -66,4 +66,4 @@ class Definition
   alias_native :to_s, :cssText
 end
 
-end; end; end
+end; end

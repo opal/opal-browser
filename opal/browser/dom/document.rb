@@ -65,6 +65,12 @@ class Document < Element
     DOM(`document.body`)
   end
 
+  def style_sheets
+    Native::Array.new(`#@native.styleSheets`) {|e|
+      CSS::StyleSheet.new(e)
+    }
+  end
+
   def root=(element)
     `#@native.documentElement = #{element.to_native}`
   end
