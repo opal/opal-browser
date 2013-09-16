@@ -38,7 +38,7 @@ class Element < Node
   alias attribute attr
 
   def attribute_nodes
-    Array(`#@native.attributes`, :item).map { |e| DOM(e) }
+    Native::Array.new(`#@native.attributes`, get: :item) { |e| DOM(e) }
   end
 
   def attributes(options = {})
@@ -138,20 +138,20 @@ class Element < Node
   end
 
   def css(path)
-    NodeSet.new(document, Array(`#@native.querySelectorAll(path)`))
+    NodeSet.new(document, Native::Array.new(`#@native.querySelectorAll(path)`))
   end
 
   def xpath(path)
     result = []
 
-    %x{
-      try {
+    begin
+      %x{
         var tmp = (#@native.ownerDocument || #@native).evaluate(
           path, #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
-        result = #{Array(`tmp`, :snapshotItem, :snapshotLength)};
-      } catch (e) { }
-    }
+        result = #{Native::Array.new(`tmp`, get: :snapshotItem, length: :snapshotLength)};
+      }
+    rescue; end
 
     NodeSet.new(document, result)
   end

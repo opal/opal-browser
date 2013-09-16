@@ -119,7 +119,7 @@ class Node
   end
 
   def children
-    NodeSet.new(document, Array(`#@native.childNodes`))
+    NodeSet.new(document, Native::Array.new(`#@native.childNodes`))
   end
 
   def children=(node)

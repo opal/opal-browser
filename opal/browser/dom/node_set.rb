@@ -5,9 +5,7 @@ class NodeSet
 
   def initialize(document, list = [])
     @document = document
-    @internal = list.map {|e|
-      DOM(e)
-    }
+    @internal = list.map { |e| DOM(Native.try_convert(e)) }
   end
 
   Enumerable.instance_methods.each {|name|
@@ -156,13 +154,11 @@ class NodeSet
 
   def push(node)
     @internal.push node
-  end
-
-  def <<(node)
-    @internal.push node
 
     self
   end
+
+  alias << push
 
   def remove
     raise NotImplementedError
