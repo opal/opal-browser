@@ -62,7 +62,7 @@ class Document < Element
   end
 
   def body
-    xpath('//body').first
+    DOM(`document.body`)
   end
 
   def root=(element)
