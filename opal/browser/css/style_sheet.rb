@@ -31,6 +31,20 @@ class StyleSheet
     `#@native.insertRule(#{rule}, #{index})`
   end
 
+  def rule(selector, body)
+    unless String === selector
+      selector = selector.join ', '
+    end
+
+    unless String === body
+      body = body.map {|name, value|
+        "#{name}: #{value};"
+      }.join "\n"
+    end
+
+    insert(length, "#{selector} { #{body} }")
+  end
+
   def method_missing(*args, &block)
     rules.__send__(*args, &block)
   end
