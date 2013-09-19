@@ -130,13 +130,8 @@ class Node
     node_type == COMMENT_NODE
   end
 
-  def content
-    `#@native.nodeValue`
-  end
-
-  def content=(value)
-    `#@native.nodeValue = value`
-  end
+  alias content  inner_text
+  alias content= inner_text=
 
   def document
     DOM(`#@native.ownerDocument`)
@@ -283,6 +278,14 @@ class Node
   end
 
   alias type node_type
+
+  def value
+    `#@native.nodeValue`
+  end
+
+  def value=(value)
+    `#@native.nodeValue = value`
+  end
 
   def inspect
     "#<DOM::Node: #{name}>"
