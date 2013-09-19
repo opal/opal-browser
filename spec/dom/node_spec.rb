@@ -141,4 +141,14 @@ describe Browser::DOM::Node do
       $document["spec-1"].previous_element.should be_nil
     end
   end
+
+  describe '#inner_text' do
+    html <<-HTML
+      <div id="inner"><span>I like trains.</span> <span>And turtles.</span></div>
+    HTML
+
+    it 'should get the whole text for elements' do
+      $document["inner"].inner_text.should == "I like trains. And turtles."
+    end
+  end
 end
