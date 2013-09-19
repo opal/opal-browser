@@ -130,9 +130,6 @@ class Node
     node_type == COMMENT_NODE
   end
 
-  alias content  inner_text
-  alias content= inner_text=
-
   def document
     DOM(`#@native.ownerDocument`)
   end
@@ -177,9 +174,13 @@ class Node
     `#@native.textContent`
   end
 
+  alias content inner_text
+
   def inner_text=(value)
     `#@native.textContent = #{value}`
   end
+
+  alias content= inner_text=
 
   def last_element_child
     element_children.last
