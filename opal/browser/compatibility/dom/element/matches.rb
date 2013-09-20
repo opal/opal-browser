@@ -18,7 +18,9 @@ unless defined?(`window.Element.prototype.matches`)
       `#@native.webkitMatchesSelector(#{selector})`
     end
   else
-    raise NotImplementedError, 'matches by selector unsupported'
+    def matches?(*)
+      raise NotImplementedError, 'matches by selector unsupported'
+    end
   end
 end
 
