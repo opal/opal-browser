@@ -175,6 +175,10 @@ class Element < Node
     end
   end
 
+  def matches?(selector)
+    `#@native.matches(#{selector})`
+  end
+
   def inspect
     "#<DOM::Element: #{name}>"
   end
