@@ -1,31 +1,20 @@
 require 'browser/css/style_sheet'
 require 'browser/css/declaration'
 require 'browser/css/rule'
+require 'browser/css/builder'
 
-module Browser
-
-module CSS
-  def self.create(text = nil, &block)
+module Kernel
+  def CSS(text = nil, &block)
     style = $document.create_element(:style)
     style[:type] = 'text/css'
     style.append_to($document.head)
 
-    if text
-      style.inner_text = text
-    end
-
     if block
-      sheet = $document.style_sheets.last
-
-      if block.arity == 0
-        sheet.instance_eval(&block)
-      else
-        block.call(sheet)
-      end
+      style.inner_text = Browser::CSS::Builder.new(&block).to_s
+    else
+      style.inner_text = text
     end
 
     style
   end
-end
-
 end
