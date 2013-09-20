@@ -10,6 +10,7 @@ require 'browser/dom/element'
 require 'browser/dom/document'
 require 'browser/dom/document_fragment'
 require 'browser/dom/builder'
+require 'browser/dom/mutation_observer'
 
 module Kernel
   def XML(what)
