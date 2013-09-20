@@ -57,8 +57,19 @@ $window   = Browser::Window.new(`window`)
 $document = $window.document
 
 module Kernel
-  def alert(text)
-    $window.alert(text)
+  def alert(*args)
+    $window.alert(*args)
+  end
+
+  def once(*args, &block)
+    $window.once(*args, &block)
+  end
+
+  alias once_after once
+  alias after once
+
+  def every(*args, &block)
+    $window.every(*args, &block)
   end
 
   def log(what)

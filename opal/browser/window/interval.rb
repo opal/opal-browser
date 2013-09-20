@@ -1,8 +1,6 @@
 module Browser; class Window
 
 class Interval
-  include Native::Base
-
   attr_reader :every
 
   def initialize(window, time, &block)
@@ -10,11 +8,11 @@ class Interval
     @every  = time
     @block  = block
 
-    super(`#@window.setInterval(#{block.to_native}, time * 1000)`)
+    @id = `#@window.setInterval(#{block.to_n}, time * 1000)`
   end
 
   def abort
-    `#@window.clearInterval(#@native)`
+    `#@window.clearInterval(#@id)`
   end
 
   alias stop abort

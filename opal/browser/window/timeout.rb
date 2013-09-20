@@ -1,8 +1,6 @@
 module Browser; class Window
 
 class Timeout
-  include Native::Base
-
   attr_reader :after
 
   def initialize(window, time, &block)
@@ -10,11 +8,11 @@ class Timeout
     @after  = time
     @block  = block
 
-    super(`#@window.setTimeout(#{block.to_native}, time * 1000)`)
+    @id = `#@window.setTimeout(#{block.to_n}, time * 1000)`
   end
 
   def abort
-    `#@window.clearTimeout(#@native)`
+    `#@window.clearTimeout(#@id)`
   end
 
   alias stop abort
