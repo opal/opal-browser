@@ -26,7 +26,10 @@ class Element < Node
   end
 
   def remove_class(name)
-    `#@native.className = #{class_names.delete(name).join ' '}`
+    names = class_names
+    names.delete(name)
+
+    `#@native.className = #{names.join ' '}`
   end
 
   alias_native :class_name, :className
