@@ -8,6 +8,6 @@ describe Browser::CSS::Builder do
       end
     end
 
-    css.to_s.should == "#lol {\ncolor: black;\n}\n\n"
+    css.to_s.should == "#lol {\n\tcolor: black;\n}\n\n"
   end
 end
