@@ -65,6 +65,22 @@ describe Browser::DOM::Event do
 
       elem.trigger :bazinga, 1, 2, 3
     end
+
+    async "works with deferred elements" do
+      elem = $document["event-spec"]
+
+      elem.on :bazinga, 'span.nami' do
+        run_async {
+          true.should be_true
+        }
+      end
+
+      elem.add_child DOM { span.nami }
+
+      after 0.01 do
+        elem.first_element_child.trigger :bazinga
+      end
+    end
   end
 
   describe "#off" do
