@@ -27,4 +27,20 @@ describe Browser::DOM::Element do
       $document["class-names-1"].class_names.should == %w[a b c]
     end
   end
+
+  describe '#matches?' do
+    html <<-HTML
+      <div id="matches" class="not me">
+        <span class="yes me"></span>
+      </div>
+    HTML
+
+    it 'matches on class and id' do
+      $document[:matches].matches?('#matches.not.me').should be_true
+    end
+
+    it 'matches on class and name' do
+      $document[:matches].first_element_child.matches?('span.yes').should be_true
+    end
+  end
 end
