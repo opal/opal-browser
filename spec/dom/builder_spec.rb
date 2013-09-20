@@ -57,4 +57,13 @@ describe Browser::DOM::Builder do
     res.child.name.should == 'SPAN'
     res.child.class_names.should == %w[nicer]
   end
+
+  it 'joins class name properly' do
+    res = DOM {
+      i.icon[:legal]
+    }
+
+    res.name.should == 'I'
+    res.class_names.should == %w[icon-legal]
+  end
 end
