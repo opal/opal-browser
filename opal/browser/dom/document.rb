@@ -30,7 +30,7 @@ class Document < Element
   alias at []
 
   def cookies
-    Cookies.new(to_native) #if defined? `#@native.cookie`
+    Cookies.new(@native) if defined?(`#@native.cookie`)
   end
 
   def document
@@ -72,7 +72,7 @@ class Document < Element
   end
 
   def root=(element)
-    `#@native.documentElement = #{element.to_native}`
+    `#@native.documentElement = #{Native.convert(element)}`
   end
 
   def inspect
