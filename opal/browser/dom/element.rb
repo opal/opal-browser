@@ -108,7 +108,7 @@ class Element < Node
   end
 
   def at(path)
-    xpath(path).first
+    xpath(path).first || css(path).first
   end
 
   def at_css(*rules)
