@@ -49,9 +49,9 @@ module Target
   end
 
   class Callback
-    attr_reader :target, :name
+    attr_reader :target, :name, :selector
 
-    def initialize(target, name, &block)
+    def initialize(target, name, selector = nil, &block)
       %x{
         callback = #{self};
         func     = function(event) {
@@ -66,6 +66,7 @@ module Target
       @function = `func`
       @target   = target
       @name     = name
+      @selector = selector
     end
 
     def off
@@ -87,15 +88,54 @@ module Target
     }
   end
 
-  def on(name, &block)
+  def observe
+    %x{
+      if (!#@native.$observer) {
+        #@native.$observer = #{MutationObserver.new {|mutations|
+          mutations.each {|mutation|
+            Array(mutation.added).each {|node|
+              deferred.each {|name, selector, block|
+                if node.matches?(selector)
+                  node.on(name, &block)
+                end
+              }
+            }
+          }
+        }};
+
+        #{`#@native.$observer`.observe(@native, children: true, tree: true)}
+      }
+    }
+  end
+
+  def deferred
+    %x{
+      if (!#@native.$deferred) {
+        #@native.$deferred = [];
+      }
+
+      return #@native.$deferred;
+    }
+  end
+
+  def on(name, selector = nil, &block)
     raise ArgumentError, 'no block has been passed' unless block
 
     name     = Event.name(name)
-    callback = Callback.new(self, name, &block)
+    callback = Callback.new(self, name, selector, &block)
 
     callbacks.push(callback)
 
-    `#@native.addEventListener(#{name}, #{callback.to_n})`
+    if selector
+      observe
+      deferred << [name, selector, block]
+
+      css(selector).each {|e|
+        e.on(name, &block)
+      }
+    else
+      `#@native.addEventListener(#{name}, #{callback.to_n})`
+    end
 
     callback
   end
