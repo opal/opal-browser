@@ -7,16 +7,34 @@ class Builder < BasicObject
       @element = element
     end
 
-    def method_missing(name, &block)
+    def method_missing(name, content = nil, &block)
+      if content
+        @element << @builder.create_text!(content)
+      end
+
       if name.end_with? ?!
         @element[:id] = name[0 .. -2]
       else
+        @last = name
         @element.add_class name
       end
 
       @builder.extend!(@element, &block) if block
 
       self
+    end
+
+    def [](*names)
+      return unless @last
+
+      @element.remove_class @last
+      @element.add_class [@last, *names].join('-')
+
+      self
+    end
+
+    def do(&block)
+      @builder.extend!(@element, &block)
     end
   end
 
