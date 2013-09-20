@@ -55,10 +55,10 @@ class MutationObserver
   def observe(target, options = nil)
     unless options
       options = {
-        children: true,
-        tree: true,
+        children:   true,
+        tree:       true,
         attributes: :old,
-        cdata: :old
+        cdata:      :old
       }
     end
 
