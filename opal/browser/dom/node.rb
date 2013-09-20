@@ -106,6 +106,10 @@ class Node
     self
   end
 
+  def clear
+    children.each(&:remove)
+  end
+
   def blank?
     raise NotImplementedError
   end
