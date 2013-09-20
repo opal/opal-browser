@@ -22,7 +22,7 @@ class Builder < BasicObject
 
   def initialize(document, element = nil, &block)
     @document = document
-    @element  = element
+    @current  = element
     @roots    = NodeSet.new
 
     if block.arity == 0
