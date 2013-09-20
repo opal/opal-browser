@@ -12,6 +12,8 @@ require 'browser/dom/document_fragment'
 require 'browser/dom/builder'
 require 'browser/dom/mutation_observer'
 
+require 'browser/dom/compatibility'
+
 module Kernel
   def XML(what)
     %x{
