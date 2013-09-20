@@ -7,7 +7,6 @@ module Kernel
   def CSS(text = nil, &block)
     style = $document.create_element(:style)
     style[:type] = 'text/css'
-    style.append_to($document.head)
 
     if block
       style.inner_text = Browser::CSS::Builder.new(&block).to_s
