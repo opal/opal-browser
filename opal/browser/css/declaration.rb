@@ -4,6 +4,38 @@ class Declaration
   include Native::Base
   include Enumerable
 
+  class DSL
+    include Native::Base
+
+    def initialize(declaration, &block)
+      @declaration = declaration
+
+      if block.arity == 0
+        instance_exec(&block)
+      else
+        block.call(self)
+      end
+    end
+
+    def method_missing(name, arg)
+      if arg.is_a? Hash
+        arg.each {|sub, value|
+          if name.end_with? ?!
+            `#@native.setProperty(#{name[0 .. -2]} + "-" + #{sub}, #{value.to_s}, true)`
+          else
+            `#@native.setProperty(#{name} + "-" + #{sub}, #{value.to_s}, false)`
+          end
+        }
+      else
+        if name.end_with? ?!
+          `#@native.setProperty(#{name[0 .. -2]}, #{arg.to_s}, true)`
+        else
+          `#@native.setProperty(#{name}, #{arg.to_s}, false)`
+        end
+      end
+    end
+  end
+
   def rule
     Rule.new(`#@native.parentRule`) if defined?(`#@native.parentRule`)
   end
@@ -22,18 +54,10 @@ class Declaration
     self
   end
 
-  def method_missing(id, *args)
-    if id.ends_with? '!'
-      `#@native.setProperty(#{id[0 .. -2]}, #{args.first}, true)`
+  def apply(&block)
+    DSL.new(@native, &block)
 
-      self
-    elsif id.ends_with? '='
-      `#@native.setProperty(#{id[0 .. -2]}, #{args.first}, false)`
-
-      self
-    else
-      `#@native.getPropertyValue(#{id})`
-    end
+    self
   end
 
   def [](name)
