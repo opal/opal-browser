@@ -53,6 +53,10 @@ class StyleSheet
     insert(length, "#{selector} { #{body} }")
   end
 
+  def [](id)
+    rules.find { |r| log r; r.id == id }
+  end
+
   def method_missing(*args, &block)
     rules.__send__(*args, &block)
   end
