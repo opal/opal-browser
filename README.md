@@ -12,8 +12,24 @@ DOM
 DOM support is complete as far as I know, it has a very Nokogiri feel to it
 with obvious differences where relevant (for instance, event handling).
 
+```ruby
+$document.on :load do
+  alert "yo dawg, I'm all loaded up in here"
+end
+```
+
 It also supports a markaby inspired builder DSL which generates DOM nodes
 directly instead of creating a string.
+
+```ruby
+$document.on :load do
+  DOM {
+    div.info {
+      span.red "I'm all cooked up."
+    }
+  }.append_to($document.body)
+end
+```
 
 CSSOM
 -----
@@ -22,6 +38,14 @@ includes a DSL for generating a CSS style and the same DSL is also used to
 change style declarations (which can either belong to a `DOM::Element` or a
 `CSS::Rule::Style`).
 
+```ruby
+$document.body.style.apply {
+  background color: 'black'
+  color 'white'
+  font family: 'Verdana'
+}
+```
+
 AJAX & SJAX
 -----------
 The `XMLHttpRequest` API has been wrapped completely, it also optionally
@@ -29,10 +53,32 @@ supports binary results as typed-arrays.
 
 It easily allows for synchronous and asynchronous requests.
 
+```ruby
+HTTP.get "/something.json" do
+  on :success do |res|
+    alert res.json.inspect
+  end
+end
+```
+
 WebSocket
 ---------
 Websockets have been fully wrapped and they are easily configurable with
 blocks.
+
+```ruby
+Browser::Socket.new 'ws://echo.websocket.org' do
+  on :open do
+    every 1 do
+      puts "ping"
+    end
+  end
+
+  on :message do |e|
+    log "Received #{e.data}"
+  end
+end
+```
 
 EventSource
 -----------
