@@ -3,6 +3,14 @@ module Browser; module CSS
 class StyleSheet
   include Native::Base
 
+  def initialize(what)
+    if what.is_a? DOM::Element
+      super(`#{what.to_n}.sheet`)
+    else
+      super(what)
+    end
+  end
+
   alias_native :disabled?, :disabled
   alias_native :href, :href
   alias_native :media, :media
