@@ -13,9 +13,12 @@ class StyleSheet
 
   alias_native :disabled?, :disabled
   alias_native :href, :href
-  alias_native :media, :media
   alias_native :title, :title
   alias_native :type, :type
+
+  def media
+    Media.new(`#@native.media`) if `#@native.media != null`
+  end
 
   def owner
     DOM(`#@native.ownerNode`)
@@ -59,6 +62,21 @@ class StyleSheet
 
   def method_missing(*args, &block)
     rules.__send__(*args, &block)
+  end
+
+  class Media < Native::Array
+    alias_native :text, :mediaText
+    alias_native :to_s, :mediaText
+
+    def push(medium)
+      `#@native.appendMedium(#{medium})`
+
+      self
+    end
+
+    def delete(medium)
+      `#@native.deleteMedium(#{medium})`
+    end
   end
 end
 
