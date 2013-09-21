@@ -54,7 +54,7 @@ supports binary results as typed-arrays.
 It easily allows for synchronous and asynchronous requests.
 
 ```ruby
-HTTP.get "/something.json" do
+Browser::HTTP.get "/something.json" do
   on :success do |res|
     alert res.json.inspect
   end
