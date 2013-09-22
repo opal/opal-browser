@@ -22,7 +22,7 @@ class EventSource
     end if block
   end
 
-  alias_native :url, :url
+  alias_native :url
 
   def state
     %x{

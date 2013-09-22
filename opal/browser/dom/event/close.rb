@@ -27,8 +27,8 @@ class Close < Event
     new(`new CloseEvent(#{name}, #{Definition.new(&block)})`)
   end
 
-  alias_native :code, :code
-  alias_native :reason, :reason
+  alias_native :code
+  alias_native :reason
   alias_native :clean?, :wasClean
 end
 

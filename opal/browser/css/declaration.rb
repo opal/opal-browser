@@ -86,7 +86,7 @@ class Declaration
     self
   end
 
-  alias_native :length, :length
+  alias_native :length
   alias_native :to_s, :cssText
 end
 

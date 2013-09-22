@@ -15,8 +15,8 @@ class UI < Event
     new(`new UIEvent(#{name}, #{Definition.new(&block)})`)
   end
 
-  alias_native :detail, :detail
-  alias_native :view, :view
+  alias_native :detail
+  alias_native :view
 end
 
 end; end; end

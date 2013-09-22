@@ -23,9 +23,9 @@ class DeviceProximity < Event
     new(`new DeviceProximityEvent(#{name}, #{Definition.new(&block)})`)
   end
 
-  alias_native :value, :value
-  alias_native :min, :min
-  alias_native :max, :max
+  alias_native :value
+  alias_native :min
+  alias_native :max
 end
 
 end; end; end

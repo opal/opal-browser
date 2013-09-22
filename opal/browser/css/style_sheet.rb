@@ -12,9 +12,9 @@ class StyleSheet
   end
 
   alias_native :disabled?, :disabled
-  alias_native :href, :href
-  alias_native :title, :title
-  alias_native :type, :type
+  alias_native :href
+  alias_native :title
+  alias_native :type
 
   def media
     Media.new(`#@native.media`) if `#@native.media != null`

@@ -17,7 +17,7 @@ class Element < Node
     end
   }
 
-  alias_native :id, :id
+  alias_native :id
 
   def add_class(name)
     `#@native.className = #{class_names.push(name).uniq.join ' '}`

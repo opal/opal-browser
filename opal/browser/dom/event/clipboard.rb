@@ -19,7 +19,7 @@ class Clipboard < Event
     new(`new ClipboardEvent(#{name}, #{Definition.new(&block)})`)
   end
 
-  alias_native :data, :data
+  alias_native :data
   alias_native :type, :dataType
 end
 

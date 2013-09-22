@@ -3,7 +3,7 @@ module Browser
 class History
   include Native::Base
 
-  alias_native :length, :length
+  alias_native :length
 
   def back(number = 1)
     `#@native.go(-number)`

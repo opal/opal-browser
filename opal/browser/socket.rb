@@ -33,8 +33,8 @@ class Socket
     end if block
   end
 
-  alias_native :protocol, :protocol
-  alias_native :url, :url
+  alias_native :protocol
+  alias_native :url
   alias_native :buffered, :bufferedAmount
 
   def type

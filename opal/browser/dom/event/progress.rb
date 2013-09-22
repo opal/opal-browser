@@ -24,8 +24,8 @@ class Progress < Event
   end
 
   alias_native :computable?, :computableLength
-  alias_native :loaded, :loaded
-  alias_native :total, :total
+  alias_native :loaded
+  alias_native :total
 end
 
 end; end; end

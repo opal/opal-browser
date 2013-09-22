@@ -29,10 +29,10 @@ class DeviceMotion < Event
     new(`new DeviceMotionEvent(#{name}, #{Definition.new(&block)})`)
   end
 
-  alias_native :acceleration, :acceleration
+  alias_native :acceleration
   alias_native :acceleration_with_gravity, :accelerationIncludingGravity
   alias_native :rotation, :rotationRate
-  alias_native :interval, :interval
+  alias_native :interval
 end
 
 end; end; end

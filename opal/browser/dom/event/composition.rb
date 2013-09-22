@@ -19,8 +19,8 @@ class Composition < UI
     new(`new CompositionEvent(#{name}, #{Definition.new(&block)})`)
   end
 
-  alias_native :data, :data
-  alias_native :locale, :locale
+  alias_native :data
+  alias_native :locale
 
   def start?
     name.downcase == 'compositionstart'

@@ -31,11 +31,11 @@ class Storage < Event
     new(`new StorageEvent(#{name}, #{Definition.new(&block)})`)
   end
 
-  alias_native :key, :key
+  alias_native :key
   alias_native :new, :newValue
   alias_native :old, :oldValue
   alias_native :area, :storageArea
-  alias_native :url, :url
+  alias_native :url
 end
 
 end; end; end

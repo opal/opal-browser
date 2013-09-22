@@ -20,13 +20,8 @@ class Location
   end
 
   %w[hash host hostname href pathname port protocol search].each {|name|
-    define_method name do
-      `#@native[#{name}]`
-    end
-
-    define_method "#{name}=" do |value|
-      `#@native[#{name}] = #{value}`
-    end
+    alias_native name
+    alias_native "#{name}="
   }
 
   alias path pathname

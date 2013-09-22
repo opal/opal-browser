@@ -27,10 +27,10 @@ class DeviceOrientation < Event
     new(`new DeviceOrientationEvent(#{name}, #{Definition.new(&block)})`)
   end
 
-  alias_native :absolute, :absolute
-  alias_native :alpha, :alpha
-  alias_native :beta, :beta
-  alias_native :gamma, :gamma
+  alias_native :absolute
+  alias_native :alpha
+  alias_native :beta
+  alias_native :gamma
 end
 
 end; end; end

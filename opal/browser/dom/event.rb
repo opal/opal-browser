@@ -225,7 +225,7 @@ class Event
   alias_native :bubbles?, :bubbles
   alias_native :cancelable?, :cancelable
   alias_native :name, :type
-  alias_native :data, :data
+  alias_native :data
   alias_native :phase, :eventPhase
   alias_native :at, :timeStamp
 
