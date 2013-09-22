@@ -3,78 +3,44 @@ module Browser
 class Navigator
   include Native::Base
 
-  def code
-    `#@native.appCodeName`
-  end
+  Version = Struct.new(:major, :minor, :build)
+  Product = Struct.new(:name, :version)
+  Vendor = Struct.new(:name, :version)
 
-  def name
-    `#@native.appName`
-  end
+  alias_native :code, :appCodeName
+  alias_native :name, :appName
 
   def version
-    `#@native.appVersion`
+    Version.new(`#@native.appVersion`, `#@native.appMinorVersion`, `#@native.buildID`)
   end
 
-  def minor_version
-    `#@native.appMinorVersion`
-  end
-
-  def build_id
-    `#@native.buildID`
-  end
-
-  def cookies?
-    `#@native.cookieEnabled`
-  end
+  alias_native :cookies?, :cookieEnabled
 
   def track?
     `!#@native.doNotTrack`
   end
 
-  def language
-    `#@native.language`
-  end
-
-  def mime_types
-    `#@native.mimeTypes`
-  end
+  alias_native :language, :language
+  alias_native :mime_types, :mimeTypes
 
   def offline?
     `!#@native.onLine`
   end
 
-  def operating_system
-    `#@native.oscpu`
-  end
-
-  alias os operating_system
-
-  def platform
-    `#@native.platform`
-  end
-
-  def plugins
-    `#@native.plugins`
-  end
+  alias_native :operating_system, :oscpu
+  alias_native :os, :oscpu
+  alias_native :platform, :platform
+  alias_native :plugins, :plugins
+  alias_native :product, :product
 
   def product
-    `#@native.product`
+    Product.new(`#@native.product`, `#@native.productSub`)
   end
 
-  def product_version
-    `#@native.productSub`
-  end
-
-  def user_agent
-    `#@native.userAgent`
-  end
+  alias_native :user_agent, :userAgent
 
   def vendor
-    `#@native.vendor`
-  end
-
-  def vendor_version
-    `#@native.vendorSub`
+    Vendor.new(`#@native.vendor`, `#@naive.vendorSub`)
   end
 
   def java?
