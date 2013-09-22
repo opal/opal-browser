@@ -1,13 +1,3 @@
-#--
-#            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-#                    Version 2, December 2004
-#
-#            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-#   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-#
-#  0. You just DO WHAT THE FUCK YOU WANT TO.
-#++
-
 module Browser
 
 class Socket
@@ -19,6 +9,12 @@ class Socket
     Socket.new(value) if `window.WebSocket && #{value} instanceof window.WebSocket`
   }
 
+  # Create a connection to the given URL, optionally using the given protocol.
+  #
+  # @param url [String] URL to connect to
+  # @param protocol [String] protocol to use
+  # @yield if the block has no parameters it's instance_exec'd, otherwise it's
+  #        called with self
   def initialize(url, protocol = nil, &block)
     if native?(url)
       super(url)
@@ -33,10 +29,24 @@ class Socket
     end if block
   end
 
+  # The protocol of the socket.
+  #
+  # @return [String]
   alias_native :protocol
+
+  # The URL the socket is connected to.
+  #
+  # @return [String]
   alias_native :url
+
+  # The amount of buffered data.
+  #
+  # @return [Integer]
   alias_native :buffered, :bufferedAmount
 
+  # The type of the socket.
+  #
+  # @return [:blob, :buffer, :string]
   def type
     %x{
       switch (#@native.binaryType) {
@@ -52,6 +62,9 @@ class Socket
     }
   end
 
+  # The state of the socket.
+  #
+  # @return [:connecting, :open, :closing, :closed]
   def state
     %x{
       switch (#@native.readyState) {
@@ -70,25 +83,29 @@ class Socket
     }
   end
 
+  # The extensions used by the socket,
+  #
+  # @return [Array<String>]
   def extensions
-    %x{
-      if (#@native.extensions == "") {
-        return nil;
-      }
-      else {
-        return #@native.extensions;
-      }
-    }
+    `#@native.extensions`.split(/\s*,\s*/)
   end
 
+  # Check if the socket is alive.
   def alive?
     state == :open
   end
 
+  # Send data to the socket.
+  #
+  # @param data [Object] the data to send
   def write(data)
     `#@native.send(#{data.to_n})`
   end
 
+  # Close the socket.
+  #
+  # @param code [Integer, nil] the error code
+  # @param reason [String, nil] the reason for closing
   def close(code = nil, reason = nil)
     `#@native.close(#{code.to_n}, #{reason.to_n})`
   end
