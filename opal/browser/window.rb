@@ -3,6 +3,7 @@ require 'browser/navigator'
 require 'browser/history'
 require 'browser/interval'
 require 'browser/timeout'
+require 'browser/console'
 require 'browser/cookies'
 
 require 'browser/dom'
@@ -55,6 +56,13 @@ class Window
     DOM(`#@native.document`)
   end
 
+  # Get the {Console} for this window.
+  #
+  # @return [Console]
+  def console
+    Console.new(`#@native.console`)
+  end
+
   # Execute the block every given seconds.
   #
   # @param time [Float] the seconds between every call
@@ -80,6 +88,7 @@ end
 
 $window   = Browser::Window.new(`window`)
 $document = $window.document
+$console  = $window.console
 
 module Kernel
   # (see Browser::Window#alert)
@@ -98,12 +107,5 @@ module Kernel
   # (see Browser::Window#every)
   def every(time, &block)
     $window.every(time, &block)
-  end
-
-  # Log the passed value to the console.
-  def log(what)
-    `#{$window.to_n}.console.log(#{what})`
-
-    what
   end
 end
