@@ -1,5 +1,6 @@
 module Browser
 
+# This class wraps `EventSource`.
 class EventSource
   include Native::Base
   include DOM::Event::Target
@@ -8,6 +9,11 @@ class EventSource
     EventSource.new(value) if `window.EventSource && #{value} instanceof window.EventSource`
   }
 
+  # Create an {EventSource} on the given path.
+  #
+  # @param path [String] the path to use as source
+  # @yield if the block has no parameters it's instance_exec'd, otherwise it's
+  #        called with self
   def initialize(path, &block)
     if native?(path)
       super(path)
