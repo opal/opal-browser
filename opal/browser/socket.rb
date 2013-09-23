@@ -1,5 +1,6 @@
 module Browser
 
+# This class wraps `WebSocket`.
 class Socket
   include Native::Base
   include IO::Writable
@@ -11,8 +12,8 @@ class Socket
 
   # Create a connection to the given URL, optionally using the given protocol.
   #
-  # @param url [String] URL to connect to
-  # @param protocol [String] protocol to use
+  # @param url [String] the URL to connect to
+  # @param protocol [String] the protocol to use
   # @yield if the block has no parameters it's instance_exec'd, otherwise it's
   #        called with self
   def initialize(url, protocol = nil, &block)
@@ -29,24 +30,21 @@ class Socket
     end if block
   end
 
-  # The protocol of the socket.
-  #
-  # @return [String]
+  # @!attribute [r] protocol
+  # @return [String] the protocol of the socket
   alias_native :protocol
 
-  # The URL the socket is connected to.
-  #
-  # @return [String]
+
+  # @!attribute [r] url
+  # @return [String] the URL the socket is connected to
   alias_native :url
 
-  # The amount of buffered data.
-  #
-  # @return [Integer]
+  # @!attribute [r] buffered
+  # @return [Integer] the amount of buffered data.
   alias_native :buffered, :bufferedAmount
 
-  # The type of the socket.
-  #
-  # @return [:blob, :buffer, :string]
+  # @!attribute [r] type
+  # @return [:blob, :buffer, :string] the type of the socket
   def type
     %x{
       switch (#@native.binaryType) {
@@ -62,9 +60,8 @@ class Socket
     }
   end
 
-  # The state of the socket.
-  #
-  # @return [:connecting, :open, :closing, :closed]
+  # @!attribute [r] state
+  # @return [:connecting, :open, :closing, :closed] the state of the socket
   def state
     %x{
       switch (#@native.readyState) {
@@ -83,9 +80,8 @@ class Socket
     }
   end
 
-  # The extensions used by the socket,
-  #
-  # @return [Array<String>]
+  # @!attribute [r] extensions
+  # @return [Array<String>] the extensions used by the socket
   def extensions
     `#@native.extensions`.split(/\s*,\s*/)
   end
@@ -97,7 +93,7 @@ class Socket
 
   # Send data to the socket.
   #
-  # @param data [Object] the data to send
+  # @param data [#to_n] the data to send
   def write(data)
     `#@native.send(#{data.to_n})`
   end
