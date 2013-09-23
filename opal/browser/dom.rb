@@ -15,6 +15,10 @@ require 'browser/dom/mutation_observer'
 require 'browser/dom/compatibility'
 
 module Kernel
+  # Parse an XML string into a DOM usable {Browser::DOM::Document}
+  #
+  # @param what [String] the string to parse
+  # @return [Browser::DOM::Document] the document
   def XML(what)
     %x{
       var doc;
@@ -32,6 +36,10 @@ module Kernel
     DOM(`doc`)
   end
 
+  # Wrap a native element or create a DOM tree using the
+  # {Browser::DOM::Builder} DSL.
+  #
+  # @return [Browser::DOM::Node]
   def DOM(*args, &block)
     if block
       document = args.shift || $document
