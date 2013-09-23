@@ -32,7 +32,7 @@ class History
   end
 
   def current
-    $window.location.pathname
+    $window.location.path
   end
 
   def state
