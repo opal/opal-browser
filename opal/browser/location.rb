@@ -4,8 +4,17 @@ class Location
   include Native::Base
 
   # Change the location.
+  #
+  # @param url [String, #to_s] the URL to go to
   def assign(url)
     `#@native.assign(#{url.to_s})`
+  end
+
+  # Replace the current URL.
+  #
+  # @param url [String, #to_s] the URL to go to
+  def replace(url)
+    `#@native.replace(#{url.to_s})`
   end
 
   # Reload the page.
@@ -13,13 +22,6 @@ class Location
   # @param force [Boolean] whether to force the reload
   def reload(force = false)
     `#@native.reload(force)`
-  end
-
-  # Replace the current URL.
-  #
-  # @param url [String] the URL to go to
-  def replace(url)
-    `#@native.replace(#{url.to_s})`
   end
 
   # Convert the location to a string.
