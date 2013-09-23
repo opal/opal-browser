@@ -15,7 +15,11 @@ class Builder
       end
     }
 
-    result
+    if result[0] == " "
+      result[1 .. -1]
+    else
+      result
+    end
   end
 
   def initialize(&block)
