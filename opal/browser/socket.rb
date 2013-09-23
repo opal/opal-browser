@@ -34,7 +34,6 @@ class Socket
   # @return [String] the protocol of the socket
   alias_native :protocol
 
-
   # @!attribute [r] url
   # @return [String] the URL the socket is connected to
   alias_native :url
