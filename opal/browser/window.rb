@@ -1,12 +1,12 @@
 require 'browser/location'
 require 'browser/navigator'
 require 'browser/history'
+require 'browser/interval'
+require 'browser/timeout'
 require 'browser/cookies'
+
 require 'browser/dom'
 require 'browser/css'
-
-require 'browser/window/interval'
-require 'browser/window/timeout'
 
 module Browser
 
