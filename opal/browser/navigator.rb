@@ -12,32 +12,24 @@ class Navigator
   class MimeType
     include Native::Base
 
-    # Get the plugin for the MIME type.
-    #
-    # @!parse attr_reader :plugin
-    # @return [Plugin]
+    # @!attribute [r] plugin
+    # @return [Plugin] the plugin for the MIME type
     def plugin
       Plugin.new(`#@native.enabledPlugin`)
     end
 
-    # Get the description for the MIME type.
-    #
-    # @!parse attr_reader :description
-    # @return [String]
+    # @!attribute [r] description
+    # @return [String] the description for the MIME type
     alias_native :description
 
-    # Extensions for this MIME type.
-    #
-    # @!parse attr_reader :extensions
-    # @return [Array<String>]
+    # @!attribute [r] extensions
+    # @return [Array<String>] the extensions for this MIME type
     def extensions
       `#@native.suffixes`.split(/\s*/)
     end
 
-    # The MIME type.
-    #
-    # @!parse attr_reader :type
-    # @return [String]
+    # @!attribute [r] type
+    # @return [String] the MIME type
     alias_native :type
   end
 
@@ -50,47 +42,33 @@ class Navigator
       #end
     end
 
-    # Get the plugin description.
-    #
-    # @!parse attr_reader :description
-    # @return [String]
+    # @!attribute [r] description
+    # @return [String] the plugin description
     alias_native :description
 
-    # Get the file associated to the plugin.
-    #
-    # @!parse attr_reader :file
-    # @return [String]
+    # @!attribute [r] file
+    # @return [String] the file associated with the plugin
     alias_native :file, :filename
 
-    # Get the plugin name.
-    #
-    # @!parse attr_reader :name
-    # @return [String]
+    # @!attribute [r] name
+    # @return [String] the plugin name
     alias_native :name
 
-    # Get the plugin version.
-    #
-    # @!parse attr_reader :version
-    # @return [String]
+    # @!attribute [r] version
+    # @return [String] the plugin version
     alias_native :version
   end
 
-  # Get the browser code name.
-  #
-  # @!parse attr_reader :code
-  # @return [String]
+  # @!attribute [r] code
+  # @return [String] the browser code name
   alias_native :code, :appCodeName
 
-  # Get the browser name.
-  #
-  # @!parse attr_reader :name
-  # @return [String]
+  # @!attribute [r] name
+  # @return [String] the browser name
   alias_native :name, :appName
 
-  # Get the browser {Version}.
-  #
-  # @!parse attr_reader :version
-  # @return [Version]
+  # @!attribute [r] version
+  # @return [Version] the browser version
   def version
     Version.new(`#@native.appVersion`, `#@native.appMinorVersion`, `#@native.buildID`)
   end
@@ -103,16 +81,12 @@ class Navigator
     `!#@native.doNotTrack`
   end
 
-  # Check the browser language.
-  #
-  # @!parse attr_reader :language
-  # @return [String]
+  # @!attribute [r] language
+  # @return [String] the browser language
   alias_native :language
 
-  # Check the supported MIME types.
-  #
-  # @!parse attr_reader :mime_types
-  # @return [Native::Array<MimeType>]
+  # @!attribute [r] mime_types
+  # @return [Native::Array<MimeType>] the supported MIME types
   def mime_types
     Native::Array.new `#@native.mimeTypes`, get: :item, named: :namedItem do |m|
       MimeType.new(m)
@@ -124,46 +98,38 @@ class Navigator
     `!#@native.onLine`
   end
 
-  # Get the operating system the browser is running on.
-  #
-  # @!parse attr_reader :operating_system
-  # @return [String]
+  # @!attribute [r] operating_system
+  # @return [String] the operating system the browser is running on
   alias_native :operating_system, :oscpu
 
   alias os operating_system
 
-  # Get the platform the browser is running on.
-  #
-  # @!parse attr_reader :platform
-  # @return [String]
+  # @!attribute [r] platform
+  # @return [String] the platform the browser is running on
   alias_native :platform
 
-  # Get enabled plugins.
-  #
-  # @!parse attr_reader :plugins
-  # @return [Native::Array<Plugin>]
+  # @!attribute [r] plugins
+  # @return [Native::Array<Plugin>] the enabled plugins
   def plugins
     Native::Array.new `#@native.plugins` do |p|
       Plugin.new(p)
     end
   end
 
-  # Get the product name and version.
-  #
-  # @!parse attr_reader :product
-  # @return [Product]
+  # @!attribute [r] product
+  # @return [Product] the product name and version
   def product
     Product.new(`#@native.product`, `#@native.productSub`)
   end
 
+  # @!attribute [r] user_agent
+  # @return [String] the browser's user agent
   alias_native :user_agent, :userAgent
 
-  # Get the vendor name and version.
-  #
-  # @!parse attr_reader :vendor
-  # @return [Vendor]
+  # @!attribute [r] vendor
+  # @return [Vendor] the vendor name and version
   def vendor
-    Vendor.new(`#@native.vendor`, `#@naive.vendorSub`)
+    Vendor.new(`#@native.vendor`, `#@native.vendorSub`)
   end
 
   # Check if Java is enabled.
