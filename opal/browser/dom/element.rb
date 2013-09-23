@@ -159,20 +159,22 @@ class Element < Node
     NodeSet.new(document, result)
   end
 
-  def style(data = nil)
+  def style(data = nil, &block)
     style = CSS::Declaration.new(`#@native.style`)
+
+    return style unless data || block
 
     if data.is_a?(String)
       style.replace(data)
-
-      self
     elsif data.is_a?(Enumerable)
       style.assign(data)
-
-      self
-    else
-      style
     end
+
+    if block
+      style.apply(&block)
+    end
+
+    self
   end
 
   def matches?(selector)
