@@ -10,6 +10,8 @@ require 'browser/window/timeout'
 
 module Browser
 
+# Wrapper class for the `window` object, an instance of it gets
+# set to `$window`.
 class Window
   include Native::Base
   include DOM::Event::Target
@@ -18,30 +20,53 @@ class Window
     $window if `#{value} == window`
   }
 
-  def alert(text)
-    `#@native.alert(text)`
+  # Alert the passed string.
+  def alert(value)
+    `#@native.alert(value)`
+
+    value
   end
 
+  # Get the {Location} object for this window.
+  #
+  # @return [Location]
   def location
     Location.new(`#@native.location`) if `#@native.location`
   end
 
+  # Get the {Navigator} object for this window.
+  #
+  # @return [Navigator]
   def navigator
     Navigator.new(`#@native.navigator`) if `#@native.navigator`
   end
 
+  # Get the {History} object for this window.
+  #
+  # @return [History]
   def history
     History.new(`#@native.history`) if `#@native.history`
   end
 
+  # Get the {DOM::Document} for this window.
+  #
+  # @return [DOM::Document]
   def document
     DOM(`#@native.document`)
   end
 
+  # Execute the block every given seconds.
+  #
+  # @param time [Float] the seconds between every call
+  # @return [Interval] the object representing the interval
   def every(time, &block)
     Interval.new(@native, time, &block)
   end
 
+  # Execute a block after the given seconds.
+  #
+  # @param time [Float] the seconds after it gets called
+  # @return [Timeout] the object representing the timeout
   def once(time, &block)
     Timeout.new(@native, time, &block)
   end
@@ -57,21 +82,25 @@ $window   = Browser::Window.new(`window`)
 $document = $window.document
 
 module Kernel
-  def alert(*args)
-    $window.alert(*args)
+  # (see Browser::Window#alert)
+  def alert(value)
+    $window.alert(value)
   end
 
-  def once(*args, &block)
-    $window.once(*args, &block)
+  # (see Browser::Window#once)
+  def once(time, &block)
+    $window.once(time, &block)
   end
 
   alias once_after once
   alias after once
 
-  def every(*args, &block)
-    $window.every(*args, &block)
+  # (see Browser::Window#every)
+  def every(time, &block)
+    $window.every(time, &block)
   end
 
+  # Log the passed value to the console.
   def log(what)
     `#{$window.to_n}.console.log(#{what})`
 
