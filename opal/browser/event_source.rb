@@ -28,8 +28,12 @@ class EventSource
     end if block
   end
 
+  # @!attribute [r] url
+  # @return [String] the URL of the event source
   alias_native :url
 
+  # @!attribute [r] state
+  # @return [:connecting, :open, :closed] the state of the event source
   def state
     %x{
       switch (#@native.readyState) {
@@ -45,10 +49,12 @@ class EventSource
     }
   end
 
+  # Check if the event source is alive.
   def alive?
     state == :open
   end
 
+  # Close the event source.
   def close
     `#@native.close()`
   end
