@@ -1,25 +1,19 @@
 module Browser; module HTTP
 
-class Header
-  attr_reader :name, :value
+# Represents a single HTTP header.
+Header = Struct.new(:name, :value)
 
-  def initialize(name, value)
-    @name  = name
-    @value = value
-  end
-
-  def to_s
-    @value
-  end
-
-  alias to_str to_s
-end
-
-class Headers < Hash
+# Represents HTTP headers.
+class Headers
+  # Parse HTTP headers from a string.
+  #
+  # @param string [String] the whole HTTP headers response
+  # @return [Headers] the parsed headers
   def self.parse(string)
     self[string.lines.map { |l| l.chomp.split(/\s*:\s*/) }]
   end
 
+  # Create {Headers} from a hash.
   def self.[](hash)
     result = new
 
@@ -30,31 +24,73 @@ class Headers < Hash
     result
   end
 
-  def []=(name, value)
-    super(name, value.is_a?(Header) ? value : Header.new(name, value))
+  include Enumerable
+
+  # Create an empty {Headers}.
+  def initialize
+    @hash = Hash.new
   end
 
-  def merge!(other)
-    other.each {|name, value|
-      self[name] = value
+  # Iterate over the headers.
+  #
+  # @yield [name, value] the header name and value
+  # @return [self]
+  def each(&block)
+    return enum_for :each unless block
+
+    @hash.each {|_, header|
+      block.call [header.name, header.value]
     }
+
+    self
+  end
+
+  # Get the value of a header.
+  def [](name)
+    @hash[name.downcase]
+  end
+
+  def []=(name, value)
+    header = Header.new(name, value)
+
+    @hash[name.downcase] = header
+  end
+
+  # Push a header.
+  #
+  # @param header [Header] the header to push
+  # @return [self]
+  def <<(header)
+    @hash[header.name.downcase] = header
+
+    self
+  end
+
+  alias push <<
+
+  # Merge in place other headers.
+  #
+  # @param other [Headers, Hash, #each] the headers to merge
+  # @return [self]
+  def merge!(other)
+    if Headers === other
+      other.each {|header|
+        self << header
+      }
+    else
+      other.each {|name, value|
+        self[name] = value
+      }
+    end
+
+    self
+  end
+
+  # @!attribute [r] length
+  # @return [Integer] the number of headers
+  def length
+    @hash.length
   end
 end
 
 end; end
-
-module Kernel
-  def require_external(url)
-    result = if url.end_with? '.js'
-      `eval(#{File.read(url)})`
-    else
-      eval File.read(url)
-    end
-
-    if block_given?
-      yield result
-    else
-      result
-    end
-  end
-end
