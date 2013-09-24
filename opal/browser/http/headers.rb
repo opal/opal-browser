@@ -73,15 +73,9 @@ class Headers
   # @param other [Headers, Hash, #each] the headers to merge
   # @return [self]
   def merge!(other)
-    if Headers === other
-      other.each {|header|
-        self << header
-      }
-    else
-      other.each {|name, value|
-        self[name] = value
-      }
-    end
+    other.each {|name, value|
+      self[name] = value
+    }
 
     self
   end
