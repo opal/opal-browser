@@ -12,14 +12,16 @@ class Declaration
     definitions[name] = block
   end
 
-  def self.for(name, arguments)
+  def self.for(name, *arguments)
     if definition = definitions[name]
-      definition.call(arguments)
+      definition.call(*arguments)
     else
-      if String === arguments
-        [[name, arguments]]
+      argument, = *arguments
+
+      if String === argument
+        [[name, argument]]
       else
-        arguments.map {|sub, value|
+        argument.map {|sub, value|
           ["#{name}-#{sub}", value.to_s]
         }
       end
@@ -39,13 +41,13 @@ class Declaration
       end
     end
 
-    def method_missing(name, arg)
+    def method_missing(name, *args)
       if name.end_with? ?!
-        Declaration.for(name[0 .. -2], arg).each {|sub, value|
+        Declaration.for(name[0 .. -2], *args).each {|sub, value|
           `#@native.setProperty(#{sub}, #{value}, true)`
         }
       else
-        Declaration.for(name, arg).each {|sub, value|
+        Declaration.for(name, *args).each {|sub, value|
           `#@native.setProperty(#{sub}, #{value}, false)`
         }
       end
