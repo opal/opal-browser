@@ -55,28 +55,14 @@ class Builder
   def method_missing(name, arg)
     io = @io.last
 
-    if arg.is_a? Hash
-      arg.each {|sub, value|
-        if name.end_with? ?!
-          io << "\t#{name[0 .. -2]}-#{sub}: "
-          io << value.to_s
-          io << " !important;\n"
-        else
-          io << "\t#{name}-#{sub}: "
-          io << value.to_s
-          io << ";\n"
-        end
+    if name.end_with? ?!
+      Declaration.for(name[0 .. -2], arg).each {|sub, value|
+        io << "\t#{sub}: #{value} !important;\n"
       }
     else
-      if name.end_with? ?!
-        io << "\t#{name[0 .. -2]}: "
-        io << arg.to_s
-        io << " !important;\n"
-      else
-        io << "\t#{name}: "
-        io << arg.to_s
-        io << ";\n"
-      end
+      Declaration.for(name, arg).each {|sub, value|
+        io << "\t#{sub}: #{value};\n"
+      }
     end
   end
 

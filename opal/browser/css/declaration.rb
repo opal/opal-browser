@@ -4,6 +4,28 @@ class Declaration
   include Native::Base
   include Enumerable
 
+  def self.definitions
+    @definitions ||= {}
+  end
+
+  def self.define(name, &block)
+    definitions[name] = block
+  end
+
+  def self.for(name, arguments)
+    if definition = definitions[name]
+      definition.call(arguments)
+    else
+      if String === arguments
+        [[name, arguments]]
+      else
+        arguments.map {|sub, value|
+          ["#{name}-#{sub}", value.to_s]
+        }
+      end
+    end
+  end
+
   class DSL
     include Native::Base
 
@@ -18,20 +40,14 @@ class Declaration
     end
 
     def method_missing(name, arg)
-      if arg.is_a? Hash
-        arg.each {|sub, value|
-          if name.end_with? ?!
-            `#@native.setProperty(#{name[0 .. -2]} + "-" + #{sub}, #{value.to_s}, true)`
-          else
-            `#@native.setProperty(#{name} + "-" + #{sub}, #{value.to_s}, false)`
-          end
+      if name.end_with? ?!
+        Declaration.for(name[0 .. -2], arg).each {|sub, value|
+          `#@native.setProperty(#{sub}, #{value}, true)`
         }
       else
-        if name.end_with? ?!
-          `#@native.setProperty(#{name[0 .. -2]}, #{arg.to_s}, true)`
-        else
-          `#@native.setProperty(#{name}, #{arg.to_s}, false)`
-        end
+        Declaration.for(name, arg).each {|sub, value|
+          `#@native.setProperty(#{sub}, #{value}, false)`
+        }
       end
     end
   end
