@@ -15,11 +15,11 @@ class Request
     request.send(*parameters)
   end
 
-  DEFAULT_HEADERS = Headers[{
+  DEFAULT_HEADERS = {
     'X-Requested-With' => 'XMLHttpRequest',
     'X-Opal-Version'   => RUBY_ENGINE_VERSION,
     'Accept'           => 'text/javascript, text/html, application/xml, text/xml, */*'
-  }]
+  }
 
   # @!attribute [r] headers
   # @return [Headers] the request headers
