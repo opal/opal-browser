@@ -11,6 +11,13 @@ define :border do |args|
          ['-webkit-border-radius', value],
          ['border-radius', value]]
       else
+        value.map {|horizontal, value|
+          value.map {|vertical, value|
+            [["-moz-border-radius-#{horizontal}#{vertical}", value],
+             ["-webkit-border-#{horizontal}-#{vertical}-radius", value],
+             ["border-#{horizontal}-#{vertical}-radius", value]]
+          }.flatten(1)
+        }.flatten(1)
       end
 
     else
@@ -25,6 +32,10 @@ define :box do |args|
   args.map {|name, value|
     case name
     when :shadow
+      if Array === value
+        value = value.join ', '
+      end
+
       if String === value
         [['-moz-box-shadow', value],
          ['-webkit-box-shadow', value],
