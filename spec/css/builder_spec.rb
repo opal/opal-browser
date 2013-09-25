@@ -19,6 +19,14 @@ describe Browser::CSS::Builder do
     end
 
     css.to_s.should == "#lol {\n\t-moz-border-radius: 5px;\n\t-webkit-border-radius: 5px;\n\tborder-radius: 5px;\n}"
+
+    css = Browser::CSS::Builder.new do
+      rule '#lol' do
+        border radius: { top: { left: '5px' } }
+      end
+    end
+
+    css.to_s.should == "#lol {\n\t-moz-border-radius-topleft: 5px;\n\t-webkit-border-top-left-radius: 5px;\n\tborder-top-left-radius: 5px;\n}"
   end
 
   it 'builds box-shadow correctly' do
