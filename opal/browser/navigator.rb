@@ -36,10 +36,9 @@ class Navigator
   # Class to represent a browser plugin.
   class Plugin < Native::Array
     def initialize(plugin)
-      # FIXME: uncomment these
-      #super plugin do |m|
-        #MimeType.new(m)
-      #end
+      super plugin do |m|
+        MimeType.new(m)
+      end
     end
 
     # @!attribute [r] description
