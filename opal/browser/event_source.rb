@@ -2,6 +2,10 @@ module Browser
 
 # This class wraps `EventSource`.
 class EventSource
+  def self.supported?
+    defined? `window.EventSource`
+  end
+
   include Native::Base
   include DOM::Event::Target
 

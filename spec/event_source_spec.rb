@@ -39,4 +39,4 @@ describe Browser::EventSource do
       end
     end
   end
-end
+end if Browser::EventSource.supported?
