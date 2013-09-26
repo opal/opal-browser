@@ -40,4 +40,4 @@ describe Browser::Socket do
       end
     end
   end
-end
+end if Browser::Socket.supported?

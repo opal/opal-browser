@@ -2,6 +2,10 @@ module Browser
 
 # This class wraps `WebSocket`.
 class Socket
+  def self.supported?
+    defined? `window.WebSocket`
+  end
+
   include Native::Base
   include IO::Writable
   include DOM::Event::Target
