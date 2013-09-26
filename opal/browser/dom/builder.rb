@@ -71,15 +71,9 @@ class Builder < BasicObject
   end
 
   def extend!(element = nil, &block)
-    old, @current = @current, element if element
-
-    if block.arity == 0
-      instance_exec(&block)
-    else
-      block.call(self)
-    end
-
-    @current = old if element
+    old, @current = @current, element
+    block.call(self)
+    @current = old
 
     self
   end
@@ -108,11 +102,7 @@ class Builder < BasicObject
       end
 
       @current = element
-      result = if block.arity == 0
-        instance_eval(&block)
-      else
-        block.call(self)
-      end
+      result   = block.call(self)
       @current = parent
 
       if String === result
