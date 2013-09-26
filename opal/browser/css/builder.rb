@@ -3,6 +3,8 @@ require 'stringio'
 module Browser; module CSS
 
 class Builder
+  Rule = Struct.new(:selector, :definition)
+
   # TODO: fix usage of commas
   def self.selector(list)
     result = ''
@@ -23,9 +25,9 @@ class Builder
   end
 
   def initialize(&block)
-    @output   = []
     @selector = []
-    @io       = []
+    @current  = []
+    @rules    = []
 
     if block.arity == 0
       instance_exec(&block)
@@ -35,39 +37,35 @@ class Builder
   end
 
   def rule(name, &block)
-    io = StringIO.new
+    @selector << name
+    @current  << Rule.new(Builder.selector(@selector), Definition.new)
 
-    @selector.push(name)
-    @io.push(io)
-
-    io << "#{Builder.selector(@selector)} {\n"
-    if block.arity == 0
-      instance_exec(&block)
-    else
-      block.call(self)
-    end
-    io << "}"
+    block.call(self)
 
     @selector.pop
-    @output << @io.pop
+    @rules << @current.pop
   end
 
-  def method_missing(name, arg)
-    io = @io.last
-
-    if name.end_with? ?!
-      Declaration.for(name[0 .. -2], arg).each {|sub, value|
-        io << "\t#{sub}: #{value} !important;\n"
-      }
-    else
-      Declaration.for(name, arg).each {|sub, value|
-        io << "\t#{sub}: #{value};\n"
-      }
-    end
+  def method_missing(name, *args, &block)
+    @current.last.definition.__send__(name, *args, &block)
   end
 
   def to_s
-    @output.reverse.map(&:string).join("\n\n")
+    @rules.reverse.map {|rule|
+      io = StringIO.new
+
+      io << "#{rule.selector} {\n"
+      rule.definition.each {|style|
+        if style.important?
+          io << "\t#{style.name}: #{style.value.to_s} !important;\n"
+        else
+          io << "\t#{style.name}: #{style.value.to_s};\n"
+        end
+      }
+      io << "}"
+
+      io.string
+    }.join("\n\n")
   end
 end
 
