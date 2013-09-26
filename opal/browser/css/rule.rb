@@ -1,5 +1,3 @@
-require 'browser/css/rule/style'
-
 module Browser; module CSS
 
 class Rule

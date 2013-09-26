@@ -4,13 +4,6 @@ class Style < Rule
   alias_native :selector, :selectorText
   alias_native :id, :selectorText
 
-  # FIXME: when ^ is fixed remove these
-  def selector
-    `#@native.selectorText`
-  end
-  alias id selector
-  # FIXME: ^
-
   def declaration
     Declaration.new(`#@native.style`)
   end

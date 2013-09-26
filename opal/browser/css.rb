@@ -2,8 +2,11 @@ require 'browser/css/unit'
 require 'browser/css/definition'
 require 'browser/css/builder'
 require 'browser/css/declaration'
+
 require 'browser/css/style_sheet'
+
 require 'browser/css/rule'
+require 'browser/css/rule/style'
 
 module Kernel
   # Create a <style> element from a string or a block using the
