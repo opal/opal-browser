@@ -1,27 +1,6 @@
 module Browser; module CSS
 
 class Definition
-  class Unit
-    attr_reader :type
-
-    def initialize(number, type)
-      @number = number
-      @type   = type
-    end
-
-    def to_i
-      @number.to_i
-    end
-
-    def to_f
-      @number.to_f
-    end
-
-    def to_s
-      "#{@number}#{@type}"
-    end
-  end
-
   Style = Struct.new(:name, :value, :important?)
 
   def initialize(&block)
@@ -48,10 +27,10 @@ class Definition
 
     if Hash === argument
       argument.each {|sub, value|
-        @style << Style.new("#{name}-#{sub}", value.to_s, important)
+        @style << Style.new("#{name}-#{sub}", value, important)
       }
     else
-      @style << Style.new(name, argument.to_s, important)
+      @style << Style.new(name, argument, important)
     end
 
     self
@@ -59,66 +38,6 @@ class Definition
 end
 
 end; end
-
-class Numeric
-  Unit = Browser::CSS::Definition::Unit
-
-  def em
-    Unit.new(self, :em)
-  end
-
-  def ex
-    Unit.new(self, :ex)
-  end
-
-  def ch
-    Unit.new(self, :ch)
-  end
-
-  def rem
-    Unit.new(self, :rem)
-  end
-
-  def vh
-    Unit.new(self, :vh)
-  end
-
-  def vw
-    Unit.new(self, :vw)
-  end
-
-  def vmin
-    Unit.new(self, :vmin)
-  end
-
-  def vmax
-    Unit.new(self, :vmax)
-  end
-
-  def px
-    Unit.new(self, :px)
-  end
-
-  def mm
-    Unit.new(self, :mm)
-  end
-
-  def cm
-    Unit.new(self, :cm)
-  end
-
-  def in
-    Unit.new(self, :in)
-  end
-
-  def pt
-    Unit.new(self, :pt)
-  end
-
-  def pc
-    Unit.new(self, :pc)
-  end
-end
 
 =begin
 define :border do |args|

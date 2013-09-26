@@ -57,9 +57,9 @@ class Builder
       io << "#{rule.selector} {\n"
       rule.definition.each {|style|
         if style.important?
-          io << "\t#{style.name}: #{style.value.to_s} !important;\n"
+          io << "\t#{style.name}: #{style.value} !important;\n"
         else
-          io << "\t#{style.name}: #{style.value.to_s};\n"
+          io << "\t#{style.name}: #{style.value};\n"
         end
       }
       io << "}"
