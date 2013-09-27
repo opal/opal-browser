@@ -12,9 +12,9 @@ module Compatibility
   end
 
   # FIXME: v
-  # def self.has?(parent = `window`, object, method)
+  # def self.respond_to?(parent = `window`, object, method)
   # ^
-  def self.has?(*args)
+  def self.respond_to?(*args)
     if args.length == 2
       parent         = `window`
       object, method = args
@@ -23,6 +23,10 @@ module Compatibility
     end
 
     %x{
+      if (!#{parent}) {
+        return false;
+      }
+
       var klass = #{parent}[#{object}];
 
       if (!klass) {
@@ -32,6 +36,28 @@ module Compatibility
       return !!klass.prototype[#{method}];
     }
   end
+
+  # FIXME: v
+  # def self.has?(parent = `window`, name)
+  # ^
+  def self.has?(*args)
+    if args.length == 1
+      parent = `window`
+      name,  = args
+    else
+      parent, name = args
+    end
+
+    %x{
+      if (!#{parent}) {
+        return false;
+      }
+
+      return !!#{parent}[#{name}];
+    }
+  end
 end
+
+C = Compatibility
 
 end
