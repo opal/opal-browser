@@ -11,6 +11,10 @@ class Document < Element
     end
   end
 
+  def window
+    Window.new(`#@native.defaultView`)
+  end
+
   def create_text(content)
     DOM(`#@native.createTextNode(#{content})`)
   end
