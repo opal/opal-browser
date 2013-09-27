@@ -33,7 +33,7 @@ module Compatibility
         return false;
       }
 
-      return !!klass.prototype[#{method}];
+      return typeof(klass.prototype[#{method}]) === "function";
     }
   end
 
@@ -53,7 +53,7 @@ module Compatibility
         return false;
       }
 
-      return !!#{parent}[#{name}];
+      return #{parent}[#{name}] != null;
     }
   end
 end
