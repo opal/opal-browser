@@ -181,6 +181,10 @@ class Element < Node
     `#@native.matches(#{selector})`
   end
 
+  def window
+    document.window
+  end
+
   def inspect
     "#<DOM::Element: #{name}>"
   end
