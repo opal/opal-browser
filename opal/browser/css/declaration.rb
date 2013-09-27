@@ -31,7 +31,15 @@ class Declaration
   end
 
   def [](name)
-    `#@native.getPropertyValue(#{name})`
+    %x{
+      var result = #@native.getPropertyValue(#{name});
+
+      if (result == null || result === "") {
+        return nil;
+      }
+
+      return result;
+    }
   end
 
   def []=(name, value)
