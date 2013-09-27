@@ -206,6 +206,10 @@ class Element < Node
     self
   end
 
+  def style!
+    CSS::Declaration.new(`#{window.to_n}.getComputedStyle(#@native, null)`)
+  end
+
   def matches?(selector)
     `#@native.matches(#{selector})`
   end
