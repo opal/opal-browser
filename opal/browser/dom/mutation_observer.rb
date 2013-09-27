@@ -36,10 +36,6 @@ class MutationObserver
 
     alias_native :old, :oldValue
     alias_native :attribute, :attributeName
-
-    def old
-      `#@native.oldValue || nil`
-    end
   end
 
   def initialize(&block)
