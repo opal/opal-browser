@@ -1,21 +1,25 @@
 module Browser; module DOM; class Element
 
-unless defined?(`window.Element.prototype.matches`)
-  if defined?(`window.Element.prototype.oMatchesSelector`)
+unless Compatibility.has?(:Element, :matches)
+  if Compatibility.has?(:Element, :oMatchesSelector)
     def matches?(selector)
       `#@native.oMatchesSelector(#{selector})`
     end
-  elsif defined?(`window.Element.prototype.msMatchesSelector`)
+  elsif Compatibility.has?(:Element, :msMatchesSelector)
     def matches?(selector)
       `#@native.msMatchesSelector(#{selector})`
     end
-  elsif defined?(`window.Element.prototype.mozMatchesSelector`)
+  elsif Compatibility.has?(:Element, :mozMatchesSelector)
     def matches?(selector)
       `#@native.mozMatchesSelector(#{selector})`
     end
-  elsif defined?(`window.Element.prototype.webkitMatchesSelector`)
+  elsif Compatibility.has?(:Element, :webkitMatchesSelector)
     def matches?(selector)
       `#@native.webkitMatchesSelector(#{selector})`
+    end
+  elsif Compatibility.sizzle?
+    def matches?(selector)
+      `Sizzle.matchesSelector(#@native, #{selector})`
     end
   else
     def matches?(*)
