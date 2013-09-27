@@ -96,14 +96,43 @@ class Element < Node
   end
 
   Size     = Struct.new(:width, :height)
-  Position = Struct.new(:x, :y)
+  Position = Struct.new(:x, :y, :parent)
 
   def size
     Size.new(`#@native.clientWidth`, `#@native.clientHeight`)
   end
 
   def position
-    Size.new(`#@native.clientLeft`, `#@native.clientTop`)
+    offset        = self.offset
+    parent        = offset.parent
+    parent_offset = Position.new(0, 0)
+
+    if style[:position] == :fixed
+      unless parent =~ :html
+        parent_offset = parent.offset
+      end
+
+      parent_offset.y += parent.style['border-top-width'] || 0
+      parent_offset.x += parent.style['border-left-width'] || 0
+    end
+
+    Position.new(offset.x - parent_offset.x - style['margin-left'] || 0,
+                 offset.y - parent_offset.y - style['margin-top'] || 0,
+                 parent)
+  end
+
+  def offset
+    doc  = document
+    root = doc.root.to_n
+    win  = doc.window.to_n
+
+    %x{
+      var box = #@native.getBoundingClientRect(),
+          y   = box.top + (#{win}.pageYOffset || #{root}.scrollTop) - (#{root}.clientTop || 0),
+          x   = box.left + (#{win}.pageXOffset || #{root}.scrollLeft) - (#{root}.clientLeft || 0);
+    }
+
+    Position.new(`x`, `y`, DOM(`#@native.offsetParent || #{root}`))
   end
 
   def /(*paths)
