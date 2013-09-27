@@ -36,6 +36,10 @@ class Node
     `#@native === #{Native.try_convert(other)}`
   end
 
+  def =~(name)
+    self.name.downcase == name.downcase
+  end
+
   def <<(node)
     add_child(node)
   end
