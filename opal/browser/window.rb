@@ -82,6 +82,28 @@ class Window
   alias once_after once
 
   alias after once
+
+  Position = Struct.new(:x, :y)
+
+  def scroll(to = nil)
+    if to
+      x = to[:x] || scroll.x
+      y = to[:y] || scroll.y
+
+      `#@native.scrollTo(#{x}, #{y})`
+    else
+      %x{
+        var doc  = #@native.document,
+            root = doc.documentElement,
+            body = doc.body;
+
+        var x = root.scrollLeft || body.scrollLeft,
+            y = root.scrollTop || body.scrollTop;
+      }
+
+      Position.new(`x`, `y`)
+    end
+  end
 end
 
 end
