@@ -88,6 +88,10 @@ class Unit
     @number.to_f
   end
 
+  def to_u
+    self
+  end
+
   def to_s
     "#{@number}#{@type}"
   end
@@ -194,6 +198,10 @@ class Numeric
     else
       Unit.new(self, :%)
     end
+  end
+
+  def to_u
+    self
   end
 end
 
