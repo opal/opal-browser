@@ -196,3 +196,19 @@ class Numeric
     end
   end
 end
+
+class String
+  def to_u
+    if matches = self.match(/^([\d+.]+)(.+)?$/)
+      value = matches[1].to_f
+
+      if unit = matches[2]
+        value.__send__(unit[2])
+      else
+        value
+      end
+    else
+      raise ArgumentError, "not a unit"
+    end
+  end
+end
