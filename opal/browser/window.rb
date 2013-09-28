@@ -83,7 +83,9 @@ class Window
 
   alias after once
 
-  Position = Struct.new(:x, :y)
+  def size
+    Size.new(`#@native.innerWidth`, `#@native.innerHeight`)
+  end
 
   def scroll(to = nil)
     if to
