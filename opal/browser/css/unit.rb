@@ -211,7 +211,7 @@ class String
       value = matches[1].to_f
 
       if unit = matches[2]
-        value.__send__(unit[2])
+        value.__send__(unit[2].downcase)
       else
         value
       end
