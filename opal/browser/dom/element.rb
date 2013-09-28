@@ -95,8 +95,8 @@ class Element < Node
     `#@native.removeAttribute(name)`
   end
 
-  def size
-    Size.new(`#@native.clientWidth`, `#@native.clientHeight`)
+  def size(*inc)
+    Size.new(`#@native.offsetWidth`, `#@native.offsetHeight`)
   end
 
   def position
