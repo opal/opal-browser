@@ -1,3 +1,8 @@
+module Browser
+  Size     = Struct.new(:width, :height)
+  Position = Struct.new(:x, :y, :parent)
+end
+
 class String
   # Encode as URI component.
   #

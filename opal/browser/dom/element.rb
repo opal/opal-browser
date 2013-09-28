@@ -95,9 +95,6 @@ class Element < Node
     `#@native.removeAttribute(name)`
   end
 
-  Size     = Struct.new(:width, :height)
-  Position = Struct.new(:x, :y, :parent)
-
   def size
     Size.new(`#@native.clientWidth`, `#@native.clientHeight`)
   end
