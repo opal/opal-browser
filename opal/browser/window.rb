@@ -9,6 +9,8 @@ require 'browser/cookies'
 require 'browser/dom'
 require 'browser/css'
 
+require 'browser/window/compatibility'
+
 module Browser
 
 # Wrapper class for the `window` object, an instance of it gets
