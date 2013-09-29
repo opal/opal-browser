@@ -1,22 +1,27 @@
-module Browser; class Window
+module Browser; class Window; class Scroll
 
 unless C.has? `document.documentElement`, :scrollLeft
   if C.has? :pageXOffset
-    def scroll(to = nil)
-      if to
-        x = to[:x] || scroll.x
-        y = to[:y] || scroll.y
+    def position
+      Position.new(x, y)
+    end
 
-        `#@native.scrollTo(#{x}, #{y})`
-      else
-        Position.new(`#@native.pageXOffset`, `#@native.pageYOffset`)
-      end
+    def x
+      `#@native.pageXOffset`
+    end
+
+    def y
+      `#@native.pageYOffset`
     end
   else
-    def scroll(*)
-      raise NotImplementedError, 'scroll on window not supported'
+    def x
+      raise NotImplementedError, 'window scroll unsupported'
+    end
+
+    def y
+      raise NotImplementedError, 'window scroll unsupported'
     end
   end
 end
 
-end; end
+end; end; end

@@ -1,10 +1,13 @@
-module Browser; class Window
+module Browser; class Window; class Size
 
-unless C.has? :innerHeight
-  def size
-    Size.new(`#@native.document.documentElement.clientWidth`,
-             `#@native.document.documentElement.clientHeight`)
+unless C.has? :outerHeight
+  def width
+    raise NotImplementedError, 'window outer size not supported'
+  end
+
+  def height
+    raise NotImplementedError, 'window outer size not supported'
   end
 end
 
-end; end
+end; end; end
