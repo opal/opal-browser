@@ -30,6 +30,21 @@ class Message < Event
       }
     }
   end
+
+  alias_native :origin
+
+  def source
+    %x{
+      var source = #@native.source;
+
+      if (source instanceof window.Window) {
+        return #{Window.new(`source`)};
+      }
+      else {
+        return nil;
+      }
+    }
+  end
 end
 
 end; end; end
