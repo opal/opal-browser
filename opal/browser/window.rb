@@ -120,6 +120,14 @@ class Window
     Scroll.new(self)
   end
 
+  # Send a message to the window.
+  #
+  # @param message [String] the message
+  # @param options [Hash] optional `to: target`
+  def send!(message, options = {})
+    `#@native.postMessage(#{message}, #{options[:to] || '*'})`
+  end
+
   # Execute the block every given seconds.
   #
   # @param time [Float] the seconds between every call
