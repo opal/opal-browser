@@ -5,7 +5,7 @@ class Screen
   include DOM::Event::Target
 
   target {|value|
-    Screen.new(value) if `window.Screen && #{value} instanceof Screen`
+    Screen.new(value) if `window.Screen && #{value} instanceof window.Screen`
   }
 
   alias_native :width

@@ -4,12 +4,12 @@ require 'browser/history'
 require 'browser/interval'
 require 'browser/timeout'
 require 'browser/console'
-require 'browser/screen'
 require 'browser/cookies'
 
 require 'browser/dom'
 require 'browser/css'
 
+require 'browser/screen'
 require 'browser/window/view'
 require 'browser/window/size'
 require 'browser/window/scroll'
