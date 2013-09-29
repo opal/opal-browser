@@ -4,6 +4,7 @@ require 'browser/history'
 require 'browser/interval'
 require 'browser/timeout'
 require 'browser/console'
+require 'browser/screen'
 require 'browser/cookies'
 
 require 'browser/dom'
@@ -66,6 +67,13 @@ class Window
   # @return [Console]
   def console
     Console.new(`#@native.console`)
+  end
+
+  # Get the {Screen} for this window.
+  #
+  # @return [Screen]
+  def screen
+    Screen.new(`#@native.screen`)
   end
 
   # Get the {View} for the window.
