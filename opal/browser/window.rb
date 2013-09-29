@@ -20,6 +20,29 @@ module Browser
 # Wrapper class for the `window` object, an instance of it gets
 # set to `$window`.
 class Window
+  def self.open(url, options)
+    name     = options.delete(:name)
+    features = options.map {|key, value|
+      value = case value
+              when true  then :yes
+              when false then :no
+              else            value
+              end
+
+      "#{key}=#{value}"
+    }.join(?,)
+
+    %x{
+      var win = window.open(#{url}, #{name}, #{features});
+
+      if (win == null) {
+        return nil;
+      }
+
+      return #{new(`win`)};
+    }
+  end
+
   include Native::Base
   include DOM::Event::Target
 
