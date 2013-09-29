@@ -1,6 +1,6 @@
 module Browser
   Size     = Struct.new(:width, :height)
-  Position = Struct.new(:x, :y, :parent)
+  Position = Struct.new(:x, :y)
 end
 
 class String
