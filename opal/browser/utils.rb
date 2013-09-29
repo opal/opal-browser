@@ -32,16 +32,3 @@ class String
     `decodeURI(#{self})`
   end
 end
-
-class Proc
-  # Defer the function to be called as soon as possible.
-  def defer(*args)
-    %x{
-      var func = #{self};
-
-      setTimeout(function() {
-        #{`func`.call(*args)};
-      });
-    }
-  end
-end
