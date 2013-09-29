@@ -216,7 +216,7 @@ class String
         value
       end
     else
-      raise ArgumentError, "not a unit"
+      0
     end
   end
 end
