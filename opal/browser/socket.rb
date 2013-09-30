@@ -11,7 +11,7 @@ class Socket
   include DOM::Event::Target
 
   target {|value|
-    Socket.new(value) if `window.WebSocket && #{value} instanceof window.WebSocket`
+    Socket.new(value) if Native.is_a?(value, `window.WebSocket`)
   }
 
   # Create a connection to the given URL, optionally using the given protocol.

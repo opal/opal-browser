@@ -10,7 +10,7 @@ class EventSource
   include DOM::Event::Target
 
   target {|value|
-    EventSource.new(value) if `window.EventSource && #{value} instanceof window.EventSource`
+    EventSource.new(value) if Native.is_a?(value, `window.EventSource`)
   }
 
   # Create an {EventSource} on the given path.
