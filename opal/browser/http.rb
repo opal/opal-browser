@@ -3,6 +3,8 @@ require 'browser/http/headers'
 require 'browser/http/request'
 require 'browser/http/response'
 
+require 'browser/http/compatibility'
+
 module Browser
 
 module HTTP

@@ -42,7 +42,7 @@ class Request
   # @yield [request] if the block has a parameter the request is passed
   #                  otherwise it's instance_exec'd
   def initialize(&block)
-    super(`new XMLHttpRequest()`)
+    super(transport)
 
     @headers      = Headers[DEFAULT_HEADERS]
     @method       = :get
@@ -59,6 +59,10 @@ class Request
     else
       block.call(self)
     end if block
+  end
+
+  def transport
+    `new XMLHttpRequest()`
   end
 
   # Check if the request has been opened.
