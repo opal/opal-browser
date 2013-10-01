@@ -1,8 +1,12 @@
 module Browser
 
 module Compatibility
-  def self.immediate?
-    has? :setImmediate
+  def self.immediate?(prefix = nil)
+    if prefix
+      has?("#{prefix}SetImmediate")
+    else
+      has?(:setImmediate)
+    end
   end
 
   def self.post_message?
@@ -26,79 +30,76 @@ module Compatibility
 end
 
 class Immediate
-  unless C.immediate?
-    if C.post_message?
-      @@tasks = {}
-      @@prefix = "opal.browser.immediate.#{rand(1_000_000)}."
+  if C.immediate?
+    def dispatch
+      @id = `window.setImmediate(function() {
+        #{@function.call(@arguments, &@block)};
+      })`
+    end
 
-      $window.on :message do |e|
-        if String === e.data && e.data.start_with?(@@prefix)
-          if task = @@tasks.delete(e.data[@@prefix.length .. -1])
-            task[0].call(*task[1], &task[2])
-          end
+    def prevent
+      `window.clearImmediate(#@id)`
+    end
+  elsif C.immediate? :ms
+    def dispatch
+      @id = `window.msSetImmediate(function() {
+        #{@function.call(@arguments, &@block)};
+      })`
+    end
+
+    def prevent
+      `window.msClearImmediate(#@id)`
+    end
+  elsif C.post_message?
+    @@tasks  = {}
+    @@prefix = "opal.browser.immediate.#{rand(1_000_000)}."
+
+    $window.on :message do |e|
+      if String === e.data && e.data.start_with?(@@prefix)
+        if task = @@tasks.delete(e.data[@@prefix.length .. -1])
+          task[0].call(*task[1], &task[2])
         end
       end
+    end
 
-      def initialize(func, *args, &block)
-        @aborted     = false
-        @id          = rand(1_000_000).to_s
-        @@tasks[@id] = [func, args, block]
+    def dispatch
+      @id          = rand(1_000_000).to_s
+      @@tasks[@id] = [@function, @arguments, @block]
 
-        $window.send! "#{@@prefix}#{@id}"
-      end
+      $window.send! "#{@@prefix}#{@id}"
+    end
 
-      def abort
-        return if aborted?
+    def prevent
+      @@tasks.delete(@id)
+    end
+  elsif C.ready_state_change?
+    def dispatch
+      %x{
+        var script = document.createElement("script");
 
-        @aborted = true
-        @@tasks.delete(@id)
+        script.onreadystatechange = function() {
+          if (!#{aborted?}) {
+            #{@function.call(@arguments, &@block)};
+          }
 
-        self
-      end
-    elsif C.ready_state_change?
-      def initialize(func, *args, &block)
-        @aborted = false
+          script.onreadystatechange = null;
+          script.parentNode.removeChild(script);
+        };
 
-        %x{
-          var that   = #{self},
-              script = document.createElement("script");
+        document.documentElement.appendChild(script);
+      }
+    end
 
-          script.onreadystatechange = function() {
-            if (!#{`that`.aborted?}) {
-              #{func.call(*args, &block)};
-            }
+    def prevent; end
+  else
+    def dispatch
+      @id = `window.setTimeout(function() {
+        #{@function.call(*@arguments, &@block)};
+      }, 0)`
+    end
 
-            script.onreadystatechange = null;
-            script.parentNode.removeChild(script);
-          };
-
-          document.documentElement.appendChild(script);
-        }
-      end
-
-      def abort
-        return if aborted?
-
-        @aborted = true
-
-        self
-      end
-    else
-      def initialize(func, *args, &block)
-        @aborted = false
-        @id      = `window.setTimeout(function() {
-          #{func.call(*args, &block)};
-        }, 0)`
-      end
-
-      def abort
-        return if aborted?
-
-        @aborted = true
-        `window.clearTimeout(#@id)`
-
-        self
-      end
+    def prevent
+      `window.clearTimeout(#@id)`
     end
   end
 end

@@ -4,22 +4,28 @@ module Browser
 
 # FIXME: drop the immediate check when require order is fixed
 class Immediate
-  if C.immediate?
-    def initialize(func, *args, &block)
-      @aborted = false
-      @id      = `window.setImmediate(function() {
-        #{func.call(*args, &block)};
-      })`
-    end
+  def initialize(func, args, &block)
+    @aborted   = false
+    @function  = func
+    @arguments = args
+    @block     = block
+  end
 
-    def abort
-      return if aborted?
+  def dispatch
+    raise NotImplementedError
+  end unless method_defined? :dispatch
 
-      @aborted = true
-      `window.clearImmediate(#@id)`
+  def prevent
+    raise NotImplementedError
+  end unless method_defined? :prevent
 
-      self
-    end
+  def abort
+    return if aborted?
+
+    @aborted = true
+    prevent
+
+    self
   end
 
   def aborted?
@@ -32,6 +38,6 @@ end
 class Proc
   # Defer the function to be called as soon as possible.
   def defer(*args, &block)
-    Browser::Immediate.new(self, *args, &block)
+    Browser::Immediate.new(self, args, &block).tap(&:dispatch)
   end
 end
