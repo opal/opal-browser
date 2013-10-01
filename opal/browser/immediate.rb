@@ -2,7 +2,7 @@ require 'browser/compatibility/immediate'
 
 module Browser
 
-# FIXME: drop the immediate check when require order is fixed
+# FIXME: drop the method_defined? checks when require order is fixed
 class Immediate
   def initialize(func, args, &block)
     @aborted   = false
