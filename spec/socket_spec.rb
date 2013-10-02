@@ -2,11 +2,11 @@ require 'spec_helper'
 require 'browser/socket'
 
 describe Browser::Socket do
-  # TODO: find out why `Browser::Socket.new "ws://#{$window.location.host}/socket" do end`
-  #       doesn't work
+  # FIXME: find out why it doesn't work inline
+  ws = "ws://#{$window.location.host}/socket"
 
   async 'creates a socket' do
-    Browser::Socket.new 'ws://localhost:9292/socket' do |s|
+    Browser::Socket.new ws do |s|
       s.on :open do |e|
         run_async {
           e.target.should be_kind_of Browser::Socket
@@ -16,7 +16,7 @@ describe Browser::Socket do
   end
 
   async 'receives messages' do
-    Browser::Socket.new 'ws://localhost:9292/socket' do |s|
+    Browser::Socket.new ws do |s|
       s.on :message do |e|
         run_async {
           e.data.should == 'lol'
@@ -26,7 +26,7 @@ describe Browser::Socket do
   end
 
   async 'sends messages' do
-    Browser::Socket.new 'ws://localhost:9292/socket' do |s|
+    Browser::Socket.new ws do |s|
       s.on :message do |e|
         s.print 'omg'
 
