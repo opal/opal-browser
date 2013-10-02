@@ -123,4 +123,15 @@ class Console
   end
 end
 
+class Window
+  # Get the {Console} for this window.
+  #
+  # @return [Console]
+  def console
+    Console.new(`#@native.console`)
+  end
+end
+
+$console = $window.console
+
 end

@@ -65,4 +65,13 @@ class Location
   alias_native :query=, :search=
 end
 
+class Window
+  # Get the {Location} object for this window.
+  #
+  # @return [Location]
+  def location
+    Location.new(`#@native.location`) if `#@native.location`
+  end
+end
+
 end

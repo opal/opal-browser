@@ -139,4 +139,13 @@ class Navigator
   end
 end
 
+class Window
+  # Get the {Navigator} object for this window.
+  #
+  # @return [Navigator]
+  def navigator
+    Navigator.new(`#@native.navigator`) if `#@native.navigator`
+  end
+end
+
 end

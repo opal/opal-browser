@@ -73,3 +73,25 @@ module Kernel
     end
   end
 end
+
+module Browser
+
+class Window
+  include DOM::Event::Target
+
+  target {|value|
+    $window if `#{value} == window`
+  }
+
+
+  # Get the {DOM::Document} for this window.
+  #
+  # @return [DOM::Document]
+  def document
+    DOM(`#@native.document`)
+  end
+end
+
+end
+
+$document = $window.document

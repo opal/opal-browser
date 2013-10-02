@@ -40,4 +40,13 @@ class History
   end
 end
 
+class Window
+  # Get the {History} object for this window.
+  #
+  # @return [History]
+  def history
+    History.new(`#@native.history`) if `#@native.history`
+  end
+end
+
 end

@@ -28,4 +28,13 @@ class Screen
   alias_native :orientation
 end
 
+class Window
+  # Get the {Screen} for this window.
+  #
+  # @return [Screen]
+  def screen
+    Screen.new(`#@native.screen`)
+  end
+end
+
 end

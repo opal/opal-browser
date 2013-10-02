@@ -1,15 +1,6 @@
-require 'browser/location'
-require 'browser/navigator'
-require 'browser/history'
 require 'browser/interval'
 require 'browser/timeout'
-require 'browser/console'
-require 'browser/cookies'
 
-require 'browser/dom'
-require 'browser/css'
-
-require 'browser/screen'
 require 'browser/window/view'
 require 'browser/window/size'
 require 'browser/window/scroll'
@@ -44,59 +35,12 @@ class Window
   end
 
   include Native::Base
-  include DOM::Event::Target
-
-  target {|value|
-    $window if `#{value} == window`
-  }
 
   # Alert the passed string.
   def alert(value)
     `#@native.alert(value)`
 
     value
-  end
-
-  # Get the {Location} object for this window.
-  #
-  # @return [Location]
-  def location
-    Location.new(`#@native.location`) if `#@native.location`
-  end
-
-  # Get the {Navigator} object for this window.
-  #
-  # @return [Navigator]
-  def navigator
-    Navigator.new(`#@native.navigator`) if `#@native.navigator`
-  end
-
-  # Get the {History} object for this window.
-  #
-  # @return [History]
-  def history
-    History.new(`#@native.history`) if `#@native.history`
-  end
-
-  # Get the {DOM::Document} for this window.
-  #
-  # @return [DOM::Document]
-  def document
-    DOM(`#@native.document`)
-  end
-
-  # Get the {Console} for this window.
-  #
-  # @return [Console]
-  def console
-    Console.new(`#@native.console`)
-  end
-
-  # Get the {Screen} for this window.
-  #
-  # @return [Screen]
-  def screen
-    Screen.new(`#@native.screen`)
   end
 
   # Get the {View} for the window.
@@ -151,9 +95,7 @@ end
 
 end
 
-$window   = Browser::Window.new(`window`)
-$document = $window.document
-$console  = $window.console
+$window = Browser::Window.new(`window`)
 
 module Kernel
   # (see Browser::Window#alert)
