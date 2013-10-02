@@ -8,7 +8,7 @@ class Element < Node
   include Event::Target
 
   target {|value|
-    # TODO: oneline rescue
+    # FIXME: oneline rescue
 
     begin
       DOM(value)
