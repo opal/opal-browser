@@ -220,3 +220,9 @@ class String
     end
   end
 end
+
+class NilClass
+  def to_u
+    0
+  end
+end
