@@ -1,3 +1,5 @@
+require 'browser/location'
+
 module Browser
 
 class History
