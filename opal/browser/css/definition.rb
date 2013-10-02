@@ -25,27 +25,24 @@ class Definition
     Gradient.new(*args)
   end
 
-  def background(*args); _background(false, *args); end
-  def background!(*args); _background(true, *args); end
-
-  def _background(important, *args)
+  def background(*args)
     if Gradient === args.first
       if args.length > 1
         raise NotImplementedError, "multiple gradients not implemented yet"
       end
 
       args.first.each {|s|
-        style s.name || 'background-image', s.value, important
+        style s.name || 'background-image', s.value
       }
     else
       options = args.first
 
-      if String === options
-        style :background, options, important
-      else
+      if Hash === options
         argument.each {|sub, value|
-          style "background-#{sub}", value, important
+          style "background-#{sub}", value
         }
+      else
+        style :background, options
       end
     end
   end
@@ -55,11 +52,7 @@ class Definition
       options.each {|name, value|
         case name
         when :radius
-          if String === value
-            style '-moz-border-radius', value
-            style '-webkit-border-radius', value
-            style 'border-radius', value
-          else
+          if Hash === value
             value.each {|horizontal, value|
               value.each {|vertical, value|
                 style "-moz-border-radius-#{horizontal}#{vertical}", value
@@ -67,15 +60,19 @@ class Definition
                 style "border-#{horizontal}-#{vertical}-radius", value
               }
             }
+          else
+            style '-moz-border-radius', value
+            style '-webkit-border-radius', value
+            style 'border-radius', value
           end
 
         when :color
-          if String === value
-            style 'border-color', value
-          else
+          if Hash === value
             value.each {|name, value|
               style "border-#{name}-color", value
             }
+          else
+            style 'border-color', value
           end
 
         else
