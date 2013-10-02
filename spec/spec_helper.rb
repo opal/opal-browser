@@ -1,3 +1,6 @@
+require 'json2'
+require 'sizzle'
+
 require 'browser'
 
 module OpalSpec
