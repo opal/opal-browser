@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'browser/history'
 
 describe Browser::History do
   describe '#current' do
