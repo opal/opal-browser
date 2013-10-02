@@ -38,5 +38,4 @@ describe Browser::CSS::Builder do
 
     css.to_s.should == "#lol {\n\t-moz-box-shadow: 0 0 5px black;\n\t-webkit-box-shadow: 0 0 5px black;\n\tbox-shadow: 0 0 5px black;\n}"
   end
-
 end
