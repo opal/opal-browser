@@ -12,6 +12,8 @@ describe Browser::DOM::MutationObserver do
       run_async {
         mutations.first.added.first.name.should == 'DIV'
       }
+
+      obs.disconnect
     }
 
     obs.observe $document[:mutate]
@@ -24,6 +26,8 @@ describe Browser::DOM::MutationObserver do
       run_async {
         mutations.first.removed.first.name.should == 'SPAN'
       }
+
+      obs.disconnect
     }
 
     obs.observe $document[:mutate]
