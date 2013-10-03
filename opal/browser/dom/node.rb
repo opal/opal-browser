@@ -101,8 +101,15 @@ class Node
   alias before add_previous_sibling
 
   def remove
-    parent.remove_child(self)
+    detach
+    clear
   end
+
+  def detach
+    parent.remove_child(self) if parent
+  end
+
+  def clear; end
 
   def remove_child(element)
     `#@native.removeChild(#{Native.try_convert(element)})`
