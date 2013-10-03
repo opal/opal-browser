@@ -103,10 +103,14 @@ class Node
   def remove
     detach
     clear
+
+    self
   end
 
   def detach
     parent.remove_child(self) if parent
+
+    self
   end
 
   def clear; end
