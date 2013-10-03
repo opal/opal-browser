@@ -19,17 +19,16 @@ class Element < Node
 
   alias_native :id
 
-  def add_class(name)
-    `#@native.className = #{class_names.push(name).uniq.join ' '}`
+  def add_class(*names)
+    `#@native.className = #{(class_names + names).uniq.join ' '}`
 
     self
   end
 
-  def remove_class(name)
-    names = class_names
-    names.delete(name)
+  def remove_class(*names)
+    `#@native.className = #{(class_names - names).join ' '}`
 
-    `#@native.className = #{names.join ' '}`
+    self
   end
 
   alias_native :class_name, :className
