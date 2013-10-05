@@ -30,6 +30,10 @@ class Declaration
     self
   end
 
+  def delete(name)
+    `#@native.removeProperty(#{name})`
+  end
+
   def [](name)
     %x{
       var result = #@native.getPropertyValue(#{name});
@@ -43,7 +47,7 @@ class Declaration
   end
 
   def []=(name, value)
-    `#@native.setProperty(#{name}, #{value}, false)`
+    `#@native.setProperty(#{name}, #{value.to_s}, false)`
   end
 
   def important?(name)
