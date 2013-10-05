@@ -24,6 +24,12 @@ class Unit
     [@number, @type].hash
   end
 
+  %i[em ex ch rem vh vw vmin vmax px mm cm in pt pc].each {|name|
+    define_method name do
+      Unit.new(convert(self, name), name)
+    end
+  }
+
   def +(other)
     return Unit.new(@number + other, @type) unless Unit === other
 
@@ -134,61 +140,11 @@ end; end
 class Numeric
   Unit = Browser::CSS::Unit
 
-  def em
-    Unit.new(self, :em)
-  end
-
-  def ex
-    Unit.new(self, :ex)
-  end
-
-  def ch
-    Unit.new(self, :ch)
-  end
-
-  def rem
-    Unit.new(self, :rem)
-  end
-
-  def vh
-    Unit.new(self, :vh)
-  end
-
-  def vw
-    Unit.new(self, :vw)
-  end
-
-  def vmin
-    Unit.new(self, :vmin)
-  end
-
-  def vmax
-    Unit.new(self, :vmax)
-  end
-
-  def px
-    Unit.new(self, :px)
-  end
-
-  def mm
-    Unit.new(self, :mm)
-  end
-
-  def cm
-    Unit.new(self, :cm)
-  end
-
-  def in
-    Unit.new(self, :in)
-  end
-
-  def pt
-    Unit.new(self, :pt)
-  end
-
-  def pc
-    Unit.new(self, :pc)
-  end
+  %i[em ex ch rem vh vw vmin vmax px mm cm in pt pc].each {|name|
+    define_method name do
+      Unit.new(self, name)
+    end
+  }
 
   alias old_percent %
 
@@ -211,7 +167,7 @@ class String
       value = matches[1].to_f
 
       if unit = matches[2]
-        value.__send__(unit[2].downcase)
+        value.__send__(unit.downcase)
       else
         value
       end
