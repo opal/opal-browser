@@ -59,8 +59,8 @@ class Offset
       x, y = value
     end
 
-    @element.style[:left] = ((x - offset.x) + left).px if x
-    @element.style[:top]  = ((y - offset.y) + top).px  if y
+    @element.style[:left] = (x.px - offset.x) + left if x
+    @element.style[:top]  = (y.px - offset.y) + top  if y
   end
 end
 
