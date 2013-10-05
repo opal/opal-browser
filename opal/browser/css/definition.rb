@@ -35,14 +35,12 @@ class Definition
         style s.name || 'background-image', s.value
       }
     else
-      options = args.first
-
-      if Hash === options
-        argument.each {|sub, value|
+      if Hash === args.first
+        args.first.each {|sub, value|
           style "background-#{sub}", value
         }
       else
-        style :background, options
+        style :background, args
       end
     end
   end
