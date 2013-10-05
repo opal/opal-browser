@@ -24,7 +24,12 @@ class Declaration
 
   def apply(&block)
     Definition.new(&block).each {|style|
-      `#@native.setProperty(#{style.name}, #{style.value}, #{style.important?})`
+      # FIXME: use ternary operator when it's fixed
+      if style.important?
+        `#@native.setProperty(#{style.name}, #{style.value}, "important")`
+      else
+        `#@native.setProperty(#{style.name}, #{style.value}, "")`
+      end
     }
 
     self
@@ -47,7 +52,7 @@ class Declaration
   end
 
   def []=(name, value)
-    `#@native.setProperty(#{name}, #{value.to_s}, false)`
+    `#@native.setProperty(#{name}, #{value.to_s}, "")`
   end
 
   def important?(name)
