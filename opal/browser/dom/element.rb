@@ -109,13 +109,11 @@ class Element < Node
   def offset(*values)
     off = Offset.new(self)
 
-    if values
+    unless values.empty?
       off.set(*values)
-
-      self
-    else
-      off
     end
+
+    off
   end
 
   def offset=(value)
