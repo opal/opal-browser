@@ -6,9 +6,9 @@ class Position
     @native  = element.to_n
   end
 
-  def position
+  def get
     offset        = @element.offset
-    position      = offset.position
+    position      = offset.get
     parent        = offset.parent
     parent_offset = Browser::Position.new(0, 0)
 
@@ -26,11 +26,11 @@ class Position
   end
 
   def x
-    position.x
+    get.x
   end
 
   def y
-    position.y
+    get.y
   end
 end
 
