@@ -47,8 +47,12 @@ class Definition
     end
   end
 
-  def border(options)
-    if Hash === options
+  def border(*args)
+    if Hash === args.first
+      if args.length == 1
+        options = args.first
+      end
+
       options.each {|name, value|
         case name
         when :radius
@@ -76,11 +80,11 @@ class Definition
           end
 
         else
-          style "border-#{name}", Array(value).join(' ')
+          style "border-#{name}", value
         end
       }
     else
-      style :border, Array(options).join(' ')
+      style :border, args
     end
   end
 
@@ -132,10 +136,10 @@ class Definition
 
       if Hash === argument
         argument.each {|sub, value|
-          style "#{name}-#{sub}", Array(value).join(' ')
+          style "#{name}-#{sub}", value
         }
       else
-        style name, Array(argument).join(' ')
+        style name, argument
       end
     else
       style name, args.join(' ')
@@ -148,6 +152,10 @@ class Definition
 
 private
   def style(name, value = nil, important = @important)
+    if Array === value
+      value = value.join ' '
+    end
+
     if Style === name
       @style << name
     else
