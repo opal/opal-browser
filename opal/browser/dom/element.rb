@@ -106,8 +106,20 @@ class Element < Node
     Position.new(self)
   end
 
-  def offset
-    Offset.new(self)
+  def offset(*values)
+    off = Offset.new(self)
+
+    if values
+      off.set(*values)
+
+      self
+    else
+      off
+    end
+  end
+
+  def offset=(value)
+    offset.set(*value)
   end
 
   def scroll

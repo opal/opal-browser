@@ -11,14 +11,22 @@ class Offset
   end
 
   def x
-    position.x
+    get.x
+  end
+
+  def x=(value)
+    set value, nil
   end
 
   def y
-    position.y
+    get.y
   end
 
-  def position
+  def y=(value)
+    set nil, value
+  end
+
+  def get
     doc  = @element.document
     root = doc.root.to_n
     win  = doc.window.to_n
@@ -32,8 +40,27 @@ class Offset
     Browser::Position.new(`x`, `y`)
   end
 
-  def position=(value)
+  def set(*value)
+    position = @element.style![:position]
 
+    if position == :static
+      @element.style[:position] = :relative
+    end
+
+    offset = get
+    top    = @element.style![:top].to_u
+    left   = @element.style![:left].to_u
+
+    if Browser::Position === value.first
+      x, y = value.first.x, value.first.y
+    elsif Hash === value.first
+      x, y = value.first[:x], value.first[:y]
+    else
+      x, y = value
+    end
+
+    @element.style[:left] = ((x - offset.x) + left).px if x
+    @element.style[:top]  = ((y - offset.y) + top).px  if y
   end
 end
 
