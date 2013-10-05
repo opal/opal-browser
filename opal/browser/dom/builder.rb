@@ -7,6 +7,12 @@ class Builder < BasicObject
       @element = element
     end
 
+    def style(*args, &block)
+      @element.style(*args, &block)
+
+      self
+    end
+
     def method_missing(name, content = nil, &block)
       if content
         @element << @builder.create_text!(content)
