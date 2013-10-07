@@ -12,13 +12,7 @@ class Element < Node
   include Event::Target
 
   target {|value|
-    # FIXME: oneline rescue
-
-    begin
-      DOM(value)
-    rescue
-      nil
-    end
+    DOM(value) rescue nil
   }
 
   alias_native :id
