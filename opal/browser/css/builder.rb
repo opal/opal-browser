@@ -51,8 +51,10 @@ class Builder
   end
 
   def to_s
-    @rules.reverse.map {|rule|
-      io = StringIO.new
+    io = StringIO.new
+
+    @rules.reverse.each {|rule|
+      next if rule.definition.empty?
 
       io << "#{rule.selector} {\n"
       rule.definition.each {|style|
@@ -62,10 +64,10 @@ class Builder
           io << "\t#{style.name}: #{style.value};\n"
         end
       }
-      io << "}"
+      io << "}\n\n"
+    }
 
-      io.string
-    }.join("\n\n")
+    io.string
   end
 end
 
