@@ -2,6 +2,18 @@ module Browser; module DOM
 
 class Builder < BasicObject
   class Element < BasicObject
+    def self.new(builder, element)
+      return super unless self == Element
+
+      name = element.name.capitalize
+
+      if const_defined?(name)
+        const_get(name).new(builder, element)
+      else
+        super
+      end
+    end
+
     def initialize(builder, element)
       @builder = builder
       @element = element
@@ -41,6 +53,14 @@ class Builder < BasicObject
 
     def do(&block)
       @builder.extend!(@element, &block)
+    end
+
+    class Input < self
+      def type(name)
+        @element[:type] = name
+
+        self
+      end
     end
   end
 
