@@ -13,6 +13,10 @@ class Definition
     end if block
   end
 
+  def empty?
+    @style.empty?
+  end
+
   def each(&block)
     return enum_for :each unless block
 
