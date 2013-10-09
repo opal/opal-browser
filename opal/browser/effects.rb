@@ -1,5 +1,11 @@
 module Browser; module DOM
-  
+
+class Document < Element
+  def active_element
+    DOM(`#@native.activeElement`)
+  end
+end
+
 class Element
   def show(what = :block)
     style[:display] = what
@@ -15,6 +21,18 @@ class Element
     else
       hide
     end
+  end
+
+  def focus
+    `#@native.focus()`
+  end
+
+  def blur
+    `#@native.blur()`
+  end
+
+  def focused?
+    `#@native.hasFocus`
   end
 end
 
