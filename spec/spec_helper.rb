@@ -2,6 +2,7 @@ require 'json2'
 require 'sizzle'
 
 require 'browser'
+require 'browser/console'
 
 module OpalSpec
   class Example
