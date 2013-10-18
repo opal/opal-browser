@@ -10,6 +10,10 @@ class Unit
     @type   = type
   end
 
+  def coerce(other)
+    return self, other
+  end
+
   def ==(other)
     @number == convert(other, @type)
   end
