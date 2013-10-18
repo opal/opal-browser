@@ -71,7 +71,6 @@ class Event
       Keyboard          => $$[:KeyboardEvent],
       Focus             => $$[:FocusEvent],
       Wheel             => $$[:WheelEvent],
-      Event             => $$[:Event],
       Custom            => $$[:CustomEvent]
     }
   end
@@ -190,8 +189,9 @@ class Event
   end
 
   def self.new(value, *args)
-    klass, _ = classes.find {|_, constructor|
-      constructor && `#{value} instanceof #{constructor.to_n}`
+    # FIXME: fix when #detect is fixed
+    klass, _ = classes.find {|what|
+      Native.is_a?(value, what[1])
     }
 
     if !klass || klass == self
