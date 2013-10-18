@@ -64,7 +64,7 @@ class Keyboard < UI
   end
 
   def char
-    `#@native.char || #@native.charCode`
+    `#@native.char || #@native.charCode || #{key.chr}`
   end
 
   alias to_i key
