@@ -56,11 +56,20 @@ class Builder < BasicObject
     end
 
     class Input < self
-      def type(name)
-        @element[:type] = name
+      { type:         :type,
+        name:         :name,
+        value:        :value,
+        size:         :size,
+        place_holder: :placeholder,
+        read_only:    :readonly,
+        required:     :required
+      }.each {|name, attribute|
+        define_method name do |value|
+          @element[attribute] = value
 
-        self
-      end
+          self
+        end
+      }
     end
   end
 
