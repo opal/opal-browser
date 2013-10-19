@@ -16,8 +16,8 @@ class Node
   DOCUMENT_FRAGMENT_NODE      = 11
   NOTATION_NODE               = 12
 
-  def self.new(value = undefined)
-    if value && self == Node
+  def self.new(value)
+    if self == Node
       @classes ||= [nil, Element, Attribute, Text, CDATA, nil, nil, nil, Comment, Document, nil, DocumentFragment]
 
       if klass = @classes[`value.nodeType`]
@@ -25,8 +25,6 @@ class Node
       else
         raise ArgumentError, 'cannot instantiate a non derived Node object'
       end
-    elsif self == Node
-      raise ArgumentError, 'cannot instantiate a non derived Node object'
     else
       super
     end

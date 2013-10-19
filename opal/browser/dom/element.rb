@@ -2,11 +2,26 @@ require 'browser/dom/element/position'
 require 'browser/dom/element/offset'
 require 'browser/dom/element/scroll'
 
+require 'browser/dom/element/input'
+
 module Browser; module DOM
 
 class Element < Node
   def self.create(*args)
     $document.create_element(*args)
+  end
+
+  def self.new(node)
+    if self == Element
+      case `node.nodeName`.downcase
+      when :input
+        Input.new(node)
+
+      else super
+      end
+    else
+      super
+    end
   end
 
   include Event::Target
