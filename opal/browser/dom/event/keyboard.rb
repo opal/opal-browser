@@ -22,8 +22,12 @@ class Keyboard < UI
       `#@native.shiftKey = true`
     end
 
+    def code=(code)
+      `#@native.keyCode = #@native.which = #{code}`
+    end
+
     def key=(key)
-      `#@native.key = #@native.keyCode = #@native.which = #{key}`
+      `#@native.key = #{key}`
     end
 
     def char=(char)
@@ -60,7 +64,11 @@ class Keyboard < UI
   end
 
   def key
-    `#@native.key || #@native.keyCode || #@native.which`
+    `#@native.key`
+  end
+
+  def code
+    `#@native.keyCode || #@native.which`
   end
 
   def char
