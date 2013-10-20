@@ -43,7 +43,7 @@ class Event
     })
   end
 
-  def self.name(name)
+  def self.name_for(name)
     names[name].gsub(?:, '')
   end
 
@@ -76,7 +76,7 @@ class Event
   end
 
   def self.class_for(name)
-    type = case name(name)
+    type = case name_for(name)
       when 'animationend', 'animationiteration', 'animationstart'
         Animation
 
@@ -174,7 +174,7 @@ class Event
   end
 
   def self.create(name, *args, &block)
-    name  = name(name)
+    name  = name_for(name)
     klass = class_for(name)
 
     event = if klass == self

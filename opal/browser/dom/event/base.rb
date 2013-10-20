@@ -121,7 +121,7 @@ module Target
   def on(name, selector = nil, &block)
     raise ArgumentError, 'no block has been passed' unless block
 
-    name     = Event.name(name)
+    name     = Event.name_for(name)
     callback = Callback.new(self, name, selector, &block)
 
     callbacks.push(callback)
@@ -151,7 +151,7 @@ module Target
       if what.include?(?*) or what.include?(??)
         off(Regexp.new(what.gsub(/\*/, '.*?').gsub(/\?/, ?.)))
       else
-        what = Event.name(what)
+        what = Event.name_for(what)
 
         callbacks.delete_if {|callback|
           if callback.name == what
