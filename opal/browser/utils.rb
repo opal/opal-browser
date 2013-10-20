@@ -32,3 +32,19 @@ class String
     `decodeURI(#{self})`
   end
 end
+
+class Hash
+  def self.decode_uri(string)
+    self[string.split(?&).map {|part|
+      name, value = part.split(?=)
+
+      [name.decode_uri_component, value.decode_uri_component]
+    }]
+  end
+
+  def encode_uri
+    map {|name, value|
+      "#{name.to_s.encode_uri_component}=#{value.to_s.encode_uri_component}"
+    }.join(?&)
+  end
+end
