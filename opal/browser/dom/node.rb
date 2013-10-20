@@ -298,7 +298,7 @@ class Node
   alias type node_type
 
   def value
-    `#@native.nodeValue`
+    `#@native.nodeValue || nil`
   end
 
   def value=(value)
