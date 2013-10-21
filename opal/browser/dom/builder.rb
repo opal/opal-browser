@@ -57,8 +57,14 @@ class Builder < BasicObject
       self
     end
 
-    def do(&block)
-      @builder.extend!(@element, &block)
+    def do(string = nil, &block)
+      if block
+        @builder.extend!(@element, &block)
+      else
+        @element << @builder.create_text!(string)
+      end
+
+      self
     end
 
     class Input < self
