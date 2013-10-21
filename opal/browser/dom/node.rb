@@ -51,6 +51,8 @@ class Node
       node.each {|node|
         add_child(node)
       }
+    elsif String === node
+      `#@native.appendChild(#@native.ownerDocument.createTextNode(node))`
     else
       `#@native.appendChild(#{Native.try_convert(node)})`
     end
