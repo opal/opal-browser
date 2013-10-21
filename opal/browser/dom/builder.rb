@@ -74,9 +74,11 @@ class Builder < BasicObject
   end
 
   def initialize(document, element = nil, &block)
+    Kernel.raise ArgumentError, "no block given" unless block
+
     @document = document
     @current  = element
-    @roots    = NodeSet.new
+    @roots    = ::Browser::DOM::NodeSet.new
 
     if block.arity == 0
       instance_exec(&block)
