@@ -133,20 +133,6 @@ class Element < Node
     Scroll.new(self)
   end
 
-  def scroll(to = nil)
-    if to
-      if x = to[:x]
-        `#@native.scrollLeft = #{x}`
-      end
-
-      if y = to[:y]
-        `#@native.scrollTop = #{y}`
-      end
-    else
-      Position.new(`#@native.scrollLeft`, `#@native.scrollTop`)
-    end
-  end
-
   def /(*paths)
     paths.map { |path| xpath(path) }.flatten.uniq
   end
