@@ -83,6 +83,20 @@ class Builder < BasicObject
         end
       }
     end
+
+    class A < self
+      def href(value)
+        @element[:href] = value
+
+        self
+      end
+
+      def target(value)
+        @element[:target] = value
+
+        self
+      end
+    end
   end
 
   def initialize(document, element = nil, &block)
