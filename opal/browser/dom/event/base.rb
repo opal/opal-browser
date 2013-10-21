@@ -57,7 +57,9 @@ module Target
         func     = function(event) {
           event = #{::Browser::DOM::Event.new(`event`, `callback`)};
 
-          #{block.call(`event`, *`event`.arguments)};
+          if (!#{`event`.stopped?}) {
+            #{block.call(`event`, *`event`.arguments)};
+          }
 
           return !#{`event`.stopped?};
         }

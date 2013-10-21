@@ -229,12 +229,14 @@ class Event
   alias_native :phase, :eventPhase
   alias_native :at, :timeStamp
 
-  def stopped?; !!@stopped; end
+  def stopped?
+    `!!#@native.stopped`
+  end
 
   def stop!
     `#@native.stopPropagation()` if defined?(`#@native.stopPropagation`)
-
-    @stopped = true
+    `#@native.preventDefault()` if defined?(`#@native.preventDefault`)
+    `#@native.stopped = true`
   end
 end
 
