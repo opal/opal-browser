@@ -133,6 +133,14 @@ class Element < Node
     Scroll.new(self)
   end
 
+  def inner_dom(&block)
+    # FIXME: when block passing is fixed
+    doc = document
+    clear; Builder.new(doc, self, &block)
+
+    self
+  end
+
   def /(*paths)
     paths.map { |path| xpath(path) }.flatten.uniq
   end
