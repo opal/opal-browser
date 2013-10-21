@@ -25,6 +25,12 @@ class Builder < BasicObject
       self
     end
 
+    def on(*args, &block)
+      @element.on(*args, &block)
+
+      self
+    end
+
     def method_missing(name, content = nil, &block)
       if content
         @element << @builder.create_text!(content)
