@@ -36,14 +36,16 @@ class Builder
     end
   end
 
-  def rule(name, &block)
-    @selector << name
-    @current  << Rule.new(Builder.selector(@selector), Definition.new)
+  def rule(*names, &block)
+    names.each {|name|
+      @selector << name
+      @current  << Rule.new(Builder.selector(@selector), Definition.new)
 
-    block.call(self)
+      block.call(self)
 
-    @selector.pop
-    @rules << @current.pop
+      @selector.pop
+      @rules << @current.pop
+    }
   end
 
   def method_missing(name, *args, &block)
