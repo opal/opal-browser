@@ -64,15 +64,15 @@ class Keyboard < UI
   end
 
   def key
-    `#@native.key`
+    `#@native.key || #@native.keyIdentifier || nil`
   end
 
   def code
-    `#@native.keyCode || #@native.which`
+    `#@native.keyCode || #@native.which || nil`
   end
 
   def char
-    `#@native.char || #@native.charCode || #{key.chr}`
+    `#@native.char || #@native.charCode || #{code ? code.chr : nil}`
   end
 
   alias to_i key
