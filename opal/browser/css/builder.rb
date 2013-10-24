@@ -5,7 +5,6 @@ module Browser; module CSS
 class Builder
   Rule = Struct.new(:selector, :definition)
 
-  # TODO: fix usage of commas
   def self.selector(list)
     result = ''
 
@@ -37,6 +36,10 @@ class Builder
   end
 
   def rule(*names, &block)
+    if names.any? { |n| n.include? ',' }
+      raise ArgumentError, 'selectors cannot contain commas'
+    end
+
     names.each {|name|
       @selector << name
       @current  << Rule.new(Builder.selector(@selector), Definition.new)
