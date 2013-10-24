@@ -89,12 +89,14 @@ class Node
       parents << parent
     end
 
+    if Document === parents.last
+      parents.pop
+    end
+
     return NodeSet.new(document, parents) unless expression
 
-    root = parents.last
-
-    NodeSet.new document, parents.select {|parent|
-      root.search(expression).include?(parent)
+    NodeSet.new document, parents.select {|p|
+      p.matches?(expression)
     }
   end
 
