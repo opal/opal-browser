@@ -189,9 +189,8 @@ class Event
   end
 
   def self.new(value, *args)
-    # FIXME: fix when #detect is fixed
-    klass, _ = classes.find {|what|
-      Native.is_a?(value, what[1])
+    klass, _ = classes.find {|_, constructor|
+      Native.is_a?(value, constructor)
     }
 
     if !klass || klass == self
