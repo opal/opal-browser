@@ -208,7 +208,7 @@ class Node
   end
 
   def matches?(expression)
-    ancestors.last.search(expression).include?(self)
+    false
   end
 
   def name
