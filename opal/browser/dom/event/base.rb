@@ -96,6 +96,8 @@ module Target
         #@native.$observer = #{MutationObserver.new {|mutations|
           mutations.each {|mutation|
             Array(mutation.added).each {|node|
+              next unless Element === node
+
               deferred.each {|name, selector, block|
                 if node.matches?(selector)
                   node.on(name, &block)
@@ -132,9 +134,7 @@ module Target
       observe
       deferred << [name, selector, block]
 
-      css(selector).each {|e|
-        e.on(name, &block)
-      }
+      css(selector).on(name, &block)
     else
       `#@native.addEventListener(#{name}, #{callback.to_n})`
     end
