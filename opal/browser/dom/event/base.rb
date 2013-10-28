@@ -95,7 +95,7 @@ module Target
       if (!#@native.$observer) {
         #@native.$observer = #{MutationObserver.new {|mutations|
           mutations.each {|mutation|
-            Array(mutation.added).each {|node|
+            mutation.added.each {|node|
               next unless Element === node
 
               deferred.each {|name, selector, block|
