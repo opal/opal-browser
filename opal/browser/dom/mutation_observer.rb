@@ -19,15 +19,23 @@ class MutationObserver
     def cdata?;      type == :cdata;      end
 
     def added
-      if `#@native.addedNodes != null`
-        NodeSet.new($document, Native::Array.new(`#@native.addedNodes`))
+      array = if `#@native.addedNodes != null`
+        Native::Array.new(`#@native.addedNodes`)
+      else
+        []
       end
+
+      NodeSet.new($document, array)
     end
 
     def removed
-      if `#@native.removedNodes != null`
-        NodeSet.new($document, Native::Array.new(`#@native.removedNodes`))
+      array = if `#@native.removedNodes != null`
+        Native::Array.new(`#@native.removedNodes`)
+      else
+        []
       end
+
+      NodeSet.new($document, array)
     end
 
     def target
