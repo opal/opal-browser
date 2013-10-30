@@ -220,6 +220,29 @@ class Element < Node
     CSS::Declaration.new(`#{window.to_n}.getComputedStyle(#@native, null)`)
   end
 
+  def data(what)
+    unless defined?(`#@native.$data`)
+      `#@native.$data = {}`
+    end
+
+    if Hash === what
+      what.each {|name, value|
+        `#@native.$data[name] = value`
+      }
+    else
+      %x{
+        var value = #@native.$data[what];
+
+        if (value === undefined) {
+          return nil;
+        }
+        else {
+          return value;
+        }
+      }
+    end
+  end
+
   def matches?(selector)
     `#@native.matches(#{selector})`
   end
