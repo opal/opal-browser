@@ -141,6 +141,10 @@ class Element < Node
     self
   end
 
+  def inner_dom=(node)
+    clear; self << node
+  end
+
   def /(*paths)
     paths.map { |path| xpath(path) }.flatten.uniq
   end
