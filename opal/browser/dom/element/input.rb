@@ -8,6 +8,10 @@ class Input < Element
   def value=(value)
     `#@native.value = #{value}`
   end
+
+  def clear
+    `#@native.value = ''`
+  end
 end
 
 end; end; end
