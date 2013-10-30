@@ -31,6 +31,12 @@ class Builder < BasicObject
       self
     end
 
+    def text(text)
+      @element << text.to_s
+
+      self
+    end
+
     def method_missing(name, content = nil, &block)
       if content
         @element << @builder.create_text!(content)
@@ -57,12 +63,8 @@ class Builder < BasicObject
       self
     end
 
-    def do(string = nil, &block)
-      if block
-        @builder.extend!(@element, &block)
-      else
-        @element << @builder.create_text!(string)
-      end
+    def do(&block)
+      @builder.extend!(@element, &block)
 
       self
     end
