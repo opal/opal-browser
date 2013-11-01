@@ -137,7 +137,13 @@ class Builder < BasicObject
 
   def extend!(element = nil, &block)
     old, @current = @current, element
-    block.call(self)
+
+    result = block.call(self)
+
+    if String === result
+      @current.inner_html = result
+    end
+
     @current = old
 
     self
