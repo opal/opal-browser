@@ -78,10 +78,6 @@ class Document < Element
   def root=(element)
     `#@native.documentElement = #{Native.convert(element)}`
   end
-
-  def inspect
-    "#<DOM::Document:#{object_id}>"
-  end
 end
 
 end; end
