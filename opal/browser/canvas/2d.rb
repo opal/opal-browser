@@ -2,7 +2,7 @@ module Browser; class Canvas
 
 Context.define '2d' do
   class StyleObject
-    include Native::Base
+    include Native
 
     attr_reader :context
 
@@ -158,7 +158,7 @@ Context.define '2d' do
       data
     end
 
-    include Native::Base
+    include Native
 
     attr_reader :x, :y, :width, :height
 
@@ -202,7 +202,7 @@ Context.define '2d' do
   end
 
   class Gradient
-    include Native::Base
+    include Native
 
     attr_reader :context
 

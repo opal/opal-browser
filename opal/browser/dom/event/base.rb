@@ -1,7 +1,7 @@
 module Browser; module DOM; class Event
 
 class Definition
-  include Native::Base
+  include Native
 
   def self.new(&block)
     data = super(`{}`)

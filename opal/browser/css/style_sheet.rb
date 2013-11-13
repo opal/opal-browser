@@ -1,7 +1,7 @@
 module Browser; module CSS
 
 class StyleSheet
-  include Native::Base
+  include Native
 
   def initialize(what)
     if what.is_a? DOM::Element

@@ -8,7 +8,7 @@ class Drag < Event
 
   class Definition < Definition
     class Client
-      include Native::Base
+      include Native
 
       def x=(value)
         `#@native.clientX = #{value}`
@@ -20,7 +20,7 @@ class Drag < Event
     end
 
     class Screen
-      include Native::Base
+      include Native
 
       def x=(value)
         `#@native.screenX = #{value}`

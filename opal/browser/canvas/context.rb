@@ -1,7 +1,7 @@
 module Browser; class Canvas
 
 class Context
-  include Native::Base
+  include Native
 
   def self.implementations
 	  @implementations ||= {}

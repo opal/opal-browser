@@ -6,7 +6,7 @@ class EventSource
     defined? `window.EventSource`
   end
 
-  include Native::Base
+  include Native
   include DOM::Event::Target
 
   target {|value|

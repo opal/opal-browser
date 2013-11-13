@@ -3,7 +3,7 @@ require 'browser/location'
 module Browser
 
 class History
-  include Native::Base
+  include Native
 
   alias_native :length
 

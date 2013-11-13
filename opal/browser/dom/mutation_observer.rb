@@ -1,10 +1,10 @@
 module Browser; module DOM
 
 class MutationObserver
-  include Native::Base
+  include Native
 
   class Record
-    include Native::Base
+    include Native
 
     def type
       case `#@native.type`

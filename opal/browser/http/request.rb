@@ -1,7 +1,7 @@
 module Browser; module HTTP
 
 class Request
-  include Native::Base
+  include Native
 
   # Open and send a request.
   #

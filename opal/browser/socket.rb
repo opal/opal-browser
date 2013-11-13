@@ -6,7 +6,7 @@ class Socket
     defined? `window.WebSocket`
   end
 
-  include Native::Base
+  include Native
   include IO::Writable
   include DOM::Event::Target
 

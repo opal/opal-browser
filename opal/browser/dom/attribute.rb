@@ -1,7 +1,7 @@
 module Browser; module DOM
 
 class Attribute
-  include Native::Base
+  include Native
 
   def id?
     `#@native.isId`

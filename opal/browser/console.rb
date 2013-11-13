@@ -2,7 +2,7 @@ module Browser
 
 # This class wraps a `window.console`.
 class Console
-  include Native::Base
+  include Native
 
   # Clear the console.
   #

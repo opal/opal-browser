@@ -1,7 +1,7 @@
 module Browser
 
 class Screen
-  include Native::Base
+  include Native
   include DOM::Event::Target
 
   target {|value|

@@ -1,7 +1,7 @@
 module Browser
 
 class Location
-  include Native::Base
+  include Native
 
   # Change the location.
   #

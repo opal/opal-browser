@@ -1,7 +1,7 @@
 module Browser; module CSS
 
 class Declaration
-  include Native::Base
+  include Native
   include Enumerable
 
   def rule

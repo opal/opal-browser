@@ -1,7 +1,7 @@
 module Browser; module DOM
 
 class Node
-  include Native::Base
+  include Native
 
   ELEMENT_NODE                = 1
   ATTRIBUTE_NODE              = 2

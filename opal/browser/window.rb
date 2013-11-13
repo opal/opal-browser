@@ -34,7 +34,7 @@ class Window
     }
   end
 
-  include Native::Base
+  include Native
 
   # Alert the passed string.
   def alert(value)

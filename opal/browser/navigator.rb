@@ -2,7 +2,7 @@ module Browser
 
 # Class that represents the browser attributes.
 class Navigator
-  include Native::Base
+  include Native
 
   Version = Struct.new(:major, :minor, :build)
   Product = Struct.new(:name, :version)
@@ -10,7 +10,7 @@ class Navigator
 
   # Class that represents a MIME type.
   class MimeType
-    include Native::Base
+    include Native
 
     # @!attribute [r] plugin
     # @return [Plugin] the plugin for the MIME type

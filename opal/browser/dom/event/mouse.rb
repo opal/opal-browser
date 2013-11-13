@@ -7,7 +7,7 @@ class Mouse < UI
 
   class Definition < UI::Definition
     class Client
-      include Native::Base
+      include Native
 
       def x=(value)
         `#@native.clientX = #{value}`
@@ -19,7 +19,7 @@ class Mouse < UI
     end
 
     class Layer
-      include Native::Base
+      include Native
 
       def x=(value)
         `#@native.layerX = #{value}`
@@ -31,7 +31,7 @@ class Mouse < UI
     end
 
     class Offset
-      include Native::Base
+      include Native
 
       def x=(value)
         `#@native.offsetX = #{value}`
@@ -43,7 +43,7 @@ class Mouse < UI
     end
 
     class Page
-      include Native::Base
+      include Native
 
       def x=(value)
         `#@native.pageX = #{value}`
@@ -55,7 +55,7 @@ class Mouse < UI
     end
 
     class Screen
-      include Native::Base
+      include Native
 
       def x=(value)
         `#@native.screenX = #{value}`
@@ -67,7 +67,7 @@ class Mouse < UI
     end
 
     class Ancestor
-      include Native::Base
+      include Native
 
       def x=(value)
         `#@native.x = #{value}`
