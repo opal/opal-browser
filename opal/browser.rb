@@ -1,3 +1,5 @@
+require 'native'
+
 require 'browser/utils'
 require 'browser/compatibility'
 
