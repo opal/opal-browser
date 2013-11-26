@@ -11,7 +11,7 @@ class NodeSet
       if NodeSet === el
         @literal.concat(el.to_a)
       else
-        @literal.push DOM(Native.try_convert(el))
+        @literal.push DOM(Native.convert(el))
       end
     }
   end
