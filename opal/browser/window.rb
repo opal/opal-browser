@@ -91,6 +91,14 @@ class Window
   alias once_after once
 
   alias after once
+
+  def close
+    %x{
+      return (window.open('', '_self', '') && window.close()) ||
+             (window.opener = null && window.close()) ||
+             (window.opener = '' && window.close());
+    }
+  end
 end
 
 end
