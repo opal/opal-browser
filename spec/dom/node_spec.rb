@@ -20,7 +20,7 @@ describe Browser::DOM::Node do
 
   describe "#document?" do
     it "should be true for document" do
-      $document.document?.should be_true
+      $document.document?.should be_truthy
     end
   end
 
@@ -28,7 +28,7 @@ describe Browser::DOM::Node do
     html '<div id="lol"></div>'
 
     it "should be true for <div id='lol'>" do
-      $document["#lol"].element?.should be_true
+      $document["#lol"].element?.should be_truthy
     end
   end
 
@@ -36,7 +36,7 @@ describe Browser::DOM::Node do
     html '<div id="omg">lol</div>'
 
     it "should be true for the first child of <div id='lol'>" do
-      $document["#omg"].child.text?.should be_true
+      $document["#omg"].child.text?.should be_truthy
     end
   end
 
@@ -80,12 +80,12 @@ describe Browser::DOM::Node do
     HTML
 
     it 'should return the next sibling' do
-      $document["spec-1"].next.text?.should be_true
+      $document["spec-1"].next.text?.should be_truthy
       $document["spec-1"].next.next.id.should == 'spec-2'
     end
 
     it 'should return nil when there is no next sibling' do
-      $document["spec-3"].next.text?.should be_true
+      $document["spec-3"].next.text?.should be_truthy
       $document["spec-3"].next.next.should be_nil
     end
   end
@@ -115,12 +115,12 @@ describe Browser::DOM::Node do
     HTML
 
     it 'should return the previous sibling' do
-      $document["spec-2"].previous.text?.should be_true
+      $document["spec-2"].previous.text?.should be_truthy
       $document["spec-2"].previous.previous.id.should == 'spec-1'
     end
 
     it 'should return nil when there is no previous sibling' do
-      $document["spec-1"].previous.text?.should be_true
+      $document["spec-1"].previous.text?.should be_truthy
       $document["spec-1"].previous.previous.should be_nil
     end
   end

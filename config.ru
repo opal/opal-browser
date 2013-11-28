@@ -1,9 +1,10 @@
 require 'bundler'
 Bundler.require
+Opal::RSpec.build_rspec_js
 
 apps = []
 apps << Opal::Server.new { |s|
-  s.main = 'opal/spec/sprockets_runner'
+  s.main = 'opal/rspec/sprockets_runner'
   s.append_path 'spec'
   s.debug = false
 }

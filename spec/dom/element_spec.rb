@@ -36,11 +36,11 @@ describe Browser::DOM::Element do
     HTML
 
     it 'matches on class and id' do
-      $document[:matches].matches?('#matches.not.me').should be_true
+      $document[:matches].matches?('#matches.not.me').should be_truthy
     end
 
     it 'matches on class and name' do
-      $document[:matches].first_element_child.matches?('span.yes').should be_true
+      $document[:matches].first_element_child.matches?('span.yes').should be_truthy
     end
   end
 end

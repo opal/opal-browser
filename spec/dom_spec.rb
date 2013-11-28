@@ -7,7 +7,7 @@ describe Browser::DOM do
   HTML
 
   it "parses the HTML" do
-    $document['.spec'].element?.should be_true
-    $document['.sock'].element?.should be_true
+    $document['.spec'].element?.should be_truthy
+    $document['.sock'].element?.should be_truthy
   end
 end

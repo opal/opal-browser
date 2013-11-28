@@ -71,7 +71,7 @@ describe Browser::DOM::Event do
 
       elem.on :bazinga, 'span.nami' do
         run_async {
-          true.should be_true
+          true.should be_truthy
         }
       end
 
