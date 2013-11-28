@@ -28,6 +28,14 @@ class Scroll
     self
   end
 
+  def height
+    `#@native.scrollHeight`
+  end
+
+  def width
+    `#@native.scrollWidth`
+  end
+
   def by(what)
     x = what[:x] || 0
     y = what[:y] || 0
