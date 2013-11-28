@@ -22,7 +22,8 @@ class Scroll
     x   = what[:x] || self.x
     y   = what[:y] || self.y
 
-    `#@native.scrollTo(#{x}, #{y})`
+    `#@native.scrollTop = #{y}`
+    `#@native.scrollLeft = #{x}`
 
     self
   end
