@@ -26,7 +26,7 @@ class Socket
     elsif protocol
       super(`new window.WebSocket(#{url.to_s}, #{protocol.to_n})`)
     else
-      super(`new window.WebScoket(#{url.to_s})`)
+      super(`new window.WebSocket(#{url.to_s})`)
     end
 
     if block.arity == 0
