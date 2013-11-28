@@ -43,6 +43,16 @@ class Window
     value
   end
 
+  # Display a prompt dialog with the passed string as text.
+  def prompt(value)
+    `#@native.prompt(value) || nil`
+  end
+
+  # Display a confirmation dialog with the passed string as text.
+  def confirm(value)
+    `#@native.confirm(value) || false`
+  end
+
   # Get the {View} for the window.
   #
   # @return [View]
@@ -109,6 +119,16 @@ module Kernel
   # (see Browser::Window#alert)
   def alert(value)
     $window.alert(value)
+  end
+
+  # (see Browser::Window#prompt)
+  def prompt(value)
+    $window.prompt(value)
+  end
+
+  # (see Browser::Window#confirm)
+  def confirm(value)
+    $window.confirm(value)
   end
 
   # (see Browser::Window#once)
