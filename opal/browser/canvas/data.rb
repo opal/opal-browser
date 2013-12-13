@@ -11,17 +11,17 @@
 module Browser; class Canvas
 
 class Data
-  def self.create(context, width, height)
+  def self.create(canvas, width, height)
     data = allocate
 
     data.instance_eval {
-      @context = context
-      @x       = 0
-      @y       = 0
-      @width   = width
-      @height  = height
+      @canvas = canvas.to_a
+      @x      = 0
+      @y      = 0
+      @width  = width
+      @height = height
 
-      @native = `#{context.to_n}.createImageData(width, height)`
+      @native = `#{canvas.to_n}.createImageData(width, height)`
     }
 
     data
@@ -31,14 +31,14 @@ class Data
 
   attr_reader :x, :y, :width, :height
 
-  def initialize(context, x, y, width, height)
-    @context = context
-    @x       = x
-    @y       = y
-    @width   = width
-    @height  = height
+  def initialize(canvas, x, y, width, height)
+    @canvas = canvas.to_n
+    @x      = x
+    @y      = y
+    @width  = width
+    @height = height
 
-    super(`#{@context.to_n}.getImageData(x, y, width, height)`)
+    super(`#@canvas.getImageData(x, y, width, height)`)
   end
 
   def length
@@ -57,14 +57,14 @@ class Data
     x ||= 0
     y ||= 0
 
-    `#{@context.to_n}.putImageData(#@native, x, y)`
+    `#@canvas.putImageData(#@native, x, y)`
   end
 
-  def save_to(context, x = nil, y = nil)
+  def save_to(canvas, x = nil, y = nil)
     x ||= 0
     y ||= 0
 
-    `#{context.to_n}.putImageData(#@native, x, y)`
+    `#{canvas.to_n}.putImageData(#@native, x, y)`
   end
 
   alias size length
