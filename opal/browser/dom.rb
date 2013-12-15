@@ -45,7 +45,7 @@ module Kernel
       document = args.shift || $document
       element  = args.shift
 
-      roots = Browser::DOM::Builder.new(document, element, &block).roots!
+      roots = Browser::DOM::Builder.new(document, element, &block).to_a
 
       if roots.length == 1
         roots.first
@@ -82,7 +82,6 @@ class Window
   target {|value|
     $window if `#{value} == window`
   }
-
 
   # Get the {DOM::Document} for this window.
   #

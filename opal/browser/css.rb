@@ -1,10 +1,5 @@
-require 'browser/css/unit'
-require 'browser/css/definition'
-require 'browser/css/builder'
 require 'browser/css/declaration'
-
 require 'browser/css/style_sheet'
-
 require 'browser/css/rule'
 require 'browser/css/rule/style'
 
@@ -19,7 +14,7 @@ module Kernel
     style[:type] = 'text/css'
 
     if block
-      style.inner_text = Browser::CSS::Builder.new(&block).to_s
+      style.inner_text = Paggio.css(&block)
     else
       style.inner_text = text
     end

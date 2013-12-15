@@ -23,7 +23,7 @@ class Declaration
   end
 
   def apply(&block)
-    Definition.new(&block).each {|style|
+    Paggio::CSS::Definition.new(&block).each {|style|
       # FIXME: use ternary operator when it's fixed
       if style.important?
         `#@native.setProperty(#{style.name}, #{style.value}, "important")`
