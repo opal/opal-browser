@@ -15,6 +15,6 @@ Gem::Specification.new {|s|
   s.add_dependency 'opal', '>= 0.6.0'
   s.add_dependency 'paggio'
 
-  s.add_development_dependency 'opal-spec'
+  s.add_development_dependency 'opal-rspec'
   s.add_development_dependency 'rake'
 }

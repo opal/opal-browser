@@ -1,6 +1,5 @@
 require 'bundler'
 Bundler.require
-Opal::RSpec.build_rspec_js
 
 apps = []
 apps << Opal::Server.new { |s|
