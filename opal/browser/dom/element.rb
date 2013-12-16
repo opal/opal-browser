@@ -97,12 +97,6 @@ class Element < Node
     attribute_nodes.map(&:value)
   end
 
-  def each(options = {}, &block)
-    return enum_for :each, options unless block
-
-    attributes(options).each(&block)
-  end
-
   def remove_attribute(name)
     `#@native.removeAttribute(name)`
   end

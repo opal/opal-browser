@@ -47,14 +47,14 @@ class Node
   end
 
   def add_child(node)
-    if NodeSet === node
-      node.each {|node|
-        add_child(node)
-      }
+    if native?(node)
+      `#@native.appendChild(node)`
+    elsif node.respond_to? :each
+      node.each { |n| add_child(n) }
     elsif String === node
       `#@native.appendChild(#@native.ownerDocument.createTextNode(node))`
     else
-      `#@native.appendChild(#{Native.try_convert(node)})`
+      `#@native.appendChild(#{Native.convert(node)})`
     end
 
     self
