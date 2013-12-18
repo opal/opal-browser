@@ -170,23 +170,23 @@ class Mouse < UI
   end
 
   def layer
-    Position.new(`#@native.layerX`, `#@native.layerY`) if defined?(`#@native.layerX`)
+    Position.new(`#@native.layerX`, `#@native.layerY`) unless `#@native.layerX == null`
   end
 
   def offset
-    Position.new(`#@native.offsetX`, `#@native.offsetY`) if defined?(`#@native.offsetX`)
+    Position.new(`#@native.offsetX`, `#@native.offsetY`) unless `#@native.offsetX == null`
   end
 
   def page
-    Position.new(`#@native.pageX`, `#@native.pageY`) if defined?(`#@native.pageX`)
+    Position.new(`#@native.pageX`, `#@native.pageY`) unless `#@native.pageX == null`
   end
 
   def screen
-    Position.new(`#@native.screenX`, `#@native.screenY`) if defined?(`#@native.screenX`)
+    Position.new(`#@native.screenX`, `#@native.screenY`) unless `#@native.screenX == null`
   end
 
   def ancestor
-    Position.new(`#@native.x`, `#@native.y`) if defined?(`#@native.x`)
+    Position.new(`#@native.x`, `#@native.y`) unless `#@native.x == null`
   end
 
   def x
@@ -198,15 +198,15 @@ class Mouse < UI
   end
 
   def related
-    DOM(`#@native.relatedTarget`)
+    DOM(`#@native.relatedTarget`) unless `#@native.relatedTarget == null`
   end
 
   def from
-    DOM(`#@native.fromElement`)
+    DOM(`#@native.fromElement`) unless `#@native.fromElement == null`
   end
 
   def to
-    DOM(`#@native.toElement`)
+    DOM(`#@native.toElement`) unless `#@native.toElement == null`
   end
 
   def click?
