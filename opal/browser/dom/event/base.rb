@@ -80,48 +80,6 @@ module Target
     end
   end
 
-  def callbacks
-    %x{
-      if (!#@native.$callbacks) {
-        #@native.$callbacks = [];
-      }
-
-      return #@native.$callbacks;
-    }
-  end
-
-  def observe
-    %x{
-      if (!#@native.$observer) {
-        #@native.$observer = #{MutationObserver.new {|mutations|
-          mutations.each {|mutation|
-            mutation.added.each {|node|
-              next unless Element === node
-
-              deferred.each {|name, selector, block|
-                if node.matches?(selector)
-                  node.on(name, &block)
-                end
-              }
-            }
-          }
-        }};
-
-        #{`#@native.$observer`.observe(@native, children: true, tree: true)}
-      }
-    }
-  end
-
-  def deferred
-    %x{
-      if (!#@native.$deferred) {
-        #@native.$deferred = [];
-      }
-
-      return #@native.$deferred;
-    }
-  end
-
   def on(name, selector = nil, &block)
     raise ArgumentError, 'no block has been passed' unless block
 
@@ -188,6 +146,57 @@ module Target
     end
 
     `#@native.dispatchEvent(#{event.to_n})`
+  end
+
+private
+  def callbacks
+    %x{
+      if (!#@native.$callbacks) {
+        #@native.$callbacks = [];
+      }
+
+      return #@native.$callbacks;
+    }
+  end
+
+  def observe
+    %x{
+      if (!#@native.$observer) {
+        #@native.$observer = #{MutationObserver.new {|mutations|
+          mutations.each {|mutation|
+            mutation.added.each {|node|
+              next unless Element === node
+
+              defer(node)
+            }
+          }
+        }};
+
+        #{`#@native.$observer`.observe(@native, children: true, tree: true)}
+      }
+    }
+  end
+
+  def deferred
+    %x{
+      if (!#@native.$deferred) {
+        #@native.$deferred = [];
+      }
+
+      return #@native.$deferred;
+    }
+  end
+
+  def defer(node)
+    deferred.each {|name, selector, block|
+      if node.matches?(selector)
+        node.on(name, &block)
+      end
+
+      node.elements.each {|el|
+        defer(el)
+      }
+    }
   end
 end
 
