@@ -43,27 +43,23 @@ private
       create_text(element)
 
     when HTML::Element
-      name, attributes, class_names = element.instance_eval {
-        [@name, @attributes, @class_names]
-      }
+      dom = create_element(`element.name`, `element.attributes`)
 
-      dom = create_element(name, attributes)
-
-      class_names.each {|value|
+      `element.class_names`.each {|value|
         dom.add_class value
       }
 
-      if on = element.instance_eval { @on }
+      if on = `element.on || nil`
         on.each {|args, block|
           dom.on(*args, &block)
         }
       end
 
-      if style = element.instance_eval { @style }
+      if style = `element.style || nil`
         dom.style(*style[0], &style[1])
       end
 
-      if inner = element.instance_eval { @inner_html }
+      if inner = `element.inner_html || nil`
         dom.inner_html = inner
       else
         element.each {|child|
