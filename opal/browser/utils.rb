@@ -8,28 +8,28 @@ class String
   #
   # @return [String] the string encoded for usage as URI component
   def encode_uri_component
-    `encodeURIComponent(#{self})`
+    `encodeURIComponent(self)`
   end
 
   # Encode as URI.
   #
   # @return [String] the string encoded as URI
   def encode_uri
-    `encodeURI(#{self})`
+    `encodeURI(self)`
   end
 
   # Decode as URI component.
   #
   # @return [String] the string decoded as URI component
   def decode_uri_component
-    `decodeURIComponent(#{self})`
+    `decodeURIComponent(self)`
   end
 
   # Decode as URI.
   #
   # @return [String] the string decoded as URI
   def decode_uri
-    `decodeURI(#{self})`
+    `decodeURI(self)`
   end
 end
 
@@ -46,5 +46,11 @@ class Hash
     map {|name, value|
       "#{name.to_s.encode_uri_component}=#{value.to_s.encode_uri_component}"
     }.join(?&)
+  end
+end
+
+class Object
+  def encode_uri
+    to_s.encode_uri
   end
 end
