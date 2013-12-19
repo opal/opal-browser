@@ -12,7 +12,7 @@ Gem::Specification.new {|s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ['lib']
 
-  s.add_dependency 'opal', '>= 0.6.0'
+  s.add_dependency 'opal', ['>= 0.5.5', '< 1.0.0']
   s.add_dependency 'paggio'
 
   s.add_development_dependency 'opal-rspec'

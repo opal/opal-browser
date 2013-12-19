@@ -109,6 +109,7 @@ class Window
              (window.opener = '' && window.close());
     }
   end
+
 end
 
 end
