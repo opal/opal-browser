@@ -29,3 +29,11 @@ class Timeout
 end
 
 end
+
+class Proc
+  def delay(by, *args, &block)
+    $window.once by do
+      block.call(*args)
+    end
+  end
+end
