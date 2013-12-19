@@ -5,6 +5,7 @@ require 'browser/window/view'
 require 'browser/window/size'
 require 'browser/window/scroll'
 require 'browser/window/compatibility'
+require 'browser/window/animation_frame'
 
 module Browser
 
@@ -109,6 +110,13 @@ class Window
              (window.opener = '' && window.close());
     }
   end
+
+  # Execute a block to update an animation before the next repaint.
+  #
+  def request_animation_frame(&block)
+    AnimationFrame.new(self, &block)
+  end
+
 end
 
 end
