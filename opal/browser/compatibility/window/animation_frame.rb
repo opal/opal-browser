@@ -1,4 +1,4 @@
-module Browser; class Window; class AnimationFrame
+module Browser; class Window
 
   class Compatibility
     def self.request?(prefix = nil)
@@ -11,17 +11,22 @@ module Browser; class Window; class AnimationFrame
 
     def self.cancel?(prefix = nil)
       if prefix
-        has?("#{prefix}CancelAnimationFrame") ||
-          has?("#{prefix}CancelRequestAnimationFrame")
+        has?("#{prefix}CancelAnimationFrame")
+      else
+        has?(:cancelAnimationFrame)
+      end
+    end
+
+    def self.cancel_request?(prefix = nil)
+      if prefix
+        has?("#{prefix}CancelRequestAnimationFrame")
       else
         has?(:cancelAnimationFrame)
       end
     end
   end
 
-  C = Compatibility
-
-end; end; end
+end; end
 
 module Browser; class Window
 
@@ -34,7 +39,7 @@ class AnimationFrame
     %w{ webkit moz o ms }.each do |prefix|
       if C.request? prefix
         def request(&block)
-          @id = `#@native[#{prefix}+'requestAnimationFrame'](#{block.to_n})`
+          @id = `#@native[#{prefix}+'RequestAnimationFrame'](#{block.to_n})`
         end
       end
     end
@@ -47,11 +52,11 @@ class AnimationFrame
     %w{ webkit moz o ms }.each do |prefix|
       if C.cancel? prefix
         def cancel
-          if C.has?("#{prefix}CancelAnimationFrame")
-            `#@native[#{prefix}+'cancelAnimationFrame'](#{@id})`
-          else
-            `#@native[#{prefix}+'CancelRequestAnimationFrame'](#{@id})`
-          end
+          `#@native[#{prefix}+'CancelAnimationFrame'](#{@id})`
+        end
+      elsif C.cancel_request? prefix
+        def cancel
+          `#@native[#{prefix}+'CancelRequestAnimationFrame'](#{@id})`
         end
       end
     end
