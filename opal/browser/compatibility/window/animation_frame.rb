@@ -26,7 +26,7 @@ module Browser
     end
   end
 
-end; end
+end
 
 module Browser
 
