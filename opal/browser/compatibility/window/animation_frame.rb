@@ -19,6 +19,8 @@ module Browser; class Window; class AnimationFrame
     end
   end
 
+  C = Compatibility
+
 end; end; end
 
 module Browser; class Window
