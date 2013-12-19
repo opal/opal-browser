@@ -28,7 +28,7 @@ module Browser
 
 end
 
-module Browser
+module Browser; class Window
 
 class AnimationFrame
   if C.request?
@@ -63,4 +63,4 @@ class AnimationFrame
   end
 end
 
-end
+end; end
