@@ -1,34 +1,59 @@
 module Browser; class Window; class AnimationFrame
 
-unless C.has? :requestAnimationFrame
-  supported_with_prefix = false
-  %w{ webkit moz o ms }.each do |prefix|
-    if C.has? "#{prefix}RequestAnimationFrame"
-      def vendored_request_method_name
-        "#{prefix}RequestAnimationFrame"
-      end
-      supported_with_prefix = true
-    end
-    if C.has? "#{prefix}CancelAnimationFrame"
-      def vendored_cancel_method_name
-        "#{prefix}CancelAnimationFrame"
+  class Compatibility
+    def self.request?(prefix = nil)
+      if prefix
+        has?("#{prefix}RequestAnimationFrame")
+      else
+        has?(:requestAnimationFrame)
       end
     end
-    if C.has? "#{prefix}CancelRequestAnimationFrame"
-      def vendored_cancel_method_name
-        "#{prefix}CancelRequestAnimationFrame"
+
+    def self.cancel?(prefix = nil)
+      if prefix
+        has?("#{prefix}CancelAnimationFrame") ||
+          has?("#{prefix}CancelRequestAnimationFrame")
+      else
+        has?(:cancelAnimationFrame)
       end
     end
-    break if supported_with_prefix
   end
-  unless supported_with_prefix
-    def vendored_request_method_name
-      raise NotImplementedError, 'window requestAnimationFrame unsupported'
+
+end; end; end
+
+module Browser; class Window
+
+class AnimationFrame
+  if C.request?
+    def request(&block)
+      @id = `#@native.requestAnimationFrame(#{block.to_n})`
     end
-    def vendored_cancel_method_name
-      raise NotImplementedError, 'window cancelAnimationFrame unsupported'
+  else
+    %w{ webkit moz o ms }.each do |prefix|
+      if C.request? prefix
+        def request(&block)
+          @id = `#@native[#{prefix}+'requestAnimationFrame'](#{block.to_n})`
+        end
+      end
+    end
+  end
+  if C.cancel?
+    def cancel
+      `#@native.cancelAnimationFrame(#{@id})`
+    end
+  else
+    %w{ webkit moz o ms }.each do |prefix|
+      if C.cancel? prefix
+        def cancel
+          if C.has?("#{prefix}CancelAnimationFrame")
+            `#@native[#{prefix}+'cancelAnimationFrame'](#{@id})`
+          else
+            `#@native[#{prefix}+'CancelRequestAnimationFrame'](#{@id})`
+          end
+        end
+      end
     end
   end
 end
 
-end; end; end
+end; end
