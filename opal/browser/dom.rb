@@ -36,8 +36,7 @@ module Kernel
     DOM(`doc`)
   end
 
-  # Wrap a native element or create a DOM tree using the
-  # {Browser::DOM::Builder} DSL.
+  # Wrap a native element or create a DOM tree using the {Paggio::HTML} DSL.
   #
   # @return [Browser::DOM::Node]
   def DOM(*args, &block)
