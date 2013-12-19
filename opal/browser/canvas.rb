@@ -257,7 +257,7 @@ class Canvas
     self
   end
 
-  def is_point_in_path(x, y)
+  def point_in_path?(x, y)
     `#{@native}.isPointInPath(x, y)`
   end
 
