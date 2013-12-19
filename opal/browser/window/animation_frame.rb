@@ -21,4 +21,10 @@ class AnimationFrame
 
 end
 
+  # Execute a block to update an animation before the next repaint.
+  #
+  def request_animation_frame(&block)
+    AnimationFrame.new(self, &block)
+  end
+
 end; end
