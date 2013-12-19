@@ -1,4 +1,4 @@
-module Browser; class Window
+module Browser
 
   class Compatibility
     def self.request?(prefix = nil)
@@ -28,7 +28,7 @@ module Browser; class Window
 
 end; end
 
-module Browser; class Window
+module Browser
 
 class AnimationFrame
   if C.request?
