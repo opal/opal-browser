@@ -8,7 +8,7 @@ class AnimationFrame
     @window = window
     @native = window.to_n
 
-    request
+    request &block
   end
 
   def request
