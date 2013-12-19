@@ -1,3 +1,5 @@
+require 'browser/compatibility/window/animation_frame'
+
 module Browser; class Window
 
 class AnimationFrame
