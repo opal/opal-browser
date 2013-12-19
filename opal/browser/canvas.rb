@@ -258,7 +258,7 @@ class Canvas
   end
 
   def point_in_path?(x, y)
-    `#{@native}.isPointInPath(x, y)`
+    `#@native.isPointInPath(x, y)`
   end
 
   def width
