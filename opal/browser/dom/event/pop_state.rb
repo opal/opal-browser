@@ -15,7 +15,7 @@ class PopState < Event
     new(`new PopStateEvent(#{name}, #{Definition.new(&block)})`)
   end
 
-  alias_native :state, :state
+  alias_native :state
 end
 
 end; end; end

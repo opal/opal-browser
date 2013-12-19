@@ -31,8 +31,6 @@ require 'browser/dom/event/close'
 module Browser; module DOM
 
 class Event
-  include Native
-
   def self.names
     return @names if @names
 
