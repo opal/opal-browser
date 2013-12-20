@@ -41,9 +41,14 @@ end
 end
 
 class Proc
-  def after(time, *args)
-    $window.after time do
-      call(*args)
-    end
+  def after(time)
+    $window.after(time, &self)
+  end
+end
+
+module Kernel
+  # (see Browser::Window#once)
+  def after(time, &block)
+    $window.after(time, &block)
   end
 end
