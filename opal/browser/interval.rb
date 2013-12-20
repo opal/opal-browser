@@ -67,4 +67,22 @@ class Interval
   end
 end
 
+class Window
+  # Execute the block every given seconds.
+  #
+  # @param time [Float] the seconds between every call
+  # @return [Interval] the object representing the interval
+  def every(time, &block)
+    Interval.new(@native, time, &block)
+  end
+end
+
+end
+
+class Proc
+  def every(time, *args)
+    $window.every time do
+      call(*args)
+    end
+  end
 end

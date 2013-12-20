@@ -82,14 +82,6 @@ class Window
     `#@native.postMessage(#{message}, #{options[:to] || '*'})`
   end
 
-  # Execute the block every given seconds.
-  #
-  # @param time [Float] the seconds between every call
-  # @return [Interval] the object representing the interval
-  def every(time, &block)
-    Interval.new(@native, time, &block)
-  end
-
   # Execute a block after the given seconds.
   #
   # @param time [Float] the seconds after it gets called
