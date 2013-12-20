@@ -23,7 +23,7 @@ end
 
 class Proc
   # Execute a block to update an animation before the next repaint.
-  def animation_frame(&block)
-    Browser::AnimationFrame.new($window, &block)
+  def animation_frame
+    Browser::AnimationFrame.new($window, &self)
   end
 end
