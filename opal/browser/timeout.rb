@@ -15,7 +15,7 @@ class Timeout
     @after  = time
     @block  = block
 
-    @id = `#@window.setTimeout(#{block.to_n}, time * 1000)`
+    start
   end
 
   # Abort the timeout.
@@ -23,6 +23,12 @@ class Timeout
   # @return [self]
   def abort
     `#@window.clearTimeout(#@id)`
+
+    self
+  end
+
+  def start
+    @id = `#@window.setTimeout(#{@block.to_n}, #@after * 1000)`
 
     self
   end
