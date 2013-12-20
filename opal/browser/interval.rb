@@ -61,7 +61,7 @@ class Interval
 
     return unless stopped?
 
-    @id = `#@window.setInterval(#{block.to_n}, time * 1000)`
+    @id = `#@window.setInterval(#{@block.to_n}, #@every * 1000)`
 
     self
   end
