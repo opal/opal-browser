@@ -110,9 +110,4 @@ module Kernel
   def confirm(value)
     $window.confirm(value)
   end
-
-  # (see Browser::Window#every)
-  def every(time, &block)
-    $window.every(time, &block)
-  end
 end

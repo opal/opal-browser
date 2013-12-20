@@ -80,9 +80,14 @@ end
 end
 
 class Proc
-  def every(time, *args)
-    $window.every time do
-      call(*args)
-    end
+  def every(time)
+    $window.every(time, &self)
+  end
+end
+
+module Kernel
+  # (see Browser::Window#every)
+  def every(time, &block)
+    $window.every(time, &block)
   end
 end
