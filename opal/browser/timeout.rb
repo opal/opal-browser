@@ -28,12 +28,22 @@ class Timeout
   end
 end
 
+class Window
+  # Execute a block after the given seconds.
+  #
+  # @param time [Float] the seconds after it gets called
+  # @return [Timeout] the object representing the timeout
+  def after(time, &block)
+    Timeout.new(@native, time, &block)
+  end
+end
+
 end
 
 class Proc
-  def delay(by, *args, &block)
-    $window.once by do
-      block.call(*args)
+  def after(time, *args)
+    $window.after time do
+      call(*args)
     end
   end
 end
