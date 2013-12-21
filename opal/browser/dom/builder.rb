@@ -43,7 +43,7 @@ private
       create_text(element)
 
     when HTML::Element
-      dom = create_element(`element.name`, `element.attributes`)
+      dom = create_element(`element.name`, `element.attributes || {}`)
 
       `element.class_names`.each {|value|
         dom.add_class value
