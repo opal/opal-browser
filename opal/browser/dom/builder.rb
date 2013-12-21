@@ -1,3 +1,4 @@
+# Temporary fix for a bug in String#scan
 module Paggio::Utils
   def self.heredoc(string)
     string
@@ -17,13 +18,33 @@ end
 module Browser; module DOM
 
 class Builder
-  HTML = Paggio::HTML
+  def self.to_h
+    @builders ||= {}
+  end
+
+  def self.for(klass, &block)
+    if block
+      to_h[klass] = block
+    else
+      to_h[klass]
+    end
+  end
+
+  def self.build(builder, item)
+    to_h.each {|klass, block|
+      if klass === item
+        break block.call(builder, item)
+      end
+    }
+  end
+
+  attr_reader :document, :element
 
   def initialize(document, element = nil, &block)
     @document = document
     @element  = element
     @builder  = Paggio::HTML.new(&block)
-    @roots    = @builder.each.map { |e| convert(e) }
+    @roots    = @builder.each.map { |e| Builder.build(self, e) }
 
     if @element
       @roots.each {|root|
@@ -35,52 +56,39 @@ class Builder
   def to_a
     @roots
   end
+end
 
-private
-  def convert(element)
-    case element
-    when String
-      create_text(element)
+Builder.for String do |b, item|
+  b.document.create_text(item)
+end
 
-    when HTML::Element
-      dom = create_element(`element.name`, `element.attributes || {}`)
+Builder.for Paggio::HTML::Element do |b, item|
+  dom = b.document.create_element(`item.name`)
+  dom.attributes.merge!(`item.attributes || {}`)
 
-      `element.class_names`.each {|value|
-        dom.add_class value
-      }
+  `item.class_names`.each {|value|
+    dom.add_class value
+  }
 
-      if on = `element.on || nil`
-        on.each {|args, block|
-          dom.on(*args, &block)
-        }
-      end
-
-      if style = `element.style || nil`
-        dom.style(*style[0], &style[1])
-      end
-
-      if inner = `element.inner_html || nil`
-        dom.inner_html = inner
-      else
-        element.each {|child|
-          dom << convert(child)
-        }
-      end
-
-      dom
-    end
+  if on = `item.on || nil`
+    on.each {|args, block|
+      dom.on(*args, &block)
+    }
   end
 
-  def create_element(name, attributes = {}, namespace = nil)
-    element = @document.create_element(name, namespace: namespace)
-    element.attributes.merge!(attributes)
-
-    element
+  if style = `item.style || nil`
+    dom.style(*style[0], &style[1])
   end
 
-  def create_text(content)
-    @document.create_text(content)
+  if inner = `item.inner_html || nil`
+    dom.inner_html = inner
+  else
+    item.each {|child|
+      dom << Builder.build(b, child)
+    }
   end
+
+  dom
 end
 
 end; end
