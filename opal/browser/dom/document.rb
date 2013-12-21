@@ -62,11 +62,11 @@ class Document < Element
   end
 
   def head
-    xpath('//head').first
+    DOM(`#@native.getElementsByTagName("head")[0]`)
   end
 
   def body
-    DOM(`document.body`)
+    DOM(`#@native.body`)
   end
 
   def style_sheets
