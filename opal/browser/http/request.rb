@@ -52,7 +52,7 @@ class Request
     @opened       = false
     @sent         = false
     @completed    = false
-    @callbacks    = {}
+    @callbacks    = Hash.new { |h, k| h[k] = [] }
 
     if block.arity == 0
       instance_exec(&block)
@@ -197,7 +197,7 @@ class Request
   #
   # @return [self]
   def on(what, &block)
-    @callbacks[what] = block
+    @callbacks[what] << block
 
     self
   end
@@ -210,7 +210,7 @@ class Request
   # @param user [String] the user to use for authentication
   # @param password [String] the password to use for authentication
   #
-  # @return [Response] the response
+  # @return [self]
   def open(method = nil, url = nil, asynchronous = nil, user = nil, password = nil)
     raise 'the request has already been opened' if opened?
 
@@ -228,11 +228,11 @@ class Request
 
     `#@native.open(#{@method.to_s.upcase}, #{url.to_s}, #{@asynchronous}, #{@user.to_n}, #{@password.to_n})`
 
-    @opened = true
-
     unless @callbacks.empty?
       `#@native.onreadystatechange = #{callback}`
     end
+
+    @opened = true
 
     self
   end
@@ -309,17 +309,19 @@ private
   def callback
     proc {|event|
       state = %w[uninitialized loading loaded interactive complete][`#@native.readyState`]
+      res   = response
 
-      @callbacks[state].(response) if @callbacks[state]
+      @callbacks[state].each { |b| b.(res) }
 
       if state == :complete
         @completed = true
-        @callbacks[response.status.code].(response) if @callbacks[response.status.code]
 
-        if response.success?
-          @callbacks[:success].(response) if @callbacks[:success]
+        @callbacks[res.status.code].each { |b| b.(res) }
+
+        if res.success?
+          @callbacks[:success].each { |b| b.(res) }
         else
-          @callbacks[:failure].(response) if @callbacks[:failure]
+          @callbacks[:failure].each { |b| b.(res) }
         end
       end
     }.to_n
