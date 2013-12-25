@@ -1,8 +1,9 @@
+require 'promise'
+
 require 'browser/http/binary'
 require 'browser/http/headers'
 require 'browser/http/request'
 require 'browser/http/response'
-
 require 'browser/http/compatibility'
 
 module Browser
@@ -15,7 +16,17 @@ module HTTP
   # @param data [String, Hash] the data to send
   # @return [Response] the response
   def self.send(method, url, data = nil, &block)
-    Request.new(&block).open(method, url).send(data)
+    Promise.new.tap {|promise|
+      Request.new(&block).tap {|req|
+        req.on :success do |res|
+          promise.resolve(res)
+        end
+
+        req.on :failure do |res|
+          promise.reject(res)
+        end
+      }.open(method, url).send(data)
+    }
   end
 
   # Send an asynchronous GET request.
