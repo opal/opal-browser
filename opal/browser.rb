@@ -1,6 +1,7 @@
 require 'native'
 require 'paggio'
 
+require 'browser/version'
 require 'browser/utils'
 require 'browser/compatibility'
 

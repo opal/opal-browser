@@ -1,6 +1,9 @@
+$LOAD_PATH << File.expand_path('../opal', __FILE__)
+require 'browser/version'
+
 Gem::Specification.new {|s|
   s.name         = 'opal-browser'
-  s.version      = '0.1.0'
+  s.version      = Browser::VERSION
   s.author       = 'meh.'
   s.email        = 'meh@schizofreni.co'
   s.homepage     = 'http://github.com/opal/opal-browser'
