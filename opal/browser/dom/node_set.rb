@@ -41,7 +41,7 @@ class NodeSet
   end
 
   def filter(expression)
-    NodeSet.new(document, @internal.select { |node| node.matches?(expression) })
+    NodeSet.new(document, @literal.select { |node| node.matches?(expression) })
   end
 
   def after(node)
@@ -81,7 +81,7 @@ class NodeSet
   end
 
   def inspect
-    "#<DOM::NodeSet: #{@internal.inspect[1 .. -2]}"
+    "#<DOM::NodeSet: #{@literal.inspect[1 .. -2]}"
   end
 end
 
