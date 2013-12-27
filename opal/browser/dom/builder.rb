@@ -64,7 +64,10 @@ end
 
 Builder.for Paggio::HTML::Element do |b, item|
   dom = b.document.create_element(`item.name`)
-  dom.attributes.merge!(`item.attributes || {}`)
+
+  if Hash === `item.attributes`
+    dom.attributes.merge!(`item.attributes`)
+  end
 
   `item.class_names`.each {|value|
     dom.add_class value
