@@ -3,6 +3,12 @@ module Browser
   Position = Struct.new(:x, :y)
 end
 
+class Object
+  def encode_uri
+    to_s.encode_uri
+  end
+end
+
 class String
   # Encode as URI component.
   #
@@ -46,11 +52,5 @@ class Hash
     map {|name, value|
       "#{name.to_s.encode_uri_component}=#{value.to_s.encode_uri_component}"
     }.join(?&)
-  end
-end
-
-class Object
-  def encode_uri
-    to_s.encode_uri
   end
 end
