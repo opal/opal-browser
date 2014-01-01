@@ -16,6 +16,10 @@ class NodeSet
     }
   end
 
+  def respond_to_missing?(name)
+    @literal.respond_to?(name)
+  end
+
   def method_missing(name, *args, &block)
     unless @literal.respond_to? name
       each {|el|
