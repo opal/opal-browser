@@ -31,6 +31,11 @@ class Headers
     @hash = Hash.new
   end
 
+  # Clear the {Headers}.
+  def clear
+    @hash.clear
+  end
+
   # Iterate over the headers.
   #
   # @yield [name, value] the header name and value
