@@ -1,3 +1,5 @@
+require 'promise'
+
 require 'browser/compatibility/immediate'
 
 module Browser
@@ -39,5 +41,19 @@ class Proc
   # Defer the function to be called as soon as possible.
   def defer(*args, &block)
     Browser::Immediate.new(self, args, &block).tap(&:dispatch)
+  end
+end
+
+class Promise
+  def self.defer(*args, &block)
+    new.tap {|promise|
+      proc {
+        begin
+          promise.resolve(block.call(*args))
+        rescue Exception => e
+          promise.reject(e)
+        end
+      }.defer
+    }
   end
 end
