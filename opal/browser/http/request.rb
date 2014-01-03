@@ -44,11 +44,13 @@ class Request
   def initialize(&block)
     super(transport)
 
+    @parameters   = {}
+    @query        = {}
     @headers      = Headers[DEFAULT_HEADERS]
     @method       = :get
     @asynchronous = true
     @binary       = false
-    @cacheable     = true
+    @cacheable    = true
     @opened       = false
     @sent         = false
     @completed    = false
@@ -183,11 +185,18 @@ class Request
   #
   # @param hash [Hash] the parameters
   #
-  # @return [self]
-  def parameters(hash)
-    @parameters = hash
+  # @return [Hash]
+  def parameters(hash = nil)
+    hash ? @parameters = hash : @parameters
+  end
 
-    self
+  # Set the URI query.
+  #
+  # @param hash [Hash] the query
+  #
+  # @return [Hash]
+  def query(hash = nil)
+    hash ? @query = hash : @query
   end
 
   # Register an event on the request.
@@ -223,7 +232,17 @@ class Request
     url = @url
 
     unless cacheable?
-      url += (url.include?(??) ? ?& : ??) + "_=#{rand}"
+      @query[:_] = rand
+    end
+
+    unless @query.empty?
+      if url.include???
+        url += ?&
+      else
+        url += ??
+      end
+
+      url += @query.encode_uri
     end
 
     `#@native.open(#{@method.to_s.upcase}, #{url.to_s}, #{@asynchronous}, #{@user.to_n}, #{@password.to_n})`
@@ -279,7 +298,7 @@ class Request
 
     if String === parameters
       data = parameters
-    elsif Hash === parameters
+    elsif Hash === parameters && !parameters.empty?
       data = parameters.map {|vals|
         vals.map(&:encode_uri_component).join(?=)
       }.join(?&)
