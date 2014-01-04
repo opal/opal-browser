@@ -86,7 +86,7 @@ class Canvas
   end
 
   def pattern(image, type = :repeat)
-    `#@native.createPattern(#{Element(image).to_n}, type)`
+    `#@native.createPattern(#{DOM(image).to_n}, type)`
   end
 
   def gradient(*args, &block)
