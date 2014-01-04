@@ -42,7 +42,7 @@ class Data
   end
 
   def length
-    `#@native.length`
+    `#@native.data.length`
   end
 
   def [](index)
