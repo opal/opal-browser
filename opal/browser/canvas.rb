@@ -8,6 +8,8 @@
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
 #++
 
+require 'promise'
+
 require 'browser/canvas/style'
 require 'browser/canvas/text'
 require 'browser/canvas/data'
@@ -37,6 +39,19 @@ class Canvas
 
     @style = Style.new(self)
     @text  = Text.new(self)
+  end
+
+  def load(path)
+    promise = Promise.new
+    image   = $document.create_element('img')
+
+    image.on :load do
+      promise.resolve(image)
+    end
+
+    image[:src] = path
+
+    promise
   end
 
   def data(x = nil, y = nil, width = nil, height = nil)
