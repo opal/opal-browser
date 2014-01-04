@@ -23,12 +23,26 @@ class Canvas
   attr_reader :element, :style, :text
 
   def initialize(*args)
-    if DOM::Node === args.first
-      @element = args.shift
-    else
+    if DOM::Element === args.first
+      element = args.shift
+
+      if DOM::Element::Image === element
+        @image   = element
+      else
+        @element = element
+      end
+    end
+
+    unless @element
       @element = $document.create_element('canvas')
-      @element[:width]  = args.shift
-      @element[:height] = args.shift
+
+      if @image
+        @element[:width]  = @image.width
+        @element[:height] = @image.height
+      else
+        @element[:width]  = args.shift
+        @element[:height] = args.shift
+      end
     end
 
     if @element.node_name != 'CANVAS'
@@ -39,6 +53,10 @@ class Canvas
 
     @style = Style.new(self)
     @text  = Text.new(self)
+
+    if @image
+      draw_image(@image)
+    end
   end
 
   def load(path)
