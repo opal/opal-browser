@@ -14,11 +14,12 @@ class Element < Node
 
   def self.new(node)
     if self == Element
-      case `node.nodeName`.downcase
-      when :input
-        Input.new(node)
+      name = `node.nodeName`.capitalize
 
-      else super
+      if Element.const_defined?(name)
+        Element.const_get(name).new(node)
+      else
+        super
       end
     else
       super

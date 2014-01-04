@@ -18,4 +18,6 @@ class Image < Element
   end
 end
 
+Img = Image
+
 end; end; end
