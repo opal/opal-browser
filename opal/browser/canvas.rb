@@ -158,17 +158,28 @@ class Canvas
     self
   end
 
-  def draw_image(*args)
-    image = Element(args.shift)
+  def draw_image(image, *args)
+    if Canvas === image
+      image = image.element
+    else
+      image = DOM(image)
+    end
 
     if args.first.is_a?(Hash)
       source, destination = args
 
       `#@native.drawImage(#{image.to_n}, #{source[:x]}, #{source[:y]}, #{source[:width]}, #{source[:height]}, #{destination[:x]}, #{destination[:y]}, #{destination[:width]}, #{destination[:height]})`
     else
-      x, y, width, height = args
+      case args.length
+      when 0
+        `#@native.drawImage(#{image.to_n}, 0, 0)`
 
-      `#@native.drawImage(#{image.to_n}, #{x}, #{y}, #{width || `undefined`}, #{height || `undefined`})`
+      when 2
+        `#@native.drawImage(#{image.to_n}, #{args[0]}, #{args[1]})`
+
+      when 4
+        `#@native.drawImage(#{image.to_n}, #{args[0]}, #{args[1]}, #{args[2]}, #{args[3]})`
+      end
     end
 
     self
