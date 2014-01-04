@@ -31,18 +31,8 @@ require 'browser/dom/event/close'
 module Browser; module DOM
 
 class Event
-  def self.names
-    return @names if @names
-
-    @names = Hash.new { |_, k| k }
-    @names.merge!({
-      load:  'DOMContentLoaded',
-      hover: 'mouse:over'
-    })
-  end
-
   def self.name_for(name)
-    names[name].gsub(?:, '')
+    name.gsub(?:, '')
   end
 
   def self.classes
