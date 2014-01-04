@@ -324,4 +324,8 @@ class Canvas
   end
 end
 
+Browser::DOM::Builder.for Canvas do |b, item|
+  item.element
+end
+
 end
