@@ -59,6 +59,10 @@ class Canvas
     end
   end
 
+  def append_to(parent)
+    @element.append_to(parent)
+  end
+
   def load(path)
     promise = Promise.new
     image   = $document.create_element('img')
