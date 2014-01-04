@@ -31,8 +31,15 @@ require 'browser/dom/event/close'
 module Browser; module DOM
 
 class Event
+  def self.aliases
+    @aliases ||= {
+      'dom:load' => 'DOMContentLoaded',
+      'hover'    => 'mouse:over'
+    }
+  end
+
   def self.name_for(name)
-    name.gsub(?:, '')
+    (aliases[name] || name).gsub(?:, '')
   end
 
   def self.classes
