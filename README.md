@@ -13,7 +13,7 @@ DOM support is complete as far as I know, it has a very Nokogiri feel to it
 with obvious differences where relevant (for instance, event handling).
 
 ```ruby
-$document.on :load do
+$document.on 'dom:load' do
   alert "yo dawg, I'm all loaded up in here"
 end
 ```
@@ -22,7 +22,7 @@ It also supports a markaby inspired builder DSL which generates DOM nodes
 directly instead of creating a string.
 
 ```ruby
-$document.on :load do
+$document.on 'dom:load' do
   DOM {
     div.info {
       span.red "I'm all cooked up."
