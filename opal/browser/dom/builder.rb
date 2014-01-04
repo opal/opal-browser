@@ -94,4 +94,8 @@ Builder.for Paggio::HTML::Element do |b, item|
   dom
 end
 
+Builder.for DOM::Node do |b, item|
+  item
+end
+
 end; end
