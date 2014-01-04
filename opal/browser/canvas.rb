@@ -61,6 +61,14 @@ class Canvas
     end
   end
 
+  def width
+    @element[:width].to_i
+  end
+
+  def height
+    @element[:height].to_i
+  end
+
   def append_to(parent)
     @element.append_to(parent)
   end
@@ -309,14 +317,6 @@ class Canvas
 
   def point_in_path?(x, y)
     `#@native.isPointInPath(x, y)`
-  end
-
-  def width
-    @element[:width]
-  end
-
-  def height
-    @element[:height]
   end
 
   def to_data(type = undefined)
