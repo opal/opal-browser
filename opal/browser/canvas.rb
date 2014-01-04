@@ -31,6 +31,8 @@ class Canvas
       else
         @element = element
       end
+    elsif Canvas === args.first
+      @image = args.first
     end
 
     unless @element
