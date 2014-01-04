@@ -3,6 +3,7 @@ require 'browser/dom/element/offset'
 require 'browser/dom/element/scroll'
 
 require 'browser/dom/element/input'
+require 'browser/dom/element/image'
 
 module Browser; module DOM
 
