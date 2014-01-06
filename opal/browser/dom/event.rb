@@ -227,10 +227,23 @@ class Event
     `!!#@native.stopped`
   end
 
-  def stop!
+  def stop
     `#@native.stopPropagation()` if defined?(`#@native.stopPropagation`)
-    `#@native.preventDefault()` if defined?(`#@native.preventDefault`)
     `#@native.stopped = true`
+  end
+
+  def prevent
+    `#@native.preventDefault()` if defined?(`#@native.preventDefault`)
+    `#@native.prevented = true`
+  end
+
+  def prevented?
+    `!!#@native.prevented`
+  end
+
+  def stop!
+    prevent
+    stop
   end
 end
 
