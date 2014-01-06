@@ -216,7 +216,7 @@ class Event
 
       delegates.handlers.each {|selector, block|
         if target.matches? selector
-          block.call(event)
+          block.call(event, *event.arguments)
         end
       }
     end
