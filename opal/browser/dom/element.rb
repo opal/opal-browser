@@ -217,15 +217,19 @@ class Element < Node
   end
 
   def data(what)
-    unless defined?(`#@native.$data`)
-      `#@native.$data = {}`
-    end
-
     if Hash === what
+      unless defined?(`#@native.$data`)
+        `#@native.$data = {}`
+      end
+
       what.each {|name, value|
         `#@native.$data[name] = value`
       }
     else
+      return self["data-#{what}"] if self["data-#{what}"]
+
+      return unless defined?(`#@native.$data`)
+
       %x{
         var value = #@native.$data[what];
 
