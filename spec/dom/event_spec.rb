@@ -66,7 +66,7 @@ describe Browser::DOM::Event do
       elem.trigger :bazinga, 1, 2, 3
     end
 
-    async "works with deferred elements" do
+    async "works with delegated elements" do
       elem = $document["event-spec"]
 
       elem.on :bazinga, 'span.nami' do

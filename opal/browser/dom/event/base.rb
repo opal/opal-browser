@@ -7,18 +7,18 @@ class Event
     include Native
 
     def self.new(&block)
-      data = super(`{}`)
+      data = super(`{ bubbles: true, cancelable: true }`)
       block.call(data) if block
 
       data.to_n
     end
 
-    def bubbles!
-      `#@native.bubbles = true`
+    def bubbles=(value)
+      `#@native.bubbles = #{value}`
     end
 
-    def cancelable!
-      `#@native.cancelable = true`
+    def cancelable=(value)
+      `#@native.cancelable = #{value}`
     end
   end
 
@@ -56,9 +56,8 @@ class Event
 
       def initialize(target, name, selector = nil, &block)
         %x{
-          callback = #{self};
-          func     = function(event) {
-            event = #{::Browser::DOM::Event.new(`event`, `callback`)};
+          #@function = function(event) {
+            event = #{::Browser::DOM::Event.new(`event`, `this`, `self`)};
 
             if (!#{`event`.stopped?}) {
               #{block.call(`event`, *`event`.arguments)};
@@ -68,7 +67,6 @@ class Event
           }
         }
 
-        @function = `func`
         @target   = target
         @name     = name
         @selector = selector
@@ -83,24 +81,57 @@ class Event
       end
     end
 
-    def on(name, selector = nil, &block)
-      raise ArgumentError, 'no block has been passed' unless block
-
-      name     = Event.name_for(name)
-      callback = Callback.new(self, name, selector, &block)
-
-      callbacks.push(callback)
-
-      if selector
-        observe
-        deferred << [name, selector, block]
-
-        css(selector).on(name, &block)
-      else
-        `#@native.addEventListener(#{name}, #{callback.to_n})`
+    class Delegate
+      def initialize(target, name, pair)
+        @target = target
+        @name   = name
+        @pair   = pair
       end
 
-      callback
+      def off
+        delegate = @target.delegated[@name]
+        delegate.last.delete(@pair)
+
+        if delegate.last.empty?
+          delegate.first.off
+          delegate.delete(@name)
+        end
+      end
+    end
+
+    Delegates = Struct.new(:callback, :handlers)
+
+    def on(name, selector = nil, &block)
+      raise ArgumentError, 'no block has been given' unless block
+
+      name = Event.name_for(name)
+
+      if selector
+        unless delegate = delegated[name]
+          delegate = delegated[name] = Delegates.new
+
+          delegate.callback = on(name) {|e|
+            delegate(delegate, e)
+          }
+
+          pair = [selector, block]
+          delegate.handlers = [pair]
+
+          Delegate.new(self, name, pair)
+        else
+          pair = [selector, block]
+          delegate.handlers << pair
+
+          Delegate.new(self, name, pair)
+        end
+      else
+        callback = Callback.new(self, name, selector, &block)
+        callbacks.push(callback)
+
+        `#@native.addEventListener(#{name}, #{callback.to_n})`
+
+        callback
+      end
     end
 
     def off(what = nil)
@@ -151,6 +182,14 @@ class Event
       `#@native.dispatchEvent(#{event.to_n})`
     end
 
+    # Trigger the event without bubbling.
+    def trigger!(event, *args, &block)
+      trigger event, *args do |e|
+        block.call(e) if block
+        e.bubbles = false
+      end
+    end
+
   private
     def callbacks
       %x{
@@ -162,43 +201,23 @@ class Event
       }
     end
 
-    def observe
+    def delegated
       %x{
-        if (!#@native.$observer) {
-          #@native.$observer = #{MutationObserver.new {|mutations|
-            mutations.each {|mutation|
-              mutation.added.each {|node|
-                next unless Element === node
-
-                defer(node)
-              }
-            }
-          }};
-
-          #{`#@native.$observer`.observe(@native, children: true, tree: true)}
+        if (!#@native.$delegated) {
+          #@native.$delegated = #{{}};
         }
+
+        return #@native.$delegated;
       }
     end
 
-    def deferred
-      %x{
-        if (!#@native.$deferred) {
-          #@native.$deferred = [];
-        }
+    def delegate(delegates, event)
+      target = event.target
 
-        return #@native.$deferred;
-      }
-    end
-
-    def defer(node)
-      deferred.each {|name, selector, block|
-        if node.matches?(selector)
-          node.on(name, &block)
+      delegates.handlers.each {|selector, block|
+        if target.matches? selector
+          block.call(event)
         end
-
-        node.elements.each {|el|
-          defer(el)
-        }
       }
     end
   end

@@ -195,13 +195,21 @@ class Event
     end
   end
 
-  attr_reader :target, :callback
+  attr_reader :callback
 
-  def initialize(native, callback = nil)
-    super(native)
+  def initialize(event, element = nil, callback = nil)
+    super(event)
 
-    @target    = Target.convert(`#@native.target`)
-    @callback, = callback # TODO: change this when super is fixed
+    @element  = element
+    @callback = callback
+  end
+
+  def element
+    Target.convert(@element)
+  end
+
+  def target
+    Target.convert(`#@native.target`)
   end
 
   def off

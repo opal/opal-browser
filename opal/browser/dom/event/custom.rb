@@ -11,11 +11,14 @@ class Custom < Event
     data = OpenStruct.new
     block.call(data) if block
 
-    new(`new CustomEvent(#{name}, { detail: #{data.to_n} })`)
+    new(`new CustomEvent(#{name}, {
+      bubbles:    #{data.bubbles},
+      cancelable: #{data.cancelable},
+      detail:     #{data.to_n} })`)
   end
 
   def initialize(native)
-    super(native); @native = native # TODO: remove this when super is fixed
+    super(native); @native = native # FIXME: remove this when super is fixed
 
     @detail = Hash.new(`#{native}.detail`)
   end
