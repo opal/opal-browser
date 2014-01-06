@@ -58,9 +58,6 @@ class Drag < Event
     def related=(elem)
       `#@native.relatedTarget = #{Native.try_convert(elem)}`
     end
-
-
-
   end
 
   def self.create(name, &block)
