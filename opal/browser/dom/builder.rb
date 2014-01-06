@@ -9,10 +9,6 @@ class Paggio::HTML::Element < BasicObject
   def on(*args, &block)
     (@on ||= []) << [args, block]
   end
-
-  def style(*args, &block)
-    @style = [args, block]
-  end
 end
 
 module Browser; module DOM
@@ -77,10 +73,6 @@ Builder.for Paggio::HTML::Element do |b, item|
     on.each {|args, block|
       dom.on(*args, &block)
     }
-  end
-
-  if style = `item.style || nil`
-    dom.style(*style[0], &style[1])
   end
 
   if inner = `item.inner_html || nil`
