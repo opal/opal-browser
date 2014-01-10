@@ -110,9 +110,15 @@ class Event
         unless delegate = delegated[name]
           delegate = delegated[name] = Delegates.new
 
-          delegate.callback = on(name) {|e|
-            delegate(delegate, e)
-          }
+          if %w[blur focus].include?(name)
+            delegate.callback = on! name do |e|
+              delegate(delegate, e)
+            end
+          else
+            delegate.callback = on name do |e|
+              delegate(delegate, e)
+            end
+          end
 
           pair = [selector, block]
           delegate.handlers = [pair]
@@ -132,6 +138,18 @@ class Event
 
         callback
       end
+    end
+
+    def on!(name, &block)
+      raise ArgumentError, 'no block has been given' unless block
+
+      name = Event.name_for(name)
+      callback = Callback.new(self, name, selector, &block)
+      callbacks.push(callback)
+
+      `#@native.addEventListener(#{name}, #{callback.to_n}, true)`
+
+      callback
     end
 
     def off(what = nil)
