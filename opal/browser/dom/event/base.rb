@@ -229,13 +229,15 @@ class Event
       }
     end
 
-    def delegate(delegates, event)
-      target = event.target
+    def delegate(delegates, event, element = event.target)
+      return if element == event.element
 
       delegates.handlers.each {|selector, block|
-        if target.matches? selector
+        if element.matches? selector
           block.call(event, *event.arguments)
         end
+
+        delegate(delegates, event, element.parent)
       }
     end
   end
