@@ -196,6 +196,7 @@ class Event
   end
 
   attr_reader :callback
+  attr_writer :element
 
   def initialize(event, element = nil, callback = nil)
     super(event)

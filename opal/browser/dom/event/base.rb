@@ -230,15 +230,18 @@ class Event
     end
 
     def delegate(delegates, event, element = event.target)
-      return if element == event.element
+      return if element.nil? || element == event.element
 
       delegates.handlers.each {|selector, block|
         if element.matches? selector
-          block.call(event, *event.arguments)
-        end
+          new         = event.dup
+          new.element = element
 
-        delegate(delegates, event, element.parent)
+          block.call new, *new.arguments
+        end
       }
+
+      delegate(delegates, event, element.parent)
     end
   end
 end
