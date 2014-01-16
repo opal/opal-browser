@@ -35,13 +35,23 @@ class Element < Node
   alias_native :id
 
   def add_class(*names)
-    `#@native.className = #{(class_names + names).uniq.join ' '}`
+    classes = class_names + names
+
+    unless classes.empty?
+      `#@native.className = #{classes.uniq.join ' '}`
+    end
 
     self
   end
 
   def remove_class(*names)
-    `#@native.className = #{(class_names - names).join ' '}`
+    classes = class_names - names
+
+    if classes.empty?
+      `#@native.removeAttribute('class')`
+    else
+      `#@native.className = #{classes.join ' '}`
+    end
 
     self
   end
