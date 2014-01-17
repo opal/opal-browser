@@ -4,8 +4,18 @@ module Browser
 end
 
 class Object
+  # Encode as URI.
+  #
+  # @return [String] the {Object#to_s} encoded for usage as URI
   def encode_uri
     to_s.encode_uri
+  end
+
+  # Encode as URI component.
+  #
+  # @return [String] the {Object#to_s} encoded for usage as URI component
+  def encode_uri_component
+    to_s.encode_uri_component
   end
 end
 
@@ -40,6 +50,11 @@ class String
 end
 
 class Hash
+  # Decode an URL encoded form to a {Hash}.
+  #
+  # @param string [String] the URL encoded form
+  #
+  # @return [Hash]
   def self.decode_uri(string)
     self[string.split(?&).map {|part|
       name, value = part.split(?=)
@@ -48,6 +63,9 @@ class Hash
     }]
   end
 
+  # Encode the Hash to an URL form.
+  #
+  # @return [String] the URL encoded form
   def encode_uri
     map {|name, value|
       "#{name.to_s.encode_uri_component}=#{value.to_s.encode_uri_component}"
