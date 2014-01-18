@@ -39,14 +39,6 @@ class Node
   end
 
   def <<(node)
-    add_child(node)
-  end
-
-  def <=>(other)
-    raise NotImplementedError
-  end
-
-  def add_child(node)
     if native?(node)
       `#@native.appendChild(node)`
     elsif node.respond_to? :each
@@ -60,22 +52,43 @@ class Node
     self
   end
 
+  def <=>(other)
+    raise NotImplementedError
+  end
+
+  alias add_child <<
+
   def add_next_sibling(node)
-    `#@native.parentNode.insertBefore(node, #@native.nextSibling)`
+    if native?(node)
+      `#@native.parentNode.insertBefore(node, #@native.nextSibling)`
+    elsif String === node
+      `#@native.parentNode.insertBefore(
+        #@native.ownerDocument.createTextNode(node), #@native.nextSibling)`
+    else
+      `#@native.parentNode.insertBefore(#{Native.convert(node)},
+        #@native.nextSibling)`
+    end
 
     self
   end
 
   def add_previous_sibling(node)
-    `#@native.parentNode.insertBefore(node, #@native)`
+    if native?(node)
+      `#@native.parentNode.insertBefore(node, #@native)`
+    elsif String === node
+      `#@native.parentNode.insertBefore(
+        #@native.ownerDocument.createTextNode(node), #@native)`
+    else
+      `#@native.parentNode.insertBefore(#{Native.convert(node)}, #@native)`
+    end
 
     self
   end
 
   alias after add_next_sibling
 
-  def append_to(element)
-    element.add_child(self)
+  def append_to(node)
+    node.add_child(self)
 
     self
   end
@@ -93,11 +106,13 @@ class Node
       parents.pop
     end
 
-    return NodeSet.new(document, parents) unless expression
+    if expression
+      parents.select! {|p|
+        p.matches? expression
+      }
+    end
 
-    NodeSet.new document, parents.select {|p|
-      p.matches?(expression)
-    }
+    NodeSet.new document, parents
   end
 
   alias before add_previous_sibling
