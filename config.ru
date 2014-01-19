@@ -3,8 +3,8 @@ Bundler.require
 
 apps = []
 apps << Opal::Server.new { |s|
-  s.main = 'opal/rspec/sprockets_runner'
   s.append_path 'spec'
+  s.main = 'opal/rspec/sprockets_runner'
   s.debug = false
 }
 

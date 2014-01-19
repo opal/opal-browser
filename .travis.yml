@@ -1,0 +1,73 @@
+language: ruby
+rvm: 2.0.0
+cache: bundler
+
+env:
+  global:
+    - SELENIUM_HOST=hub.browserstack.com
+    - SELENIUM_PORT=80
+
+    - BS_AUTOMATE_PROJECT="$TRAVIS_REPO_SLUG"
+    - BS_AUTOMATE_BUILD="Travis build No. $TRAVIS_BUILD_NUMBER for $TRAVIS_REPO_SLUG"
+    - secure: "L70bh0nIOaIoS7Va4Mr0GsdRlAjOILsNNrfwFDr3RjM2HaR3oeEKK1tJIEDEMamgBw6Ljhz7EWdDwt3bQ0HrhO9cI0kuzl+dA9Obf3+gucPSdi8QCZbjZDkwA56srsDEAMGAKkNWI1kmQTbPUPUoIuKmjj3Y3T68Ud2qi+hi5ag="
+    - secure: "T7RSwd/aIYwsbuoyLPLzB0ZwOATDAFrpi9GQSVIbV1rZV2oGq+yisjeARUPyRfKTI0Q08CNgarLWfL/kONR6AL19XUD3Rm1+hag8bNixRYot2c65We6d40BMtPfZyO13kSWlTtDnzotYavhXoXujJNLfSjbdLdTlmy2m9Q0UfQc="
+
+  matrix:
+    - SELENIUM_BROWSER=firefox SELENIUM_VERSION=26
+    - SELENIUM_BROWSER=chrome SELENIUM_VERSION=31
+    - SELENIUM_BROWSER=safari SELENIUM_VERSION=7.0
+    - SELENIUM_BROWSER=ie SELENIUM_VERSION=11
+
+    #- SELENIUM_BROWSER=ie SELENIUM_VERSION=6
+    #- SELENIUM_BROWSER=ie SELENIUM_VERSION=7
+    #- SELENIUM_BROWSER=ie SELENIUM_VERSION=8
+    #- SELENIUM_BROWSER=ie SELENIUM_VERSION=9
+    #- SELENIUM_BROWSER=ie SELENIUM_VERSION=10
+    #- SELENIUM_BROWSER=safari SELENIUM_VERSION=5.1
+    #- SELENIUM_BROWSER=safari SELENIUM_VERSION=6.0
+    #- SELENIUM_BROWSER=safari SELENIUM_VERSION=6.1
+    #- SELENIUM_BROWSER=opera SELENIUM_VERSION=12.15
+    #- SELENIUM_BROWSER=opera SELENIUM_VERSION=12.16
+    #- SELENIUM_BROWSER=firefox SELENIUM_VERSION=25
+    #- SELENIUM_BROWSER=chrome SELENIUM_VERSION=30
+
+matrix:
+  fast_finish: true
+
+  allow_failures:
+    - env: SELENIUM_BROWSER=chrome SELENIUM_VERSION=31
+    - env: SELENIUM_BROWSER=safari SELENIUM_VERSION=7.0
+    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=11
+
+    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=6
+    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=7
+    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=8
+    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=9
+    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=10
+    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=11
+    - env: SELENIUM_BROWSER=safari SELENIUM_VERSION=5.1
+    - env: SELENIUM_BROWSER=safari SELENIUM_VERSION=6.0
+    - env: SELENIUM_BROWSER=safari SELENIUM_VERSION=6.1
+    - env: SELENIUM_BROWSER=opera SELENIUM_VERSION=12.15
+    - env: SELENIUM_BROWSER=opera SELENIUM_VERSION=12.16
+    - env: SELENIUM_BROWSER=firefox SELENIUM_VERSION=25
+    - env: SELENIUM_BROWSER=chrome SELENIUM_VERSION=30
+
+before_install:
+  - gem update bundler
+  - bundle --version
+  - gem update --system
+  - gem --version
+
+before_script:
+  - bundle exec rackup -p 9292 &
+  - sleep 5
+  - wget http://www.browserstack.com/BrowserStackTunnel.jar
+  - java -jar BrowserStackTunnel.jar $BS_AUTHKEY localhost,9292,0 &
+  - sleep 5
+
+script:
+  - bundle exec spec/runner.rb
+
+#notifications:
+  #irc: "irc.freenode.org#opal"
