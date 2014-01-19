@@ -16,6 +16,11 @@ class Node
   DOCUMENT_FRAGMENT_NODE      = 11
   NOTATION_NODE               = 12
 
+  # Wrap a native DOM node.
+  #
+  # @param value [native] the native DOM node
+  #
+  # @return [Node]
   def self.new(value)
     if self == Node
       @classes ||= [nil, Element, Attribute, Text, CDATA, nil, nil, nil, Comment, Document, nil, DocumentFragment]
@@ -30,14 +35,32 @@ class Node
     end
   end
 
+  # Return true of the other element is the same underlying DOM node.
+  #
+  # @return [Boolean]
   def ==(other)
     `#@native === #{Native.try_convert(other)}`
   end
 
+  # Return true if the node name matches the given name case-insensitively.
+  #
+  # @param name [String] the name to match with
+  #
+  # @return [Boolean]
   def =~(name)
     self.name.downcase == name.downcase
   end
 
+  # Append a child to the node.
+  #
+  # When passing a {String} a text node will be created.
+  #
+  # When passing an Object that responds to #each, every yielded element
+  # will be added following the same logic.
+  #
+  # @param node [String, Node, #each, #to_n] the node to append
+  #
+  # @return [self]
   def <<(node)
     if native?(node)
       `#@native.appendChild(node)`
@@ -52,12 +75,15 @@ class Node
     self
   end
 
-  def <=>(other)
-    raise NotImplementedError
-  end
-
   alias add_child <<
 
+  # Add the passed node after this one.
+  #
+  # When passing a {String} a text node will be created.
+  #
+  # @param node [String, Node, #to_n] the node to add
+  #
+  # @return [self]
   def add_next_sibling(node)
     if native?(node)
       `#@native.parentNode.insertBefore(node, #@native.nextSibling)`
@@ -72,6 +98,13 @@ class Node
     self
   end
 
+  # Add the passed node before this one.
+  #
+  # When passing a {String} a text node will be created.
+  #
+  # @param node [String, Node, #to_n] the node to add
+  #
+  # @return [self]
   def add_previous_sibling(node)
     if native?(node)
       `#@native.parentNode.insertBefore(node, #@native)`
@@ -87,12 +120,24 @@ class Node
 
   alias after add_next_sibling
 
+  # Append the node to the passed one.
+  #
+  # @param node [Node] the node to append to
+  #
+  # @return self
   def append_to(node)
     node.add_child(self)
 
     self
   end
 
+  # Get an array of ancestors.
+  #
+  # Passing a selector will select the ancestors matching it.
+  #
+  # @param expression [String] the selector to use as filter
+  #
+  # @return [NodeSet]
   def ancestors(expression = nil)
     return NodeSet.new(document) unless parent
 
@@ -117,6 +162,9 @@ class Node
 
   alias before add_previous_sibling
 
+  # Detach the node and call #remove on all its children.
+  #
+  # @return [self]
   def remove
     detach
     clear
@@ -124,36 +172,51 @@ class Node
     self
   end
 
+  # Detach the node from its parent.
+  #
+  # @return [self]
   def detach
     parent.remove_child(self) if parent
 
     self
   end
 
-  def clear; end
-
-  def remove_child(element)
-    `#@native.removeChild(#{Native.try_convert(element)})`
+  # Remove all the children of the node.
+  #
+  # @return [self]
+  def clear
+    children.each(&:remove)
 
     self
   end
 
-  def clear
-    children.each(&:remove)
+  # @!attribute content
+  # @return [String] the inner text content of the node
+  def content
+    `#@native.textContent`
+  end
+
+  def content=(value)
+    `#@native.textContent = #{value}`
   end
 
   def blank?
     raise NotImplementedError
   end
 
+  # Return true if the node is a CDATA section.
   def cdata?
     node_type == CDATA_SECTION_NODE
   end
 
+  # @!attribute [r] child
+  # @return [Node?] the first child of the node
   def child
     children.first
   end
 
+  # @!attribute children
+  # @return [NodeSet] the children of the node
   def children
     NodeSet.new(document, Native::Array.new(`#@native.childNodes`))
   end
@@ -162,43 +225,51 @@ class Node
     raise NotImplementedError
   end
 
+  # Return true if the node is a comment.
   def comment?
     node_type == COMMENT_NODE
   end
 
+  # @!attribute [r] document
+  # @return [Document?] the document the node is attached to
   def document
-    DOM(`#@native.ownerDocument`)
+    DOM(`#@native.ownerDocument`) if defined?(`#@native.ownerDocument`)
   end
 
+  # Return true if the node is a document.
   def document?
     node_type == DOCUMENT_NODE
   end
 
+  # Return true if the node is an element.
   def elem?
     node_type == ELEMENT_NODE
   end
 
   alias element? elem?
 
+  # @!attribute [r] element_children
+  # @return [NodeSet] all the children which are elements
   def element_children
     children.select(&:element?)
   end
 
   alias elements element_children
 
+  # @!attribute [r] first_element_child
+  # @return [Element?] the first element child
   def first_element_child
     element_children.first
   end
 
+  # Return true if the node is a document fragment.
   def fragment?
     node_type == DOCUMENT_FRAGMENT_NODE
   end
 
-  def hash
-    # TODO: implement this properly
-  end
-
-  def inner_html(*)
+  # @!attribute inner_html
+  # @return [String] the inner HTML of the node
+  def inner_html
     `#@native.innerHTML`
   end
 
@@ -206,26 +277,25 @@ class Node
     `#@native.innerHTML = #{value}`
   end
 
-  def inner_text(*)
-    `#@native.textContent`
-  end
+  alias inner_text content
 
-  alias content inner_text
+  alias inner_text= content=
 
-  def inner_text=(value)
-    `#@native.textContent = #{value}`
-  end
-
-  alias content= inner_text=
-
+  # @!attribute [r] last_element_child
+  # @return [Element?] the last element child
   def last_element_child
     element_children.last
   end
 
+  # Check if the node matches the given CSS selector.
+  #
+  # @param expression [String] the CSS selector
   def matches?(expression)
     false
   end
 
+  # @!attribute name
+  # @return [String] the name of the node
   def name
     `#@native.nodeName || nil`
   end
@@ -234,14 +304,22 @@ class Node
     `#@native.nodeName = #{value.to_s}`
   end
 
+  # @!attribute [r] namespace
+  # @return [String] the namespace of the node
   def namespace
     `#@native.namespaceURI || nil`
   end
 
+  # @!attribute next
+  # @return [Node?] the next sibling of the node
   def next
     DOM(`#@native.nextSibling`) if `#@native.nextSibling != null`
   end
 
+  alias next= add_next_sibling
+
+  # @!attribute [r] next_element
+  # @return [Element?] the next element sibling of the node
   def next_element
     current = self.next
 
@@ -258,19 +336,23 @@ class Node
 
   alias node_name= name=
 
+  # @!attribute [r] node_type
+  # @return [Symbol] the type of the node
   def node_type
     `#@native.nodeType`
   end
 
+  # @!attribute parent
+  # @return [Element?] the parent of the node
   def parent
     DOM(`#@native.parentNode`) if `#@native.parentNode != null`
   end
 
-  def parent= (node)
+  def parent=(node)
     `#@native.parentNode = #{Native.try_convert(node)}`
   end
 
-  def parse (text, options = {})
+  def parse(text, options = {})
     raise NotImplementedError
   end
 
@@ -278,12 +360,16 @@ class Node
     raise NotImplementedError
   end
 
+  # @!attribute previous
+  # @return [Node?] the previous sibling of the node
   def previous
     DOM(`#@native.previousSibling`) if `#@native.previousSibling != null`
   end
 
   alias previous= add_previous_sibling
 
+  # @!attribute [r] previous_element
+  # @return [Element?] the previous element sibling of the node
   def previous_element
     current = self.previous
 
@@ -296,16 +382,31 @@ class Node
 
   alias previous_sibling previous
 
-  # TODO: implement for NodeSet
+  # Remove the given node from the children of this node.
+  #
+  # @return [self]
+  def remove_child(node)
+    `#@native.removeChild(#{Native.try_convert(node)})`
+
+    self
+  end
+
+  # Replace the node with the given one.
+  #
+  # @todo implement for NodeSet
+  #
+  # @param node [Node] the node to replace with
+  # @return [Node] the passed node
   def replace(node)
     `#@native.parentNode.replaceChild(#@native, #{Native.try_convert(node)})`
 
     node
   end
 
-  alias text inner_text
-  alias text= inner_text=
+  alias text content
+  alias text= content=
 
+  # Return true if the node is a text node.
   def text?
     node_type == TEXT_NODE
   end
@@ -316,6 +417,8 @@ class Node
 
   alias type node_type
 
+  # @!attribute value
+  # @return [String] the value of the node
   def value
     `#@native.nodeValue || nil`
   end
@@ -324,6 +427,7 @@ class Node
     `#@native.nodeValue = value`
   end
 
+  # @private
   def inspect
     "#<DOM::Node: #{name}>"
   end
