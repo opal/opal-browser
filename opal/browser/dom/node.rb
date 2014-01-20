@@ -1,5 +1,8 @@
 module Browser; module DOM
 
+# Abstract class for all DOM node types.
+#
+# @see https://developer.mozilla.org/en-US/docs/Web/API/Node
 class Node
   include Native
 
