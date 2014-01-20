@@ -3,8 +3,7 @@ module Browser; module DOM
 # A {MutationObserver} is a performant way to observe changes in the DOM,
 # either on the tree, the attributes or data.
 #
-# More information about it can be found
-# [here](https://developer.mozilla.org/en/docs/Web/API/MutationObserver).
+# @see https://developer.mozilla.org/en/docs/Web/API/MutationObserver
 class MutationObserver
   include Native
 
