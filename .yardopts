@@ -1,1 +1,1 @@
---no-private opal/**/*.rb
+--no-private opal/**/*.rb --markup markdown
