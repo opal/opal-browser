@@ -69,5 +69,5 @@ before_script:
 script:
   - bundle exec spec/runner.rb
 
-#notifications:
-  #irc: "irc.freenode.org#opal"
+notifications:
+  irc: "irc.freenode.org#opal"
