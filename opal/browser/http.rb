@@ -14,7 +14,8 @@ module HTTP
   # @param method [Symbol] the HTTP method to use
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
-  # @return [Response] the response
+  #
+  # @return [Promise] a promise that will be resolved with the response
   def self.send(method, url, data = nil, &block)
     Promise.new.tap {|promise|
       Request.new(&block).tap {|req|
@@ -32,7 +33,8 @@ module HTTP
   # Send an asynchronous GET request.
   #
   # @param url [String] the URL to request
-  # @return [Response] the response
+  #
+  # @return [Promise] a promise that will be resolved with the response
   def self.get(url, &block)
     send(:get, url, &block)
   end
@@ -40,7 +42,8 @@ module HTTP
   # Send an asynchronous HEAD request.
   #
   # @param url [String] the URL to request
-  # @return [Response] the response
+  #
+  # @return [Promise] a promise that will be resolved with the response
   def self.head(url, &block)
     send(:head, url, &block)
   end
@@ -49,7 +52,8 @@ module HTTP
   #
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
-  # @return [Response] the response
+  #
+  # @return [Promise] a promise that will be resolved with the response
   def self.post(url, data = nil, &block)
     send(:post, url, data, &block)
   end
@@ -58,7 +62,8 @@ module HTTP
   #
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
-  # @return [Response] the response
+  #
+  # @return [Promise] a promise that will be resolved with the response
   def self.put(url, data = nil, &block)
     send(:put, url, data, &block)
   end
@@ -67,7 +72,8 @@ module HTTP
   #
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
-  # @return [Response] the response
+  #
+  # @return [Promise] a promise that will be resolved with the response
   def self.delete(url, data = nil, &block)
     send(:delete, url, data, &block)
   end
@@ -77,6 +83,7 @@ module HTTP
   # @param method [Symbol] the HTTP method to use
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
+  #
   # @return [Response] the response
   def self.send!(method, url, data = nil, &block)
     Request.new(&block).open(method, url, false).send(data)
@@ -85,6 +92,7 @@ module HTTP
   # Send a synchronous GET request.
   #
   # @param url [String] the URL to request
+  #
   # @return [Response] the response
   def self.get!(url, &block)
     send!(:get, url, &block)
@@ -93,6 +101,7 @@ module HTTP
   # Send a synchronous HEAD request.
   #
   # @param url [String] the URL to request
+  #
   # @return [Response] the response
   def self.head!(url, &block)
     send!(:head, url, &block)
@@ -102,6 +111,7 @@ module HTTP
   #
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
+  #
   # @return [Response] the response
   def self.post!(url, data = nil, &block)
     send!(:post, url, data, &block)
@@ -111,6 +121,7 @@ module HTTP
   #
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
+  #
   # @return [Response] the response
   def self.put!(url, data = nil, &block)
     send!(:put, url, data, &block)
@@ -120,6 +131,7 @@ module HTTP
   #
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
+  #
   # @return [Response] the response
   def self.delete!(url, data = nil, &block)
     send!(:delete, url, data, &block)
