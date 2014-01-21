@@ -1,6 +1,9 @@
 module Browser
 
-# This class wraps `WebSocket`.
+# A {Socket} allows the browser and a server to have a bidirectional data
+# connection.
+#
+# @see https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
 class Socket
   def self.supported?
     defined? `window.WebSocket`
@@ -18,6 +21,7 @@ class Socket
   #
   # @param url [String] the URL to connect to
   # @param protocol [String] the protocol to use
+  #
   # @yield if the block has no parameters it's instance_exec'd, otherwise it's
   #        called with self
   def initialize(url, protocol = nil, &block)
