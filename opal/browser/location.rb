@@ -1,5 +1,8 @@
 module Browser
 
+# Allows manipulation of a location, usually from {Window} and {DOM::Document}.
+#
+# @see https://developer.mozilla.org/en-US/docs/Web/API/Location
 class Location
   include Native
 
@@ -66,9 +69,8 @@ class Location
 end
 
 class Window
-  # Get the {Location} object for this window.
-  #
-  # @return [Location]
+  # @!attribute [r] location
+  # @return [Location] the location for the window
   def location
     Location.new(`#@native.location`) if `#@native.location`
   end
