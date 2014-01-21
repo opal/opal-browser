@@ -1,5 +1,5 @@
 require 'browser/interval'
-require 'browser/timeout'
+require 'browser/delay'
 
 require 'browser/window/view'
 require 'browser/window/size'
