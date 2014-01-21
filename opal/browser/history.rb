@@ -2,50 +2,82 @@ require 'browser/location'
 
 module Browser
 
+# {History} allows manipulation of the session history.
+#
+# @see https://developer.mozilla.org/en-US/docs/Web/API/History
 class History
   include Native
 
+  # @!attribute [r] length
+  # @return [Integer] how many items are in the history
   alias_native :length
 
+  # Go back in the history.
+  #
+  # @param number [Integer] how many items to go back
+  #
+  # @return [self]
   def back(number = 1)
     `#@native.go(-number)`
 
     self
   end
 
+  # Go forward in the history.
+  #
+  # @param number [Integer] how many items to go forward
+  #
+  # @return [self]
   def forward(number = 1)
     `#@native.go(number)`
 
     self
   end
 
-  def push(url, data = nil)
+  # Push an item in the history.
+  #
+  # @param item [String] the item to push in the history
+  # @param data [Object] additional state to push
+  #
+  # @return [self]
+  def push(item, data = nil)
     data = `null` if data.nil?
 
-    `#@native.pushState(data, null, url)`
+    `#@native.pushState(data, null, item)`
 
     self
   end
 
-  def replace(url, data = nil)
+  # Replace the current history item with another.
+  #
+  # @param item [String] the item to replace with
+  # @param data [Object] additional state to replace
+  #
+  # @return [self]
+  def replace(item, data = nil)
     data = `null` if data.nil?
 
-    `#@native.replaceState(data, null, url)`
+    `#@native.replaceState(data, null, item)`
+
+    self
   end
 
+  # @!attribute [r] current
+  # @return [String] the current item
   def current
     $window.location.path
   end
 
+  # @!attribute [r] state
+  # @return [Object] the current state
   def state
     `#@native.state`
   end
 end
 
 class Window
-  # Get the {History} object for this window.
-  #
-  # @return [History]
+  # @!attribute [r] history
+  # @return [History] the history for this window
   def history
     History.new(`#@native.history`) if `#@native.history`
   end
