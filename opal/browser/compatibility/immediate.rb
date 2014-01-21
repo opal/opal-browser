@@ -51,7 +51,10 @@ class Immediate
       `window.msClearImmediate(#@id)`
     end
   elsif C.post_message?
+    # @private
     @@tasks  = {}
+
+    # @private
     @@prefix = "opal.browser.immediate.#{rand(1_000_000)}."
 
     $window.on :message do |e|
