@@ -1,6 +1,8 @@
 module Browser
 
-# Class that represents the browser attributes.
+# Representation of the navigator application.
+#
+# @see https://developer.mozilla.org/en-US/docs/Web/API/Navigator
 class Navigator
   include Native
 
@@ -8,7 +10,7 @@ class Navigator
   Product = Struct.new(:name, :version)
   Vendor  = Struct.new(:name, :version)
 
-  # Class that represents a MIME type.
+  # Representation of a MIME type.
   class MimeType
     include Native
 
@@ -33,7 +35,9 @@ class Navigator
     alias_native :type
   end
 
-  # Class to represent a browser plugin.
+  # Representation of a navigator plugin.
+  #
+  # @see https://developer.mozilla.org/en-US/docs/Web/API/Plugin
   class Plugin < Native::Array
     def initialize(plugin)
       super plugin do |m|
@@ -140,9 +144,8 @@ class Navigator
 end
 
 class Window
-  # Get the {Navigator} object for this window.
-  #
-  # @return [Navigator]
+  # @!attribute [r] navigator
+  # @return [Navigator] the navigator
   def navigator
     Navigator.new(`#@native.navigator`) if `#@native.navigator`
   end
