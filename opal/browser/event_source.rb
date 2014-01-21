@@ -1,6 +1,9 @@
 module Browser
 
-# This class wraps `EventSource`.
+# An {EventSource} allows you to receive events from a server in real-time,
+# similar to long-polling but not exactly.
+#
+# @see https://developer.mozilla.org/en-US/docs/Web/API/EventSource
 class EventSource
   def self.supported?
     defined? `window.EventSource`
