@@ -5,6 +5,10 @@ module Browser; module DOM
 #
 # @see https://developer.mozilla.org/en/docs/Web/API/MutationObserver
 class MutationObserver
+  def self.supported?
+    defined? `window.MutationObserver`
+  end
+
   include Native
 
   # Encapsulates a recorded change.

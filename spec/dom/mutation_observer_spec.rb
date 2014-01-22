@@ -9,7 +9,7 @@ describe Browser::DOM::MutationObserver do
 
   async 'notifies additions' do
     obs = Browser::DOM::MutationObserver.new {|mutations|
-      run_async {
+      async {
         expect(mutations.first.added.first.name).to eq('DIV')
       }
 
@@ -23,7 +23,7 @@ describe Browser::DOM::MutationObserver do
 
   async 'notifies removals' do
     obs = Browser::DOM::MutationObserver.new {|mutations|
-      run_async {
+      async {
         expect(mutations.first.removed.first.name).to eq('SPAN')
       }
 
@@ -34,4 +34,4 @@ describe Browser::DOM::MutationObserver do
 
     $document[:mutate].first_element_child.remove
   end
-end
+end if Browser::DOM::MutationObserver.supported?
