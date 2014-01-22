@@ -186,22 +186,32 @@ class Element < Node
   end
 
   def css(path)
-    NodeSet.new(document, Native::Array.new(`#@native.querySelectorAll(path)`))
+    %x{
+      try {
+        var result = #@native.querySelectorAll(path);
+
+        return #{NodeSet.new(document,
+          Native::Array.new(`result`))};
+      }
+      catch(e) {
+        return #{NodeSet.new(document)};
+      }
+    }
   end
 
   def xpath(path)
-    result = []
+    %x{
+      try {
+        var result = (#@native.ownerDocument || #@native).evaluate(path,
+          #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
-    begin
-      %x{
-        var tmp = (#@native.ownerDocument || #@native).evaluate(
-          path, #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-
-        result = #{Native::Array.new(`tmp`, get: :snapshotItem, length: :snapshotLength)};
+        return #{NodeSet.new(document,
+          Native::Array.new(`result`, get: :snapshotItem, length: :snapshotLength))};
       }
-    rescue; end
-
-    NodeSet.new(document, result)
+      catch (e) {
+        return #{NodeSet.new(document)};
+      }
+    }
   end
 
   def style(data = nil, &block)
