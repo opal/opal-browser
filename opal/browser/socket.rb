@@ -22,8 +22,8 @@ class Socket
   # @param url [String] the URL to connect to
   # @param protocol [String] the protocol to use
   #
-  # @yield if the block has no parameters it's instance_exec'd, otherwise it's
-  #        called with self
+  # @yield if the block has no parameters it's `instance_exec`d, otherwise it's
+  #        called with `self`
   def initialize(url, protocol = nil, &block)
     if native?(url)
       super(url)
