@@ -33,7 +33,7 @@ class Immediate
   if C.immediate?
     def dispatch
       @id = `window.setImmediate(function() {
-        #{@function.call(@arguments, &@block)};
+        #{@function.call(*@arguments, &@block)};
       })`
     end
 
