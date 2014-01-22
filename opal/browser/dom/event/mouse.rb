@@ -139,8 +139,8 @@ class Mouse < UI
     end
   end
 
-  def self.create(name, &block)
-    new(`new MouseEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new MouseEvent(#{name}, #{desc})`
   end
 
   Position = Struct.new(:x, :y)

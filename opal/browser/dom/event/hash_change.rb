@@ -15,8 +15,8 @@ class HashChange < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new HashChangeEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new HashChangeEvent(#{name}, #{desc})`
   end
 
   alias_native :old, :oldURL

@@ -5,8 +5,8 @@ class BeforeUnload < Event
     not $$[:BeforeUnloadEvent].nil?
   end
 
-  def self.create(name, &block)
-    new(`new BeforeUnloadEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new BeforeUnloadEvent(#{name}, #{desc})`
   end
 end
 

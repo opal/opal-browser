@@ -13,8 +13,8 @@ class Message < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new MessageEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new MessageEvent(#{name}, #{desc})`
   end
 
   def data

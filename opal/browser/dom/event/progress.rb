@@ -19,8 +19,8 @@ class Progress < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new ProgressEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new ProgressEvent(#{name}, #{desc})`
   end
 
   alias_native :computable?, :computableLength

@@ -29,8 +29,8 @@ class Wheel < UI
     end
   end
 
-  def self.create(name, &block)
-    new(`new WheelEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new WheelEvent(#{name}, #{desc})`
   end
 
   alias_native :x, :deltaX

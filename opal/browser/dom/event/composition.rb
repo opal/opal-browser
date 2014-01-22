@@ -15,8 +15,8 @@ class Composition < UI
     end
   end
 
-  def self.create(name, &block)
-    new(`new CompositionEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new CompositionEvent(#{name}, #{desc})`
   end
 
   alias_native :data

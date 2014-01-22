@@ -19,8 +19,8 @@ class AudioProcessing < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new AudioProcessingEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new AudioProcessingEvent(#{name}, #{desc})`
   end
 
   alias_native :time, :playbackTime

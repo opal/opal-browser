@@ -11,8 +11,8 @@ class PopState < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new PopStateEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new PopStateEvent(#{name}, #{desc})`
   end
 
   alias_native :state

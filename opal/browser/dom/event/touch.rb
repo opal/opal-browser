@@ -23,8 +23,8 @@ class Touch < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new TouchEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new TouchEvent(#{name}, #{desc})`
   end
 
   def alt?

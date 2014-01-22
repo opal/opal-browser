@@ -15,8 +15,8 @@ class Clipboard < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new ClipboardEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new ClipboardEvent(#{name}, #{desc})`
   end
 
   alias_native :data

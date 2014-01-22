@@ -1,5 +1,4 @@
 require 'browser/dom/event/base'
-
 require 'browser/dom/event/ui'
 require 'browser/dom/event/mouse'
 require 'browser/dom/event/keyboard'
@@ -172,15 +171,14 @@ class Event
     name  = name_for(name)
     klass = class_for(name)
 
-    event = if klass == self
-      new(`new window.Event(#{name}, #{Definition.new(&block)})`)
-    else
-      klass.create(name, &block)
-    end
-
+    event           = new(klass.construct(name, klass.const_get(:Definition).new(&block)))
     event.arguments = args
 
     event
+  end
+
+  def self.construct(name, desc)
+    `new Event(#{name}, #{desc})`
   end
 
   def self.new(value, *args)

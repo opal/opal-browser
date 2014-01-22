@@ -33,8 +33,8 @@ class Gamepad < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new GamepadEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new GamepadEvent(#{name}, #{desc})`
   end
 
   %w(id index timestamp axes buttons).each {|name|

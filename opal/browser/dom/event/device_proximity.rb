@@ -19,8 +19,8 @@ class DeviceProximity < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new DeviceProximityEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new DeviceProximityEvent(#{name}, #{desc})`
   end
 
   alias_native :value

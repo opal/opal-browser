@@ -11,8 +11,8 @@ class UI < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new UIEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new UIEvent(#{name}, #{desc})`
   end
 
   alias_native :detail

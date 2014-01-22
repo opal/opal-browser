@@ -15,8 +15,8 @@ class Animation < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new AnimationEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new AnimationEvent(#{name}, #{desc})`
   end
 
   alias_native :name, :animationName

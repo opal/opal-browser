@@ -39,8 +39,8 @@ class Keyboard < UI
     end
   end
 
-  def self.create(name, &block)
-    new(`new KeyboardEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new KeyboardEvent(#{name}, #{desc})`
   end
 
   def alt?

@@ -60,8 +60,8 @@ class Drag < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new DragEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new DragEvent(#{name}, #{desc})`
   end
 
   Position = Struct.new(:x, :y)

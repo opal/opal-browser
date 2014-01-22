@@ -5,8 +5,8 @@ class Sensor < Event
     not $$[:SensorEvent].nil?
   end
 
-  def self.create(name, &block)
-    new(`new SensorEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new SensorEvent(#{name}, #{desc})`
   end
 end
 

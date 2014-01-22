@@ -11,8 +11,8 @@ class PageTransition < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new PageTransitionEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new PageTransitionEvent(#{name}, #{desc})`
   end
 
   alias_native :persisted?, :persisted

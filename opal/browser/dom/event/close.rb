@@ -23,8 +23,8 @@ class Close < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new CloseEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new CloseEvent(#{name}, #{desc})`
   end
 
   alias_native :code

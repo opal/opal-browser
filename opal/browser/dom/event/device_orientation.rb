@@ -23,8 +23,8 @@ class DeviceOrientation < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new DeviceOrientationEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new DeviceOrientationEvent(#{name}, #{desc})`
   end
 
   alias_native :absolute

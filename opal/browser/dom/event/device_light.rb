@@ -11,8 +11,8 @@ class DeviceLight < Event
     end
   end
 
-  def self.create(name, &block)
-    new(`new DeviceLightEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new DeviceLightEvent(#{name}, #{desc})`
   end
 
   alias_native :value

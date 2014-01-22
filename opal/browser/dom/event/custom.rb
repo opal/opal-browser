@@ -7,14 +7,16 @@ class Custom < Event
     not $$[:CustomEvent].nil?
   end
 
-  def self.create(name, &block)
-    data = OpenStruct.new
-    block.call(data) if block
+  class Definition < Definition
+    def method_missing(name, value)
+      if name.end_with? ?=
+        `#@native[#{name[0 .. -2]}] = value`
+      end
+    end
+  end
 
-    new(`new CustomEvent(#{name}, {
-      bubbles:    #{data.bubbles},
-      cancelable: #{data.cancelable},
-      detail:     #{data.to_n} })`)
+  def self.construct(name, desc)
+    `new CustomEvent(name, desc)`
   end
 
   def initialize(native)

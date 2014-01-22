@@ -134,9 +134,7 @@ class Event
         callback = Callback.new(self, name, selector, &block)
         callbacks.push(callback)
 
-        `#@native.addEventListener(#{name}, #{callback.to_n})`
-
-        callback
+        attach(callback)
       end
     end
 
@@ -147,17 +145,28 @@ class Event
       callback = Callback.new(self, name, selector, &block)
       callbacks.push(callback)
 
-      `#@native.addEventListener(#{name}, #{callback.to_n}, true)`
+      attach!(callback)
+    end
+
+    def attach(callback)
+      `#@native.addEventListener(#{callback.name}, #{callback.to_n})`
 
       callback
     end
+    private :attach
+
+    def attach!(callback)
+      `#@native.addEventListener(#{callback.name}, #{callback.to_n}, true)`
+
+      callback
+    end
+    private :attach!
 
     def off(what = nil)
       case what
       when Callback
         callbacks.delete(what)
-
-        `#@native.removeEventListener(#{what.name}, #{what.to_n}, false)`
+        detach(what)
 
       when String
         if what.include?(?*) or what.include?(??)
@@ -167,7 +176,7 @@ class Event
 
           callbacks.delete_if {|callback|
             if callback.name == what
-              `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
+              detach(callback)
 
               true
             end
@@ -177,7 +186,7 @@ class Event
       when Regexp
         callbacks.delete_if {|callback|
           if callback.name =~ what
-            `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
+            detach(callback)
 
             true
           end
@@ -185,19 +194,24 @@ class Event
 
       else
         callbacks.each {|callback|
-          `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
+          detach(callback)
         }
 
         callbacks.clear
       end
     end
 
+    def detach(callback)
+      `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
+    end
+    private :detach
+
     def trigger(event, *args, &block)
       if event.is_a? String
         event = Event.create(event, *args, &block)
       end
 
-      `#@native.dispatchEvent(#{event.to_n})`
+      dispatch(event)
     end
 
     # Trigger the event without bubbling.
@@ -207,6 +221,11 @@ class Event
         e.bubbles = false
       end
     end
+
+    def dispatch(event)
+      `#@native.dispatchEvent(#{event.to_n})`
+    end
+    private :dispatch
 
   private
     def callbacks

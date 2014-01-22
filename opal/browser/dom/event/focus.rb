@@ -11,8 +11,8 @@ class Focus < UI
     end
   end
 
-  def self.create(name, &block)
-    new(`new FocusEvent(#{name}, #{Definition.new(&block)})`)
+  def self.construct(name, desc)
+    `new FocusEvent(#{name}, #{desc})`
   end
 
   def related
