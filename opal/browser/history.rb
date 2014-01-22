@@ -15,51 +15,35 @@ class History
   # Go back in the history.
   #
   # @param number [Integer] how many items to go back
-  #
-  # @return [self]
   def back(number = 1)
     `#@native.go(-number)`
-
-    self
   end
 
   # Go forward in the history.
   #
   # @param number [Integer] how many items to go forward
-  #
-  # @return [self]
   def forward(number = 1)
     `#@native.go(number)`
-
-    self
   end
 
   # Push an item in the history.
   #
   # @param item [String] the item to push in the history
   # @param data [Object] additional state to push
-  #
-  # @return [self]
   def push(item, data = nil)
     data = `null` if data.nil?
 
     `#@native.pushState(data, null, item)`
-
-    self
   end
 
   # Replace the current history item with another.
   #
   # @param item [String] the item to replace with
   # @param data [Object] additional state to replace
-  #
-  # @return [self]
   def replace(item, data = nil)
     data = `null` if data.nil?
 
     `#@native.replaceState(data, null, item)`
-
-    self
   end
 
   # @!attribute [r] current
