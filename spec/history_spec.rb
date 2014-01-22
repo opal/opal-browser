@@ -4,29 +4,29 @@ require 'browser/history'
 describe Browser::History do
   describe '#current' do
     it 'should return the current location' do
-      $window.history.current.should == '/'
+      expect($window.history.current).to eq('/')
     end
   end
 
   describe '#push' do
     it 'should change location' do
-      $window.history.current.should == '/'
+      expect($window.history.current).to eq('/')
       $window.history.push('/lol')
-      $window.history.current.should == '/lol'
+      expect($window.history.current).to eq('/lol')
       $window.history.push('/')
-      $window.history.current.should == '/'
+      expect($window.history.current).to eq('/')
     end
   end
 
   describe '#back' do
     async 'should go back once' do
-      $window.history.current.should == '/'
+      expect($window.history.current).to eq('/')
       $window.history.push('/wut')
-      $window.history.current.should == '/wut'
+      expect($window.history.current).to eq('/wut')
 
       $window.on 'pop:state' do |e|
         run_async {
-          $window.history.current.should == '/'
+          expect($window.history.current).to eq('/')
         }
 
         e.off
@@ -37,11 +37,20 @@ describe Browser::History do
   end
 
   describe '#state' do
-    it 'gets the right state' do
+    async 'gets the right state' do
       $window.history.push('/wut', 42)
-      $window.history.state.should == 42
+      $window.history.state.should eq(42)
       $window.history.push('/omg', 23)
-      $window.history.state.should == 23
+      $window.history.state.should eq(23)
+
+      $window.on 'pop:state' do |e|
+        run_async {
+          true.should eq(true)
+        }
+
+        e.off
+      end
+
       $window.history.back(2)
     end
   end

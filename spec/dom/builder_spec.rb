@@ -2,27 +2,27 @@ require 'spec_helper'
 
 describe Browser::DOM::Builder do
   it 'builds an element' do
-    DOM {
+    expect(DOM {
       div
-    }.name.should == 'DIV'
+    }.name).to eq('DIV')
   end
 
   it 'builds an element with text content' do
-    DOM {
+    expect(DOM {
       div "foo bar"
-    }.text.should == "foo bar"
+    }.text).to eq('foo bar')
 
-    DOM {
+    expect(DOM {
       div {
         "foo bar"
       }
-    }.text.should == "foo bar"
+    }.text).to eq('foo bar')
   end
 
   it 'builds an element with attributes' do
-    DOM {
+    expect(DOM {
       div class: :wut
-    }.class_name.should == :wut
+    }.class_name).to eq(:wut)
   end
 
   it 'builds deeper trees' do
@@ -34,15 +34,15 @@ describe Browser::DOM::Builder do
       }
     }
 
-    res.name.should == 'DIV'
-    res.child.name.should == 'SPAN'
-    res.child.text.should == 'wut'
+    expect(res.name).to eq('DIV')
+    expect(res.child.name).to eq('SPAN')
+    expect(res.child.text).to eq('wut')
   end
 
   it 'sets classes with methods' do
-    DOM {
+    expect(DOM {
       div.nice.element
-    }.class_names.should == %w[nice element]
+    }.class_names).to eq(%w[nice element])
   end
 
   it 'nests when setting classes' do
@@ -52,10 +52,10 @@ describe Browser::DOM::Builder do
       }
     }
 
-    res.name.should == 'DIV'
-    res.class_names.should == %w[nice element]
-    res.child.name.should == 'SPAN'
-    res.child.class_names.should == %w[nicer]
+    expect(res.name).to eq('DIV')
+    expect(res.class_names).to eq(%w[nice element])
+    expect(res.child.name).to eq('SPAN')
+    expect(res.child.class_names).to eq(%w[nicer])
   end
 
   it 'joins class name properly' do
@@ -63,7 +63,7 @@ describe Browser::DOM::Builder do
       i.icon[:legal]
     }
 
-    res.name.should == 'I'
-    res.class_names.should == %w[icon-legal]
+    expect(res.name).to eq('I')
+    expect(res.class_names).to eq(%w[icon-legal])
   end
 end

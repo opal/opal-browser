@@ -9,7 +9,7 @@ describe Browser::HTTP do
     async 'fetches a path' do
       Browser::HTTP.get(path).then {|res|
         run_async {
-          res.text.should == 'lol'
+          expect(res.text).to eq('lol')
         }
       }.rescue {
         run_async {
@@ -21,7 +21,7 @@ describe Browser::HTTP do
 
   describe '.get!' do
     it 'fetches a path' do
-      Browser::HTTP.get!(path).text.should == 'lol'
+      expect(Browser::HTTP.get!(path).text).to eq('lol')
     end
   end
 
@@ -29,7 +29,7 @@ describe Browser::HTTP do
     async 'sends parameters properly' do
       Browser::HTTP.post(path, lol: 'wut').then {|res|
         run_async {
-          res.text.should == 'ok'
+          expect(res.text).to eq('ok')
         }
       }.rescue {
         run_async {
@@ -41,7 +41,7 @@ describe Browser::HTTP do
 
   describe '.post!' do
     it 'sends parameters properly' do
-      Browser::HTTP.post!(path, lol: 'wut').text.should == 'ok'
+      expect(Browser::HTTP.post!(path, lol: 'wut').text).to eq('ok')
     end
   end
 
@@ -49,7 +49,7 @@ describe Browser::HTTP do
     async 'sends parameters properly' do
       Browser::HTTP.put(path, lol: 'wut').then {|res|
         run_async {
-          res.text.should == 'ok'
+          expect(res.text).to eq('ok')
         }
       }.rescue {
         run_async {
@@ -61,7 +61,7 @@ describe Browser::HTTP do
 
   describe '.put!' do
     it 'sends parameters properly' do
-      Browser::HTTP.put!(path, lol: 'wut').text.should == 'ok'
+      expect(Browser::HTTP.put!(path, lol: 'wut').text).to eq('ok')
     end
   end
 
@@ -69,7 +69,7 @@ describe Browser::HTTP do
     async 'fetches a path' do
       Browser::HTTP.delete(path).then {|res|
         run_async {
-          res.text.should == 'lol'
+          expect(res.text).to eq('lol')
         }
       }.rescue {
         run_async {
@@ -81,7 +81,7 @@ describe Browser::HTTP do
 
   describe '.delete!' do
     it 'fetches a path' do
-      Browser::HTTP.delete!(path).text.should == 'lol'
+      expect(Browser::HTTP.delete!(path).text).to eq('lol')
     end
   end
 end

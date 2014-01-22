@@ -4,23 +4,23 @@ require 'browser/storage'
 describe Browser::Window do
   describe '#storage' do
     it 'creates a new storage' do
-      $window.storage.should be_kind_of Browser::Storage
+      expect($window.storage).to be_a(Browser::Storage)
     end
 
     it 'creates a storage with the proper name' do
-      $window.storage.name.should == :default
-      $window.storage(:spec).name.should == :spec
+      expect($window.storage.name).to eq(:default)
+      expect($window.storage(:spec).name).to eq(:spec)
     end
   end
 
   describe '#session_storage' do
     it 'creates a new session storage' do
-      $window.session_storage.should be_kind_of Browser::SessionStorage
+      expect($window.session_storage).to be_a(Browser::SessionStorage)
     end
 
     it 'creates a session storage with the proper name' do
-      $window.session_storage.name.should == :default
-      $window.session_storage(:spec).name.should == :spec
+      expect($window.session_storage.name).to eq(:default)
+      expect($window.session_storage(:spec).name).to eq(:spec)
     end
   end
 end

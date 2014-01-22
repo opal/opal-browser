@@ -6,7 +6,7 @@ describe Browser::EventSource do
     Browser::EventSource.new '/events' do |es|
       es.on :open do |e|
         run_async {
-          e.target.should be_kind_of Browser::EventSource
+          expect(e.target).to be_a(Browser::EventSource)
         }
 
         es.close
@@ -18,7 +18,7 @@ describe Browser::EventSource do
     Browser::EventSource.new '/events' do |es|
       es.on :message do |e|
         run_async {
-          e.data.should == 'lol'
+          expect(e.data).to eq('lol')
         }
 
         e.off
@@ -31,7 +31,7 @@ describe Browser::EventSource do
     Browser::EventSource.new '/events' do |es|
       es.on :custom do |e|
         run_async {
-          e.data.should == 'omg'
+          expect(e.data).to eq('omg')
         }
 
         e.off

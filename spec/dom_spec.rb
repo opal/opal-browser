@@ -8,8 +8,8 @@ describe 'Kernel' do
     HTML
 
     it "parses HTML" do
-      $document['.spec'].element?.should be_truthy
-      $document['.sock'].element?.should be_truthy
+      expect($document['.spec'].element?).to be_truthy
+      expect($document['.sock'].element?).to be_truthy
     end
   end
 end

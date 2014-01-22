@@ -10,7 +10,7 @@ describe Browser::DOM::MutationObserver do
   async 'notifies additions' do
     obs = Browser::DOM::MutationObserver.new {|mutations|
       run_async {
-        mutations.first.added.first.name.should == 'DIV'
+        expect(mutations.first.added.first.name).to eq('DIV')
       }
 
       obs.disconnect
@@ -24,7 +24,7 @@ describe Browser::DOM::MutationObserver do
   async 'notifies removals' do
     obs = Browser::DOM::MutationObserver.new {|mutations|
       run_async {
-        mutations.first.removed.first.name.should == 'SPAN'
+        expect(mutations.first.removed.first.name).to eq('SPAN')
       }
 
       obs.disconnect

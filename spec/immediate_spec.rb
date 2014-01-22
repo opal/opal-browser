@@ -6,7 +6,7 @@ describe Proc do
     async 'works properly' do
       proc {|a|
         run_async {
-          a.should == 42
+          expect(a).to eq(42)
         }
       }.defer(42)
     end

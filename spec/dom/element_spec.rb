@@ -7,7 +7,7 @@ describe Browser::DOM::Element do
     HTML
 
     it 'gets the proper id' do
-      $document["lol"].id.should == 'lol'
+      expect($document["lol"].id).to eq('lol')
     end
   end
 
@@ -20,11 +20,11 @@ describe Browser::DOM::Element do
     HTML
 
     it 'gives an empty array when no class is set' do
-      $document["class-names-2"].class_names.should == []
+      expect($document["class-names-2"].class_names).to eq([])
     end
 
     it 'gives an array of class names' do
-      $document["class-names-1"].class_names.should == %w[a b c]
+      expect($document["class-names-1"].class_names).to eq(%w[a b c])
     end
   end
 
@@ -36,11 +36,11 @@ describe Browser::DOM::Element do
     HTML
 
     it 'matches on class and id' do
-      $document[:matches].matches?('#matches.not.me').should be_truthy
+      expect($document[:matches].matches?('#matches.not.me')).to be_truthy
     end
 
     it 'matches on class and name' do
-      $document[:matches].first_element_child.matches?('span.yes').should be_truthy
+      expect($document[:matches].first_element_child.matches?('span.yes')).to be_truthy
     end
   end
 end

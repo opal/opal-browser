@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Browser::DOM::Document do
   describe '#title' do
     it 'should get the document title' do
-      $document.title.should be_kind_of(String)
+      expect($document.title).to be_a(String)
     end
   end
 
@@ -11,7 +11,7 @@ describe Browser::DOM::Document do
     it 'should set the document title' do
       old = $document.title
       $document.title = 'lol'
-      $document.title.should == 'lol'
+      expect($document.title).to eq('lol')
       $document.title = old
     end
   end
@@ -22,19 +22,19 @@ describe Browser::DOM::Document do
     HTML
 
     it "should get element by id" do
-      $document["lol"].should == `#{$document.to_n}.getElementById('lol')`
+      expect($document["lol"]).to eq(`#{$document.to_n}.getElementById('lol')`)
     end
 
     it "should get element by css" do
-      $document["lol"].should == `#{$document.to_n}.getElementById('lol')`
+      expect($document["lol"]).to eq(`#{$document.to_n}.getElementById('lol')`)
     end
 
     it "should get element by xpath" do
-      $document["//*[@id='lol']"].should == `#{$document.to_n}.getElementById('lol')`
+      expect($document["//*[@id='lol']"]).to eq(`#{$document.to_n}.getElementById('lol')`)
     end
 
     it "should return nil if it can't find anything" do
-      $document["doo-dah"].should be_nil
+      expect($document["doo-dah"]).to be_nil
     end
   end
 end

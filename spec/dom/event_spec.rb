@@ -16,13 +16,13 @@ describe Browser::DOM::Event do
         count += 1
       end
 
-      count.should == 0
+      expect(count).to eq(0)
       elem.trigger :click
-      count.should == 1
+      expect(count).to eq(1)
       elem.trigger :click
-      count.should == 2
+      expect(count).to eq(2)
       elem.trigger 'mouse:down'
-      count.should == 2
+      expect(count).to eq(2)
     end
 
     it "listens for custom events" do
@@ -33,11 +33,11 @@ describe Browser::DOM::Event do
         count += 1
       end
 
-      count.should == 0
+      expect(count).to eq(0)
       elem.trigger :huehue
-      count.should == 1
+      expect(count).to eq(1)
       elem.trigger :huehue
-      count.should == 2
+      expect(count).to eq(2)
     end
 
     async "passes an event to the handler" do
@@ -45,7 +45,7 @@ describe Browser::DOM::Event do
 
       elem.on :click do |event|
         run_async {
-          event.should be_kind_of Browser::DOM::Event
+          expect(event).to be_a(Browser::DOM::Event)
         }
       end
 
@@ -57,9 +57,9 @@ describe Browser::DOM::Event do
 
       elem.on :bazinga do |event, foo, bar, baz|
         run_async {
-          foo.should == 1
-          bar.should == 2
-          baz.should == 3
+          expect(foo).to eq(1)
+          expect(bar).to eq(2)
+          expect(baz).to eq(3)
         }
       end
 
@@ -71,7 +71,7 @@ describe Browser::DOM::Event do
 
       elem.on :bazinga, 'span.nami' do
         run_async {
-          true.should be_truthy
+          expect(true).to be_truthy
         }
       end
 
@@ -97,11 +97,11 @@ describe Browser::DOM::Event do
       end
 
       elem.trigger :click
-      count.should == 2
+      expect(count).to eq(2)
 
       elem.off :click
       elem.trigger :click
-      count.should == 2
+      expect(count).to eq(2)
     end
 
     it "removes only the passed handler" do
@@ -117,11 +117,11 @@ describe Browser::DOM::Event do
       end
 
       elem.trigger :click
-      count.should == 2
+      expect(count).to eq(2)
 
       cb.off
       elem.trigger :click
-      count.should == 3
+      expect(count).to eq(3)
     end
   end
 end

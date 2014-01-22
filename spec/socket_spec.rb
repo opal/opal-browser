@@ -9,7 +9,7 @@ describe Browser::Socket do
     Browser::Socket.new ws do |s|
       s.on :open do |e|
         run_async {
-          e.target.should be_kind_of Browser::Socket
+          expect(e.target).to be_a(Browser::Socket)
         }
       end
     end
@@ -19,7 +19,7 @@ describe Browser::Socket do
     Browser::Socket.new ws do |s|
       s.on :message do |e|
         run_async {
-          e.data.should == 'lol'
+          expect(e.data).to eq('lol')
         }
       end
     end
@@ -32,7 +32,7 @@ describe Browser::Socket do
 
         s.on :message do |e|
           run_async {
-            e.data.should == 'omg'
+            expect(e.data).to eq('omg')
           }
         end
 
