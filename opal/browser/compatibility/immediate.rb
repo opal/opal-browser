@@ -13,7 +13,7 @@ if C.immediate?
 elsif C.immediate? :ms
   def dispatch
     @id = `window.msSetImmediate(function() {
-      #{@function.call(@arguments, &@block)};
+      #{@function.call(*@arguments, &@block)};
     })`
   end
 
@@ -52,7 +52,7 @@ elsif C.ready_state_change?
 
       script.onreadystatechange = function() {
         if (!#{aborted?}) {
-          #{@function.call(@arguments, &@block)};
+          #{@function.call(*@arguments, &@block)};
         }
 
         script.onreadystatechange = null;
