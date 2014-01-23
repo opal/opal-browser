@@ -66,16 +66,17 @@ module Compatibility
   end
 
   def self.new_event?
-    %x{
-      try {
-        new Event("x");
+    return @new_event if defined?(@new_event)
 
-        return true;
-      }
-      catch (e) {
-        return false;
-      }
-    }
+    begin
+      `new Event("*")`
+
+      @new_event = true
+    rescue
+      @new_event = false
+    end
+
+    @new_event
   end
 
   def self.create_event?
@@ -107,7 +108,11 @@ module Compatibility
   end
 
   def self.post_message?
-    return false unless has?(:postMessage) && !has?(:importScripts)
+    return @post_message if defined?(@post_message)
+
+    unless has?(:postMessage) && !has?(:importScripts)
+      return @post_message = false
+    end
 
     %x{
       var ok  = true,
@@ -117,7 +122,7 @@ module Compatibility
       window.postMessage("", "*")
       window.onmessage = old;
 
-      return ok;
+      return #@post_message = ok;
     }
   end
 
