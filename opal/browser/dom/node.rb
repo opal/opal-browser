@@ -85,8 +85,6 @@ class Node
   # When passing a {String} a text node will be created.
   #
   # @param node [String, Node, #to_n] the node to add
-  #
-  # @return [self]
   def add_next_sibling(node)
     if native?(node)
       `#@native.parentNode.insertBefore(node, #@native.nextSibling)`
@@ -97,8 +95,6 @@ class Node
       `#@native.parentNode.insertBefore(#{Native.convert(node)},
         #@native.nextSibling)`
     end
-
-    self
   end
 
   # Add the passed node before this one.
@@ -106,8 +102,6 @@ class Node
   # When passing a {String} a text node will be created.
   #
   # @param node [String, Node, #to_n] the node to add
-  #
-  # @return [self]
   def add_previous_sibling(node)
     if native?(node)
       `#@native.parentNode.insertBefore(node, #@native)`
@@ -117,8 +111,6 @@ class Node
     else
       `#@native.parentNode.insertBefore(#{Native.convert(node)}, #@native)`
     end
-
-    self
   end
 
   alias after add_next_sibling
@@ -126,12 +118,8 @@ class Node
   # Append the node to the passed one.
   #
   # @param node [Node] the node to append to
-  #
-  # @return self
   def append_to(node)
     node.add_child(self)
-
-    self
   end
 
   # Get an array of ancestors.
@@ -165,32 +153,14 @@ class Node
 
   alias before add_previous_sibling
 
-  # Detach the node and call #remove on all its children.
-  #
-  # @return [self]
+  # Remove the node from its parent.
   def remove
-    detach
-    clear
-
-    self
-  end
-
-  # Detach the node from its parent.
-  #
-  # @return [self]
-  def detach
     parent.remove_child(self) if parent
-
-    self
   end
 
   # Remove all the children of the node.
-  #
-  # @return [self]
   def clear
     children.each(&:remove)
-
-    self
   end
 
   # @!attribute content
@@ -386,12 +356,8 @@ class Node
   alias previous_sibling previous
 
   # Remove the given node from the children of this node.
-  #
-  # @return [self]
   def remove_child(node)
     `#@native.removeChild(#{Native.try_convert(node)})`
-
-    self
   end
 
   # Replace the node with the given one.
