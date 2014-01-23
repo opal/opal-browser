@@ -19,6 +19,14 @@ if C.attach_event?
       `#@native.attachEvent("on" + #{callback.name}, #{callback.to_n})`
     end
   end
-end
+else
+  def attach(*)
+    raise NotImplementedError
+  end
+
+  def attach!(*)
+    raise NotImplementedError
+  end
+end unless C.add_event_listener?
 
 end; end; end; end

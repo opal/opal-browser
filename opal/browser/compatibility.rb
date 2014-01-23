@@ -87,12 +87,24 @@ module Compatibility
     has? `document`, :createEventObject
   end
 
+  def self.add_event_listener?
+    has? :addEventListener
+  end
+
   def self.attach_event?
     has? `document`, :attachEvent
   end
 
+  def self.remove_event_listener?
+    has? :removeEventListener
+  end
+
   def self.detach_event?
     has? `document`, :detachEvent
+  end
+
+  def self.dispatch_event?
+    has? :dispatchEvent
   end
 
   def self.fire_event?
