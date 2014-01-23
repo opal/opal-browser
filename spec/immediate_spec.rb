@@ -3,9 +3,9 @@ require 'browser/immediate'
 
 describe Proc do
   describe '#defer' do
-    async 'works properly' do
+    async 'defers the parameters' do
       proc {|a|
-        run_async {
+        async {
           expect(a).to eq(42)
         }
       }.defer(42)

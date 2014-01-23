@@ -5,7 +5,7 @@ describe Browser::EventSource do
   async 'creates it' do
     Browser::EventSource.new '/events' do |es|
       es.on :open do |e|
-        run_async {
+        async {
           expect(e.target).to be_a(Browser::EventSource)
         }
 
@@ -17,7 +17,7 @@ describe Browser::EventSource do
   async 'receives an unnamed event' do
     Browser::EventSource.new '/events' do |es|
       es.on :message do |e|
-        run_async {
+        async {
           expect(e.data).to eq('lol')
         }
 
@@ -30,7 +30,7 @@ describe Browser::EventSource do
   async 'receives a named event' do
     Browser::EventSource.new '/events' do |es|
       es.on :custom do |e|
-        run_async {
+        async {
           expect(e.data).to eq('omg')
         }
 

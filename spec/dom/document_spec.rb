@@ -22,15 +22,15 @@ describe Browser::DOM::Document do
     HTML
 
     it "should get element by id" do
-      expect($document["lol"]).to eq(`#{$document.to_n}.getElementById('lol')`)
+      expect($document["lol"]).to eq(`document.getElementById('lol')`)
     end
 
     it "should get element by css" do
-      expect($document["lol"]).to eq(`#{$document.to_n}.getElementById('lol')`)
+      expect($document["#lol"]).to eq(`document.getElementById('lol')`)
     end
 
     it "should get element by xpath" do
-      expect($document["//*[@id='lol']"]).to eq(`#{$document.to_n}.getElementById('lol')`)
+      expect($document["//*[@id='lol']"]).to eq(`document.getElementById('lol')`)
     end
 
     it "should return nil if it can't find anything" do

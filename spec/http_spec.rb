@@ -8,11 +8,11 @@ describe Browser::HTTP do
   describe '.get' do
     async 'fetches a path' do
       Browser::HTTP.get(path).then {|res|
-        run_async {
+        async {
           expect(res.text).to eq('lol')
         }
       }.rescue {
-        run_async {
+        async {
           fail
         }
       }
@@ -28,11 +28,11 @@ describe Browser::HTTP do
   describe '.post' do
     async 'sends parameters properly' do
       Browser::HTTP.post(path, lol: 'wut').then {|res|
-        run_async {
+        async {
           expect(res.text).to eq('ok')
         }
       }.rescue {
-        run_async {
+        async {
           fail
         }
       }
@@ -48,11 +48,11 @@ describe Browser::HTTP do
   describe '.put' do
     async 'sends parameters properly' do
       Browser::HTTP.put(path, lol: 'wut').then {|res|
-        run_async {
+        async {
           expect(res.text).to eq('ok')
         }
       }.rescue {
-        run_async {
+        async {
           fail
         }
       }
@@ -68,11 +68,11 @@ describe Browser::HTTP do
   describe '.delete' do
     async 'fetches a path' do
       Browser::HTTP.delete(path).then {|res|
-        run_async {
+        async {
           expect(res.text).to eq('lol')
         }
       }.rescue {
-        run_async {
+        async {
           fail
         }
       }

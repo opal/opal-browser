@@ -8,7 +8,7 @@ describe Browser::Socket do
   async 'creates a socket' do
     Browser::Socket.new ws do |s|
       s.on :open do |e|
-        run_async {
+        async {
           expect(e.target).to be_a(Browser::Socket)
         }
       end
@@ -18,7 +18,7 @@ describe Browser::Socket do
   async 'receives messages' do
     Browser::Socket.new ws do |s|
       s.on :message do |e|
-        run_async {
+        async {
           expect(e.data).to eq('lol')
         }
       end
@@ -31,7 +31,7 @@ describe Browser::Socket do
         s.print 'omg'
 
         s.on :message do |e|
-          run_async {
+          async {
             expect(e.data).to eq('omg')
           }
         end

@@ -44,7 +44,7 @@ describe Browser::DOM::Event do
       elem = $document["event-spec"]
 
       elem.on :click do |event|
-        run_async {
+        async {
           expect(event).to be_a(Browser::DOM::Event)
         }
       end
@@ -56,7 +56,7 @@ describe Browser::DOM::Event do
       elem = $document["event-spec"]
 
       elem.on :bazinga do |event, foo, bar, baz|
-        run_async {
+        async {
           expect(foo).to eq(1)
           expect(bar).to eq(2)
           expect(baz).to eq(3)
@@ -70,7 +70,7 @@ describe Browser::DOM::Event do
       elem = $document["event-spec"]
 
       elem.on :bazinga, 'span.nami' do
-        run_async {
+        async {
           expect(true).to be_truthy
         }
       end
