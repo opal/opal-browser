@@ -1,4 +1,4 @@
-module Browser; module DOM; class Element
+module Browser; module DOM; class Element < Node
 
 unless C.respond_to?(:Element, :matches)
   if C.respond_to?(:Element, :oMatchesSelector)
