@@ -6,6 +6,10 @@ module Browser
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/API/History
 class History
+  def self.supported?
+    `!!window.history.pushState`
+  end
+
   include Native
 
   # @!attribute [r] length
