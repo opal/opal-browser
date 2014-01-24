@@ -41,7 +41,7 @@ at_exit {
 }
 
 begin
-  Selenium::WebDriver::Wait.new(timeout: 540, interval: 1) \
+  Selenium::WebDriver::Wait.new(timeout: 540, interval: 5) \
     .until { not browser.find_element(:css, 'p#totals').text.strip.empty? }
 
   totals   = browser.find_element(:css, 'p#totals').text
