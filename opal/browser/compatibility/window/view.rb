@@ -8,7 +8,7 @@ if Browser.supports? :window, :innerHeight
   def height
     `#@native.innerHeight`
   end
-elsif Browser.supports :element, :clientHeight
+elsif Browser.supports? :element, :clientHeight
   def height
     `#@native.document.documentElement.clientHeight`
   end
