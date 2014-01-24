@@ -44,7 +44,7 @@ begin
   }
 
   begin
-    Selenium::WebDriver::Wait.new(timeout: 120, interval: 5) \
+    Selenium::WebDriver::Wait.new(timeout: 540, interval: 5) \
       .until { not browser.find_element(:css, 'p#totals').text.strip.empty? }
 
     totals   = browser.find_element(:css, 'p#totals').text
@@ -53,7 +53,7 @@ begin
     puts "#{totals} in #{duration}"
     puts
 
-    if totals =~ /0 failures/
+    if totals =~ / 0 failures/
       exit 0
     end
 
@@ -92,6 +92,7 @@ rescue Selenium::WebDriver::Error::TimeOutError
   trials += 1
 
   unless trials >= 4
+    browser.quit
     retry
   end
 end
