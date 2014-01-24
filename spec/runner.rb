@@ -39,10 +39,6 @@ begin
   browser = Selenium::WebDriver.for(:remote, url: url, desired_capabilities: cap)
   browser.navigate.to('http://localhost:9292')
 
-  at_exit {
-    browser.quit
-  }
-
   begin
     Selenium::WebDriver::Wait.new(timeout: 540, interval: 5) \
       .until { not browser.find_element(:css, 'p#totals').text.strip.empty? }
@@ -85,16 +81,12 @@ begin
       }
     }
   rescue Selenium::WebDriver::Error::NoSuchElementError
-    puts 'ya blew it'
     puts browser.page_source
+  ensure
+    browser.quit
   end
 rescue Selenium::WebDriver::Error::TimeOutError
-  trials += 1
-
-  unless trials >= 4
-    browser.quit
-    retry
-  end
+  retry unless (trials += 1) >= 4
 end
 
 exit 1
