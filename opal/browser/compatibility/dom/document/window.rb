@@ -1,14 +1,12 @@
 module Browser; module DOM; class Document < Element
 
-unless C.has? `document`, :defaultView
-  if C.has? `document`, :parentWindow
-    def window
-      `#@native.parentWindow`
-    end
-  else
-    def window
-      raise NotImplementedError, 'window from document is unsupported'
-    end
+if Browser.supports? :document, :defaultView
+  def window
+    Window.new(`#@native.defaultView`)
+  end
+elsif Browser.supports? :document, :parentWindow
+  def window
+    Window.new(`#@native.parentWindow`)
   end
 end
 

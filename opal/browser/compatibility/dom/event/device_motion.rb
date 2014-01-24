@@ -1,6 +1,10 @@
 module Browser; module DOM; class Event; class DeviceMotion < Event
 
-if C.create_event?
+if Browser.supports? :event, :constructor
+  def self.construct(name, desc)
+    `new DeviceMotionEvent(#{name}, #{desc})`
+  end
+elsif Browser.supports? :event, :create
   def self.construct(name, desc)
     %x{
       var event = document.createEvent("DeviceMotionEvent");
@@ -11,7 +15,7 @@ if C.create_event?
       return event;
     }
   end
-elsif C.create_event_object?
+elsif Browser.supports? :event, :createObject
   def self.construct(name, desc)
     Native(`document.createEventObject()`).merge!(desc).to_n
   end
@@ -19,6 +23,6 @@ else
   def self.construct(*)
     raise NotImplementedError
   end
-end unless C.new_event?
+end
 
 end; end; end; end

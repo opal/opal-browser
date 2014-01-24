@@ -15,10 +15,6 @@ class Custom < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new CustomEvent(name, desc)`
-  end
-
   def initialize(native)
     super(native); @native = native # FIXME: remove this when super is fixed
 

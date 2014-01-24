@@ -3,7 +3,7 @@ require 'paggio'
 
 require 'browser/version'
 require 'browser/utils'
-require 'browser/compatibility'
+require 'browser/support'
 
 require 'browser/window'
 require 'browser/dom'

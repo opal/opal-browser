@@ -8,7 +8,6 @@ class Request
   # @param method [Symbol] the HTTP method to use
   # @param url [String, #to_s] the URL to request
   # @param parameters [String, Hash] the parameters to send
-  #
   def self.open(method, url, parameters = nil, &block)
     request = new(&block)
     request.open(method, url)
@@ -63,8 +62,10 @@ class Request
     end if block
   end
 
+  # @private
+  # @abstract
   def transport
-    `new XMLHttpRequest()`
+    raise NotImplementedError, 'no supported transport'
   end
 
   # Check if the request has been opened.

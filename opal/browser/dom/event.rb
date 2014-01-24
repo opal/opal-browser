@@ -160,7 +160,9 @@ class Event
         Custom
     end
 
-    if type != Event && type.supported?
+    if type == Custom
+      Custom
+    elsif type.supported?
       type
     else
       Event
@@ -177,8 +179,9 @@ class Event
     event
   end
 
+  # @private
   def self.construct(name, desc)
-    `new Event(#{name}, #{desc})`
+    raise NotImplementedError
   end
 
   def self.new(value, *args)

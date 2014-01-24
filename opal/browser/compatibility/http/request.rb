@@ -1,14 +1,12 @@
 module Browser; module HTTP; class Request
 
-unless C.has? :XMLHttpRequest
-  if C.has? :ActiveXObject
-    def transport
-      `new ActiveXObject("MSXML2.XMLHTTP.3.0")`
-    end
-  else
-    def transport
-      raise NotImplementedError, 'XMLHttpRequest is unsupported'
-    end
+if Browser.supports? :XHR
+  def transport
+    `new XMLHttpRequest()`
+  end
+elsif Browser.supports? :ActiveX
+  def transport
+    `new ActiveXObject("MSXML2.XMLHTTP.3.0")`
   end
 end
 

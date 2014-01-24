@@ -6,7 +6,7 @@ module Browser; module DOM
 # @see https://developer.mozilla.org/en/docs/Web/API/MutationObserver
 class MutationObserver
   def self.supported?
-    defined? `window.MutationObserver`
+    Browser.supports? :MutationObserver
   end
 
   include Native

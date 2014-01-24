@@ -4,7 +4,8 @@ require 'browser/http/binary'
 require 'browser/http/headers'
 require 'browser/http/request'
 require 'browser/http/response'
-require 'browser/http/compatibility'
+
+require 'browser/compatibility/http'
 
 module Browser
 

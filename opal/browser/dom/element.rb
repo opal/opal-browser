@@ -185,33 +185,14 @@ class Element < Node
     }.flatten.uniq
   end
 
-  def css(path)
-    %x{
-      try {
-        var result = #@native.querySelectorAll(path);
-
-        return #{NodeSet.new(document,
-          Native::Array.new(`result`))};
-      }
-      catch(e) {
-        return #{NodeSet.new(document)};
-      }
-    }
+  # @abstract
+  def css(selector)
+    raise NotImplementedError, 'query by CSS selector unsupported'
   end
 
+  # @abstract
   def xpath(path)
-    %x{
-      try {
-        var result = (#@native.ownerDocument || #@native).evaluate(path,
-          #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-
-        return #{NodeSet.new(document,
-          Native::Array.new(`result`, get: :snapshotItem, length: :snapshotLength))};
-      }
-      catch (e) {
-        return #{NodeSet.new(document)};
-      }
-    }
+    raise NotImplementedError, 'query by XPath unsupported'
   end
 
   def style(data = nil, &block)
@@ -232,8 +213,9 @@ class Element < Node
     self
   end
 
+  # @abstract
   def style!
-    CSS::Declaration.new(`#{window.to_n}.getComputedStyle(#@native, null)`)
+    raise NotImplementedError, 'computed style unsupported'
   end
 
   def data(what)
@@ -263,8 +245,9 @@ class Element < Node
     end
   end
 
+  # @abstract
   def matches?(selector)
-    `#@native.matches(#{selector})`
+    raise NotImplementedError, 'selector matching unsupported'
   end
 
   def window

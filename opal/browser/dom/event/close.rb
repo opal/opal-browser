@@ -23,10 +23,6 @@ class Close < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new CloseEvent(#{name}, #{desc})`
-  end
-
   alias_native :code
   alias_native :reason
   alias_native :clean?, :wasClean

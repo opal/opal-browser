@@ -121,13 +121,16 @@ class Storage
   end
 
   # @private
+  # @abstract
   def init
-    replace `#@window.localStorage[#{encoded_name}] || '{}'`
+    raise NotImplementedError
   end unless method_defined? :init
 
   # Save a snapshot of the storage.
+  #
+  # @abstract
   def save
-    `#@window.localStorage[#{encoded_name}] = #{JSON.dump(self)}`
+    raise NotImplementedError
   end unless method_defined? :save
 
   # Convert the storage to JSON.
@@ -154,6 +157,10 @@ end
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage#sessionStorage
 class SessionStorage < Storage
+  def self.supported?
+    Browser.supports? :sessionStorage
+  end
+
   def init
     replace `#@window.sessionStorage[#{encoded_name}] || '{}'`
   end

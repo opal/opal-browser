@@ -6,6 +6,25 @@ class Mouse < UI
   end
 
   class Definition < UI::Definition
+    def initialize(*)
+      super
+
+      %x{
+        #@native.view    = #@native.view    || window;
+        #@native.screenX = #@native.screenX || 0;
+        #@native.screenY = #@native.screenY || 0;
+        #@native.clientX = #@native.clientX || 0;
+        #@native.clientY = #@native.clientY || 0;
+
+        #@native.button   = #@native.button   || 0;
+        #@native.detail   = #@native.detail   || 0;
+        #@native.ctrlKey  = #@native.ctrlKey  || false;
+        #@native.altKey   = #@native.altKey   || false;
+        #@native.shiftKey = #@native.shiftKey || false;
+        #@native.metaKey  = #@native.metaKey  || false;
+      }
+    end
+
     class Client
       include Native
 
@@ -137,10 +156,6 @@ class Mouse < UI
     def to=(elem)
       `#@native.toElement = #{Native.try_convert(elem)}`
     end
-  end
-
-  def self.construct(name, desc)
-    `new MouseEvent(#{name}, #{desc})`
   end
 
   Position = Struct.new(:x, :y)

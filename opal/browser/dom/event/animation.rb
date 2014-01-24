@@ -15,10 +15,6 @@ class Animation < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new AnimationEvent(#{name}, #{desc})`
-  end
-
   alias_native :name, :animationName
   alias_native :elapsed, :elapsedTime
 end

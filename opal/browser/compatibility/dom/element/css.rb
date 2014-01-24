@@ -1,14 +1,22 @@
 module Browser; module DOM; class Element
 
-unless C.css?
-  if C.sizzle?
-    def css(path)
-      NodeSet.new(document, `Sizzle(#{path}, #@native)`)
-    end
-  else
-    def css(*)
-      raise NotImplementedError, 'fetching by selector unsupported'
-    end
+if Browser.supports? :query, :css
+  def css(path)
+    %x{
+      try {
+        var result = #@native.querySelectorAll(path);
+
+        return #{NodeSet.new(document,
+          Native::Array.new(`result`))};
+      }
+      catch(e) {
+        return #{NodeSet.new(document)};
+      }
+    }
+  end
+elsif Browser.loaded? :sizzle
+  def css(path)
+    NodeSet.new(document, `Sizzle(#{path}, #@native)`)
   end
 end
 

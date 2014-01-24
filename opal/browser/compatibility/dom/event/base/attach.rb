@@ -1,6 +1,18 @@
 module Browser; module DOM; class Event; module Target
 
-if C.attach_event?
+if Browser.supports? :event, :addListener
+  def attach(callback)
+    `#@native.addEventListener(#{callback.name}, #{callback.to_n})`
+
+    callback
+  end
+
+  def attach!(callback)
+    `#@native.addEventListener(#{callback.name}, #{callback.to_n}, true)`
+
+    callback
+  end
+elsif Browser.supports? :event, :attach
   def attach(callback)
     `#@native.attachEvent("on" + #{callback.name}, #{callback.to_n})`
   end
@@ -20,13 +32,15 @@ if C.attach_event?
     end
   end
 else
+  # @todo implement polyfill
   def attach(*)
     raise NotImplementedError
   end
 
+  # @todo implement polyfill
   def attach!(*)
     raise NotImplementedError
   end
-end unless C.add_event_listener?
+end
 
 end; end; end; end

@@ -6,12 +6,14 @@ class View
     @native = window.to_n
   end
 
+  # @abstract
   def width
-    `#@native.innerWidth`
+    raise NotImplementedError, 'window size unsupported'
   end
 
+  # @abstract
   def height
-    `#@native.innerHeight`
+    raise NotImplementedError, 'window size unsupported'
   end
 end
 

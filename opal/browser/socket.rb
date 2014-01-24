@@ -6,7 +6,7 @@ module Browser
 # @see https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
 class Socket
   def self.supported?
-    defined? `window.WebSocket`
+    Browser.supports? :WebSocket
   end
 
   include Native

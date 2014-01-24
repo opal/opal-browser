@@ -1,25 +1,29 @@
-module Browser; module DOM; class Element
+module Browser; module DOM; class Element < Node; class Scroll
 
-unless C.has? `document.body`, :scrollLeft
-  if C.has? `document.body`, :pageXOffset
-    def scroll(to = nil)
-      if to
-        if x = to[:x]
-          `#@native.pageXOffset = #{x}`
-        end
+if Browser.supports? :element, :scrollLeft
+  def position
+    Browser::Position.new(`#@native.scrollLeft`, `#@native.scrollTop`)
+  end
 
-        if y = to[:y]
-          `#@native.pageYOffset = #{y}`
-        end
-      else
-        Position.new(`#@native.pageXOffset`, `#@native.pageYOffset`)
-      end
-    end
-  else
-    def scroll(*)
-      raise NotImplementedError, 'scroll on element not supported'
-    end
+  def to(what)
+    x   = what[:x] || self.x
+    y   = what[:y] || self.y
+
+    `#@native.scrollTop  = #{y}`
+    `#@native.scrollLeft = #{x}`
+  end
+elsif Browser.supports? :element, :pageXOffset
+  def position
+    Position.new(`#@native.pageXOffset`, `#@native.pageYOffset`)
+  end
+
+  def to(what)
+    x   = what[:x] || self.x
+    y   = what[:y] || self.y
+
+    `#@native.pageYOffset = #{y}`
+    `#@native.pageXOffset = #{x}`
   end
 end
 
-end; end; end
+end; end; end; end

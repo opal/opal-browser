@@ -6,25 +6,19 @@ class Scroll
     @native = window.to_n
   end
 
+  # @abstract
   def position
-    %x{
-      var doc  = #@native.document,
-          root = doc.documentElement,
-          body = doc.body;
-
-      var x = root.scrollLeft || body.scrollLeft,
-          y = root.scrollTop  || body.scrollTop;
-    }
-
-    Position.new(`x`, `y`)
+    raise NotImplementedError, 'window scroll unsupported'
   end
 
+  # @abstract
   def x
-    position.x
+    raise NotImplementedError, 'window scroll unsupported'
   end
 
+  # @abstract
   def y
-    position.y
+    raise NotImplementedError, 'window scroll unsupported'
   end
 
   def to(what)

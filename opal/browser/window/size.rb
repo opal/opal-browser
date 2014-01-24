@@ -15,16 +15,18 @@ class Size
     self
   end
 
+  # @abstract
   def width
-    `#@native.outerWidth`
+    raise NotImplementedError, 'window outer size not supported'
+  end
+
+  # @abstract
+  def height
+    raise NotImplementedError, 'window outer size not supported'
   end
 
   def width=(value)
     set(width: value)
-  end
-
-  def height
-    `#@native.outerHeight`
   end
 
   def height=(value)

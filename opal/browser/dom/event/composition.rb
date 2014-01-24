@@ -15,10 +15,6 @@ class Composition < UI
     end
   end
 
-  def self.construct(name, desc)
-    `new CompositionEvent(#{name}, #{desc})`
-  end
-
   alias_native :data
   alias_native :locale
 

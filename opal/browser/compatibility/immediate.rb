@@ -1,6 +1,6 @@
 module Browser; class Immediate
 
-if C.immediate?
+if Browser.supports? :setImmediate
   def dispatch
     @id = `window.setImmediate(function() {
       #{@function.call(*@arguments, &@block)};
@@ -10,7 +10,7 @@ if C.immediate?
   def prevent
     `window.clearImmediate(#@id)`
   end
-elsif C.immediate? :ms
+elsif Browser.supports? :setImmediate, :ie
   def dispatch
     @id = `window.msSetImmediate(function() {
       #{@function.call(*@arguments, &@block)};
@@ -20,7 +20,7 @@ elsif C.immediate? :ms
   def prevent
     `window.msClearImmediate(#@id)`
   end
-elsif C.post_message?
+elsif Browser.supports? :postMessage
   # @private
   @@tasks  = {}
 
@@ -45,7 +45,7 @@ elsif C.post_message?
   def prevent
     @@tasks.delete(@id)
   end
-elsif C.ready_state_change?
+elsif Browser.supports? :readystatechange
   def dispatch
     %x{
       var script = document.createElement("script");

@@ -72,6 +72,10 @@ class Event
         @selector = selector
       end
 
+      def event
+        Event.class_for(@name)
+      end
+
       def off
         target.off(self)
       end
@@ -148,19 +152,17 @@ class Event
       attach!(callback)
     end
 
+    # @private
+    # @abstract
     def attach(callback)
-      `#@native.addEventListener(#{callback.name}, #{callback.to_n})`
-
-      callback
+      raise NotImplementedError
     end
-    private :attach
 
+    # @private
+    # @abstract
     def attach!(callback)
-      `#@native.addEventListener(#{callback.name}, #{callback.to_n}, true)`
-
-      callback
+      raise NotImplementedError
     end
-    private :attach!
 
     def off(what = nil)
       case what
@@ -201,10 +203,11 @@ class Event
       end
     end
 
+    # @private
+    # @abstract
     def detach(callback)
-      `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
+      raise NotImplementedError
     end
-    private :detach
 
     def trigger(event, *args, &block)
       if event.is_a? String
@@ -222,10 +225,11 @@ class Event
       end
     end
 
+    # @private
+    # @abstract
     def dispatch(event)
-      `#@native.dispatchEvent(#{event.to_n})`
+      raise NotImplementedError
     end
-    private :dispatch
 
   private
     def callbacks

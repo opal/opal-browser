@@ -6,7 +6,7 @@ module Browser
 # @see https://developer.mozilla.org/en-US/docs/Web/API/EventSource
 class EventSource
   def self.supported?
-    defined? `window.EventSource`
+    Browser.supports? :EventSource
   end
 
   include Native

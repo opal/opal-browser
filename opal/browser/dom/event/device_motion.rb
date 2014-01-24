@@ -25,10 +25,6 @@ class DeviceMotion < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new DeviceMotionEvent(#{name}, #{desc})`
-  end
-
   alias_native :acceleration
   alias_native :acceleration_with_gravity, :accelerationIncludingGravity
   alias_native :rotation, :rotationRate

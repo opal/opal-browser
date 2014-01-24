@@ -1,12 +1,12 @@
 module Browser; class Window; class Size
 
-unless C.has? :outerHeight
+if Browser.supports? :window, :outerHeight
   def width
-    raise NotImplementedError, 'window outer size not supported'
+    `#@native.outerWidth`
   end
 
   def height
-    raise NotImplementedError, 'window outer size not supported'
+    `#@native.outerHeight`
   end
 end
 
