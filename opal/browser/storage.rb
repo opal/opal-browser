@@ -120,18 +120,59 @@ class Storage
     end
   end
 
-  # @private
-  # @abstract
-  def init
-    raise NotImplementedError
-  end unless method_defined? :init
+  # @!method init
+  #   @private
 
-  # Save a snapshot of the storage.
-  #
-  # @abstract
-  def save
-    raise NotImplementedError
-  end unless method_defined? :save
+  # @!method save
+  #   Persist the current state to the storage.
+
+  if Browser.supports? 'Storage.local'
+    def init
+      replace `#@window.localStorage[#{encoded_name}] || '{}'`
+    end
+
+    def save
+      `#@window.localStorage[#{encoded_name}] = #{JSON.dump(self)}`
+    end
+  elsif Browser.supports? 'Storage.global'
+    def init
+      replace `#@window.globalStorage[#@window.location.hostname][#{encoded_name}] || '{}'`
+    end
+
+    def save
+      `#@window.globalStorage[#@window.location.hostname][#{encoded_name}] = #{JSON.dump(self)}`
+    end
+  elsif Browser.supports? 'Element.addBehavior'
+    def init
+      %x{
+        #@element = #@window.document.createElement('link');
+        #@element.addBehavior('#default#userData');
+
+        #@window.document.getElementsByTagName('head')[0].appendChild(#@element);
+
+        #@element.load(#{encoded_name});
+      }
+
+      replace `#@element.getAttribute(#{encoded_name}) || '{}'`
+    end
+
+    def save
+      %x{
+        #@element.setAttribute(#{encoded_name}, #{JSON.dump(self)});
+        #@element.save(#{encoded_name});
+      }
+    end
+  else
+    def init
+      $document.cookies.options expires: 60 * 60 * 24 * 365
+
+      replace $document.cookies[encoded_name]
+    end
+
+    def save
+      $document.cookies[encoded_name] = self
+    end
+  end
 
   # Convert the storage to JSON.
   #
@@ -158,7 +199,7 @@ end
 # @see https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage#sessionStorage
 class SessionStorage < Storage
   def self.supported?
-    Browser.supports? :sessionStorage
+    Browser.supports? 'Storage.session'
   end
 
   def init
@@ -191,5 +232,3 @@ class Window
 end
 
 end
-
-require 'browser/compatibility/storage'
