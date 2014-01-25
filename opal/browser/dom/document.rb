@@ -11,9 +11,18 @@ class Document < Element
     end
   end
 
-  # @abstract
-  def window
-    raise NotImplementedError, 'window from document unsupported'
+  if Browser.supports? 'Document.view'
+    def window
+      Window.new(`#@native.defaultView`)
+    end
+  elsif Browser.supports? 'Document.window'
+    def window
+      Window.new(`#@native.parentWindow`)
+    end
+  else
+    def window
+      raise NotImplementedError, 'window from document unsupported'
+    end
   end
 
   def create_text(content)
