@@ -1,8 +1,5 @@
-require 'browser/compatibility/animation_frame'
-
 module Browser
 
-# FIXME: drop the method_defined? checks when require order is fixed
 class AnimationFrame
   def initialize(window, &block)
     @window = window
@@ -10,13 +7,73 @@ class AnimationFrame
     @id     = request(block)
   end
 
-  def request
-    raise NotImplementedError, 'window requestAnimationFrame unsupported'
-  end unless method_defined? :request
+  if Browser.supports? 'Animation.request'
+    def request(block)
+      `#@native.requestAnimationFrame(#{block.to_n})`
+    end
+  elsif Browser.supports? 'Animation.request (Chrome)'
+    def request(block)
+      `#@native.webkitRequestAnimationFrame(#{block.to_n})`
+    end
+  elsif Browser.supports? 'Animation.request (Firefox)'
+    def request(block)
+      `#@native.mozRequestAnimationFrame(#{block.to_n})`
+    end
+  elsif Browser.supports? 'Animation.request (Opera)'
+    def request(block)
+      `#@native.oRequestAnimationFrame(#{block.to_n})`
+    end
+  elsif Browser.supports? 'Animation.request (Internet Explorer)'
+    def request(block)
+      `#@native.msRequestAnimationFrame(#{block.to_n})`
+    end
+  else
+    def request
+      raise NotImplementedError, 'window requestAnimationFrame unsupported'
+    end
+  end
 
-  def cancel
-    raise NotImplementedError, 'window cancelAnimationFrame unsupported'
-  end unless method_defined? :cancel
+  if Browser.supports? 'Animation.cancel'
+    def cancel
+      `#@native.cancelAnimationFrame(#@id)`
+    end
+  elsif Browser.supports? 'Animation.cancel (Chrome)'
+    def cancel
+      `#@native.webkitCancelAnimationFrame(#@id)`
+    end
+  elsif Browser.supports? 'Animation.cancelRequest (Chrome)'
+    def cancel
+      `#@native.webkitCancelRequestAnimationFrame(#@id)`
+    end
+  elsif Browser.supports? 'Animation.cancel (Firefox)'
+    def cancel
+      `#@native.mozCancelAnimationFrame(#@id)`
+    end
+  elsif Browser.supports? 'Animation.cancelRequest (Firefox)'
+    def cancel
+      `#@native.mozCancelRequestAnimationFrame(#@id)`
+    end
+  elsif Browser.supports? 'Animation.cancel (Opera)'
+    def cancel
+      `#@native.oCancelAnimationFrame(#@id)`
+    end
+  elsif Browser.supports? 'Animation.cancelRequest (Opera)'
+    def cancel
+      `#@native.oCancelRequestAnimationFrame(#@id)`
+    end
+  elsif Browser.supports? 'Animation.cancel (Internet Explorer)'
+    def cancel
+      `#@native.msCancelAnimationFrame(#@id)`
+    end
+  elsif Browser.supports? 'Animation.cancelRequest (Internet Explorer)'
+    def cancel
+      `#@native.msCancelRequestAnimationFrame(#@id)`
+    end
+  else
+    def cancel
+      raise NotImplementedError, 'window cancelAnimationFrame unsupported'
+    end
+  end
 end
 
 end
