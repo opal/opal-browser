@@ -165,14 +165,30 @@ class Node
 
   # @!attribute content
   # @return [String] the inner text content of the node
-  #
-  # @abstract
-  def content
-    raise NotImplementedError, 'text content unsupported'
-  end
+  if Browser.supports? 'Element.textContent'
+    def content
+      `#@native.textContent`
+    end
 
-  def content=(value)
-    raise NotImplementedError, 'text content unsupported'
+    def content=(value)
+      `#@native.textContent = #{value}`
+    end
+  elsif Browser.supports? 'Element.innerText'
+    def content
+      `#@native.innerText`
+    end
+
+    def content=(value)
+      `#@native.innerText = #{value}`
+    end
+  else
+    def content
+      raise NotImplementedError, 'node text content unsupported'
+    end
+
+    def content=(value)
+      raise NotImplementedError, 'node text content unsupported'
+    end
   end
 
   def blank?
