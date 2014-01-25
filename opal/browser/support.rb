@@ -4,75 +4,64 @@ module Browser
   # @private
   @support = `{}`
 
-  def self.supports?(base, *extra)
-    key = `base+extra`
-
-    if defined?(`#@support[#{key}]`)
-      return `#@support[#{key}]`
+  def self.supports?(feature)
+    if defined?(`#@support[#{feature}]`)
+      return `#@support[#{feature}]`
     end
 
-    support = case base
-      when :MutationObserver
+    support = case feature
+      when 'MutationObserver'
         defined?(`window.MutationObserver`)
 
-      when :WebSocket
+      when 'WebSocket'
         defined?(`window.WebSocket`)
 
-      when :EventSource
+      when 'EventSource'
         defined?(`window.EventSource`)
 
-      when :XHR
+      when 'XHR'
         defined?(`window.XMLHttpRequest`)
 
-      when :ActiveX
+      when 'ActiveX'
         defined?(`window.ActiveXObject`)
 
-      when :query
-        case extra.shift
-        when :xpath
-          defined?(`document.evaluate`)
+      when 'Query.css'
+        defined?(`Element.prototype.querySelectorAll`)
 
-        when :css
-          defined?(`Element.prototype.querySelectorAll`)
-        end
+      when 'Query.xpath'
+        defined?(`document.evaluate`)
 
-      when :localStorage
+      when 'Storage.local'
         defined?(`window.localStorage`)
 
-      when :globalStorage
+      when 'Storage.global'
         defined?(`window.globalStorage`)
 
-      when :sessionStorage
+      when 'Storage.session'
         defined?(`window.sessionStorage`)
 
-      when :userData
-        defined?(`document.body.addBehavior`)
+      when 'Immediate'
+        defined?(`window.setImmediate`)
 
-      when :setImmediate
-        case extra.shift
-        when nil
-          defined?(`window.setImmediate`)
+      when 'Immediate (Internet Explorer)'
+        defined?(`window.msSetImmediate`)
 
-        when :ie
-          defined?(`window.msSetImmediate`)
+      when 'Immediate (Firefox)'
+        defined?(`window.mozSetImmediate`)
 
-        when :firefox, :mozilla, :gecko
-          defined?(`window.mozSetImmediate`)
+      when 'Immediate (Opera)'
+        defined?(`window.oSetImmediate`)
 
-        when :opera
-          defined?(`window.oSetImmediate`)
+      when 'Immediate (Chrome)', 'setImmediate (Safari)'
+        defined?(`window.webkitSetImmediate`)
 
-        when :chrome, :safari, :android, :webkit
-          defined?(`window.webkitSetImmediate`)
-        end
-
-      when :getComputedStyle
+      when 'CSS.computed'
         defined?(`window.getComputedStyle`)
 
-      when :currentStyle
+      when 'CSS.current'
         defined?(`document.documentElement.currentStyle`)
 
-      when :postMessage
+      when 'Window.send'
         if defined?(`window.postMessage`) && !defined?(`window.importScripts`)
           %x{
             var ok  = true,
@@ -86,190 +75,154 @@ module Browser
           `ok`
         end
 
-      when :readystatechange
+      when 'Window.innerSize'
+        defined?(`window.innerHeight`)
+
+      when 'Window.outerSize'
+        defined?(`window.outerHeight`)
+
+      when 'Window.scroll'
+        defined?(`document.documentElement.scrollLeft`)
+
+      when 'Window.pageOffset'
+        defined?(`window.pageXOffset`)
+
+      when 'Element.addBehavior'
+        defined?(`document.body.addBehavior`)
+
+      when 'Element.clientSize'
+        defined?(`document.documentElement.clientHeight`)
+
+      when 'Element.scroll'
+        defined?(`document.documentElement.scrollLeft`)
+
+      when 'Element.textContent'
+        defined?(`document.documentElement.textContent`)
+
+      when 'Element.innerText'
+        defined?(`document.documentElement.innerText`)
+
+      when 'Element.matches'
+        defined?(`document.documentElement.matches`)
+
+      when 'Element.matches (Internet Explorer)'
+        defined?(`document.documentElement.msMatchesSelector`)
+
+      when 'Element.matches (Firefox)'
+        defined?(`document.documentElement.mozMatchesSelector`)
+
+      when 'Element.matches (Opera)'
+        defined?(`document.documentElement.oMatchesSelector`)
+
+      when 'Element.matches (Chrome)', 'Element.matches (Safari)'
+        defined?(`document.documentElement.webkitMatchesSelector`)
+
+      when 'Element.getBoundingClientRect'
+        defined?(`document.documentElement.getBoundingClientRect`)
+
+      when 'Event.readystatechange'
         `"onreadystatechange" in window.document.createElement("script")`
 
-      when :window
-        case extra.shift
-        when :innerHeight
-          defined?(`window.innerHeight`)
+      when 'Event.constructor'
+        begin
+          `new MouseEvent("click")`
 
-        when :innerWidth
-          defined?(`window.innerWidth`)
-
-        when :scrollLeft
-          defined?(`document.documentElement.scrollLeft`)
-
-        when :scrollTop
-          defined?(`document.documentElement.scrollTop`)
-
-        when :pageXOffset
-          defined?(`window.pageXOffset`)
-
-        when :pageYOffset
-          defined?(`window.pageYOffset`)
+          true
+        rescue
+          false
         end
 
-      when :event
-        case extra.shift
-        when :constructor
-          begin
-            `new MouseEvent("click")`
+      when 'Event.create'
+        defined?(`document.createEvent`)
 
-            true
-          rescue
-            false
-          end
+      when 'Event.createObject'
+        defined?(`document.createEventObject`)
 
-        when :create
-          defined?(`document.createEvent`)
+      when 'Event.addListener'
+        defined?(`document.addEventListener`)
 
-        when :createObject
-          defined?(`document.createEventObject`)
+      when 'Event.attach'
+        defined?(`document.attachEvent`)
 
-        when :addListener
-          defined?(`document.addEventListener`)
+      when 'Event.removeListener'
+        defined?(`document.removeEventListener`)
 
-        when :attach
-          defined?(`document.attachEvent`)
+      when 'Event.detach'
+        defined?(`document.detachEvent`)
 
-        when :removeListener
-          defined?(`document.removeEventListener`)
+      when 'Event.dispatch'
+        defined?(`document.dispatchEvent`)
 
-        when :detach
-          defined?(`document.detachEvent`)
+      when 'Event.fire'
+        defined?(`document.fireEvent`)
 
-        when :dispatch
-          defined?(`document.dispatchEvent`)
+      when 'Document.view'
+        defined?(`document.defaultView`)
 
-        when :fire
-          defined?(`document.fireEvent`)
-        end
+      when 'Document.window'
+        defined?(`document.parentWindow`)
 
-      when :document
-        case extra.shift
-        when :defaultView
-          defined?(`document.defaultView`)
+      when 'History'
+        defined?(`window.history.pushState`)
 
-        when :parentWindow
-          defined?(`document.parentWindow`)
-        end
+      when 'History.state'
+        defined?(`window.history.state`)
 
-      when :element
-        case extra.shift
-        when :clientHeight
-          defined?(`document.documentElement.clientHeight`)
+      when 'Animation.request'
+        defined?(`window.requestAnimationFrame`)
 
-        when :clientWidth
-          defined?(`document.documentElement.clientWidth`)
+      when 'Animation.request (Internet Explorer)'
+        defined?(`window.msRequestAnimationFrame`)
 
-        when :scrollLeft
-          defined?(`document.documentElement.scrollLeft`)
+      when 'Animation.request (Firefox)'
+        defined?(`window.mozRequestAnimationFrame`)
 
-        when :scrollTop
-          defined?(`document.documentElement.scrollTop`)
+      when 'Animation.request (Opera)'
+        defined?(`window.oRequestAnimationFrame`)
 
-        when :textContent
-          defined?(`document.documentElement.textContent`)
+      when 'Animation.request (Chrome)', 'Animation.request (Safari)'
+        defined?(`window.webkitRequestAnimationFrame`)
 
-        when :innerText
-          defined?(`document.documentElement.innerText`)
+      when 'Animation.cancel'
+        defined?(`window.cancelAnimationFrame`)
 
-        when :matches
-          case extra.shift
-          when nil
-            defined?(`Element.prototype.matches`)
+      when 'Animation.cancel (Internet Explorer)'
+        defined?(`window.msCancelAnimationFrame`)
 
-          when :ie
-            defined?(`Element.prototype.msMatchesSelector`)
+      when 'Animation.cancel (Firefox)'
+        defined?(`window.mozCancelAnimationFrame`)
 
-          when :firefox, :mozilla, :gecko
-            defined?(`Element.prototype.mozMatchesSelector`)
+      when 'Animation.cancel (Opera)'
+        defined?(`window.oCancelAnimationFrame`)
 
-          when :opera
-            defined?(`Element.prototype.oMatchesSelector`)
+      when 'Animation.cancel (Chrome)', 'Animation.cancel (Safari)'
+        defined?(`window.webkitCancelAnimationFrame`)
 
-          when :chrome, :safari, :android, :webkit
-            defined?(`Element.prototype.webkitMatchesSelector`)
-          end
-        end
+      when 'Animation.cancelRequest'
+        defined?(`window.cancelRequestAnimationFrame`)
 
-      when :history
-        case extra.shift
-        when nil
-          defined?(`window.history.pushState`)
+      when 'Animation.cancelRequest (Internet Explorer)'
+        defined?(`window.msCancelRequestAnimationFrame`)
 
-        when :state
-          defined?(`window.history.state`)
-        end
+      when 'Animation.cancelRequest (Firefox)'
+        defined?(`window.mozCancelRequestAnimationFrame`)
 
-      when :animation
-        case extra.shift
-        when :request
-          case extra.shift
-          when nil
-            defined?(`window.requestAnimationFrame`)
+      when 'Animation.cancelRequest (Opera)'
+        defined?(`window.oCancelRequestAnimationFrame`)
 
-          when :ie
-            defined?(`window.msRequestAnimationFrame`)
-
-          when :firefox, :mozilla, :gecko
-            defined?(`window.mozRequestAnimationFrame`)
-
-          when :opera
-            defined?(`window.oRequestAnimationFrame`)
-
-          when :chrome, :safari, :android, :webkit
-            defined?(`window.webkitRequestAnimationFrame`)
-          end
-
-        when :cancel
-          case extra.shift
-          when nil
-            defined?(`window.cancelAnimationFrame`)
-
-          when :ie
-            defined?(`window.msCancelAnimationFrame`)
-
-          when :firefox, :mozilla, :gecko
-            defined?(`window.mozCancelAnimationFrame`)
-
-          when :opera
-            defined?(`window.oCancelAnimationFrame`)
-
-          when :chrome, :safari, :android, :webkit
-            defined?(`window.webkitCancelAnimationFrame`)
-          end
-
-        when :cancelRequest
-          case extra.shift
-          when nil
-            defined?(`window.cancelRequestAnimationFrame`)
-
-          when :ie
-            defined?(`window.msCancelRequestAnimationFrame`)
-
-          when :firefox, :mozilla, :gecko
-            defined?(`window.mozCancelRequestAnimationFrame`)
-
-          when :opera
-            defined?(`window.oCancelRequestAnimationFrame`)
-
-          when :chrome, :safari, :android, :webkit
-            defined?(`window.webkitCancelRequestAnimationFrame`)
-          end
-        end
+      when 'Animation.cancelRequest (Chrome)', 'Animation.cancelRequest (Safari)'
+        defined?(`window.webkitCancelRequestAnimationFrame`)
     end
 
-    `#@support[#{key}] = #{support}`
+    `#@support[#{feature}] = #{support}`
   end
 
   def self.loaded?(name)
     case name
-    when :sizzle
+    when 'Sizzle'
       defined?(`window.Sizzle`)
 
-    when :wgxpath
+    when 'wicked-good-xpath'
       defined?(`window.wgxpath`)
     end
   end
