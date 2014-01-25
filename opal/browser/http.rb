@@ -8,6 +8,10 @@ require 'browser/http/response'
 module Browser
 
 module HTTP
+  def self.supported?
+    Browser.supports?('XHR') || Browser.supports?('ActiveXObject')
+  end
+
   # Send an asynchronous request.
   #
   # @param method [Symbol] the HTTP method to use

@@ -1,10 +1,6 @@
 module Browser; module HTTP
 
 class Request
-  def self.supported?
-    Browser.supports?('XHR') || Browser.supports?('ActiveXObject')
-  end
-
   include Native
 
   # Open and send a request.
