@@ -173,11 +173,6 @@ class Event
     end
   end
 
-  # @private
-  def self.construct(name, desc)
-    raise NotImplementedError
-  end
-
   def self.new(value, *args)
     return super unless self == Event
 
