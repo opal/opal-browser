@@ -165,12 +165,14 @@ class Node
 
   # @!attribute content
   # @return [String] the inner text content of the node
+  #
+  # @abstract
   def content
-    `#@native.textContent`
+    raise NotImplementedError, 'text content unsupported'
   end
 
   def content=(value)
-    `#@native.textContent = #{value}`
+    raise NotImplementedError, 'text content unsupported'
   end
 
   def blank?
@@ -251,7 +253,6 @@ class Node
   end
 
   alias inner_text content
-
   alias inner_text= content=
 
   # @!attribute [r] last_element_child

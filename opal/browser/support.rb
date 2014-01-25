@@ -169,6 +169,12 @@ module Browser
         when :scrollTop
           defined?(`document.documentElement.scrollTop`)
 
+        when :textContent
+          defined?(`document.documentElement.textContent`)
+
+        when :innerText
+          defined?(`document.documentElement.innerText`)
+
         when :matches
           case extra.shift
           when nil
