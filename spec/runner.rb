@@ -3,26 +3,6 @@ require 'selenium/webdriver'
 require 'net/https'
 require 'json'
 
-loop do
-  uri           = URI.parse("https://www.browserstack.com/automate/plan.json")
-  agent         = Net::HTTP.new(uri.host, uri.port)
-  agent.use_ssl = true
-  request       = Net::HTTP::Get.new(uri.request_uri)
-  request.basic_auth(ENV['BS_USERNAME'], ENV['BS_AUTHKEY'])
-
-  state = JSON.parse(agent.request(request).body)
-
-  if state["parallel_sessions_running"] < state["parallel_sessions_max_allowed"]
-    break
-  end
-
-  print '.'
-  sleep 30
-end
-
-puts "\rRunning specs..."
-puts
-
 url = "http://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@hub.browserstack.com/wd/hub"
 cap = Selenium::WebDriver::Remote::Capabilities.new
 
@@ -33,8 +13,32 @@ cap['browser_version'] = ENV['SELENIUM_VERSION'] if ENV['SELENIUM_VERSION']
 cap['browserstack.tunnel'] = 'true'
 cap['browserstack.debug']  = 'false'
 
-browser = Selenium::WebDriver.for(:remote, url: url, desired_capabilities: cap)
-browser.navigate.to('http://localhost:9292')
+begin
+  loop do
+    uri           = URI.parse("https://www.browserstack.com/automate/plan.json")
+    agent         = Net::HTTP.new(uri.host, uri.port)
+    agent.use_ssl = true
+    request       = Net::HTTP::Get.new(uri.request_uri)
+    request.basic_auth(ENV['BS_USERNAME'], ENV['BS_AUTHKEY'])
+
+    state = JSON.parse(agent.request(request).body)
+
+    if state["parallel_sessions_running"] < state["parallel_sessions_max_allowed"]
+      break
+    end
+
+    print '.'
+    sleep 30
+  end
+
+  puts "\rRunning specs..."
+  puts
+
+  browser = Selenium::WebDriver.for(:remote, url: url, desired_capabilities: cap)
+  browser.navigate.to('http://localhost:9292')
+rescue Exception
+  retry
+end
 
 begin
   Selenium::WebDriver::Wait.new(timeout: 540, interval: 5) \
