@@ -6,9 +6,38 @@ class Scroll
     @native  = element.to_n
   end
 
-  # @abstract
-  def position
-    raise NotImplementedError, 'scroll on element unsupported'
+  if Browser.supports? 'Element.scroll'
+    def to(what)
+      x   = what[:x] || self.x
+      y   = what[:y] || self.y
+
+      `#@native.scrollTop  = #{y}`
+      `#@native.scrollLeft = #{x}`
+    end
+
+    def position
+      Browser::Position.new(`#@native.scrollLeft`, `#@native.scrollTop`)
+    end
+  elsif Browser.supports? 'Element.pageOffset'
+    def to(what)
+      x   = what[:x] || self.x
+      y   = what[:y] || self.y
+
+      `#@native.pageYOffset = #{y}`
+      `#@native.pageXOffset = #{x}`
+    end
+
+    def position
+      Position.new(`#@native.pageXOffset`, `#@native.pageYOffset`)
+    end
+  else
+    def to(what)
+      raise NotImplementedError, 'scroll on element unsupported'
+    end
+
+    def position
+      raise NotImplementedError, 'scroll on element unsupported'
+    end
   end
 
   def x
@@ -17,11 +46,6 @@ class Scroll
 
   def y
     position.y
-  end
-
-  # @abstract
-  def to(what)
-    raise NotImplementedError, 'scroll on element unsupported'
   end
 
   def height

@@ -1,5 +1,0 @@
-require 'browser/compatibility/dom/element/matches'
-require 'browser/compatibility/dom/element/css'
-require 'browser/compatibility/dom/element/xpath'
-require 'browser/compatibility/dom/element/offset'
-require 'browser/compatibility/dom/element/style'

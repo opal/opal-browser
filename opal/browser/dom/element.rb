@@ -185,14 +185,53 @@ class Element < Node
     }.flatten.uniq
   end
 
-  # @abstract
-  def css(selector)
-    raise NotImplementedError, 'query by CSS selector unsupported'
+  if Browser.supports? 'Query.css'
+    def css(path)
+      %x{
+        try {
+          var result = #@native.querySelectorAll(path);
+
+          return #{NodeSet.new(document,
+            Native::Array.new(`result`))};
+        }
+        catch(e) {
+          return #{NodeSet.new(document)};
+        }
+      }
+    end
+  elsif Browser.loaded? 'Sizzle'
+    def css(path)
+      NodeSet.new(document, `Sizzle(#{path}, #@native)`)
+    end
+  else
+    def css(selector)
+      raise NotImplementedError, 'query by CSS selector unsupported'
+    end
   end
 
-  # @abstract
-  def xpath(path)
-    raise NotImplementedError, 'query by XPath unsupported'
+  if Browser.supports?('Query.xpath') || Browser.loaded?('wicked-good-xpath')
+    if Browser.loaded? 'wicked-good-xpath'
+      `wgxpath.install()`
+    end
+
+    def xpath(path)
+      %x{
+        try {
+          var result = (#@native.ownerDocument || #@native).evaluate(path,
+            #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+
+          return #{NodeSet.new(document,
+            Native::Array.new(`result`, get: :snapshotItem, length: :snapshotLength))};
+        }
+        catch (e) {
+          return #{NodeSet.new(document)};
+        }
+      }
+    end
+  else
+    def xpath(path)
+      raise NotImplementedError, 'query by XPath unsupported'
+    end
   end
 
   def style(data = nil, &block)
@@ -213,9 +252,18 @@ class Element < Node
     self
   end
 
-  # @abstract
-  def style!
-    raise NotImplementedError, 'computed style unsupported'
+  if Browser.supports? 'CSS.computed'
+    def style!
+      CSS::Declaration.new(`#{window.to_n}.getComputedStyle(#@native, null)`)
+    end
+  elsif Browser.supports? 'CSS.current'
+    def style!
+      CSS::Declaration.new(`#@native.currentStyle`)
+    end
+  else
+    def style!
+      raise NotImplementedError, 'computed style unsupported'
+    end
   end
 
   def data(what)
@@ -245,11 +293,37 @@ class Element < Node
     end
   end
 
-  # @abstract
-  def matches?(selector)
-    raise NotImplementedError, 'selector matching unsupported'
+  if Browser.supports? 'Element.matches'
+    def matches?(selector)
+      `#@native.matches(#{selector})`
+    end
+  elsif Browser.supports? 'Element.matches (Opera)'
+    def matches?(selector)
+      `#@native.oMatchesSelector(#{selector})`
+    end
+  elsif Browser.supports? 'Element.matches (Internet Explorer)'
+    def matches?(selector)
+      `#@native.msMatchesSelector(#{selector})`
+    end
+  elsif Browser.supports? 'Element.matches (Firefox)'
+    def matches?(selector)
+      `#@native.mozMatchesSelector(#{selector})`
+    end
+  elsif Browser.supports? 'Element.matches (Chrome)'
+    def matches?(selector)
+      `#@native.webkitMatchesSelector(#{selector})`
+    end
+  elsif Browser.loaded? 'Sizzle'
+    def matches?(selector)
+      `Sizzle.matchesSelector(#@native, #{selector})`
+    end
+  else
+    def matches?(selector)
+      raise NotImplementedError, 'selector matching unsupported'
+    end
   end
 
+  # @abstract
   def window
     document.window
   end
