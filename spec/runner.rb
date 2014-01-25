@@ -39,6 +39,14 @@ rescue Exception
   retry
 end
 
+def screenshot(browser)
+  browser.capture_entire_page_screenshot('screenshot.png')
+  request  = Net::HTTP.new('imgur.com')
+  response = request.post('/api/upload.json', image: File.open('screenshot.png'))
+
+  JSON.parse(response.body)['rsp']['image']['original_image']
+end
+
 print "\rRunning specs..."
 
 begin
@@ -58,37 +66,11 @@ begin
     exit 0
   end
 
-  browser.find_elements(:css, '.example_group').slice_before {|x|
-    begin
-      x.find_element(:css, 'dd')
-
-      false
-    rescue Exception
-      true
-    end
-  }.each {|header, *specs|
-    next unless specs.any? { |x| x.find_element(:css, '.failed') rescue false }
-
-    namespace = header.find_element(:css, 'dt').text
-
-    specs.each {|group|
-      next unless group.find_element(:css, '.failed') rescue false
-
-      method = group.find_element(:css, 'dt').text
-
-      group.find_elements(:css, 'dd.example.failed').each {|el|
-        puts "#{namespace}#{method}"
-        puts "  #{el.find_element(:css, '.failed_spec_name').text}"
-        puts
-        puts el.find_element(:css, '.failure').text
-        puts
-      }
-    }
-  }
+  puts screenshot(browser)
 rescue Selenium::WebDriver::Error::NoSuchElementError
   puts browser.page_source
 rescue Selenium::WebDriver::Error::TimeOutError
-  puts "Timeout, have fun."
+  puts "\rTimeout, have fun: #{screenshot(browser)}"
 
   exit 0
 ensure
