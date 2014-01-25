@@ -4,7 +4,6 @@ require 'browser/delay'
 require 'browser/window/view'
 require 'browser/window/size'
 require 'browser/window/scroll'
-require 'browser/window/compatibility'
 
 module Browser
 

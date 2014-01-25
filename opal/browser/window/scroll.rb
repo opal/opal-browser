@@ -6,19 +6,35 @@ class Scroll
     @native = window.to_n
   end
 
-  # @abstract
-  def position
-    raise NotImplementedError, 'window scroll unsupported'
+  if Browser.supports? 'Window.scroll'
+    def position
+      %x{
+        var doc  = #@native.document,
+            root = doc.documentElement,
+            body = doc.body;
+
+        var x = root.scrollLeft || body.scrollLeft,
+            y = root.scrollTop  || body.scrollTop;
+      }
+
+      Position.new(`x`, `y`)
+    end
+  elsif Browser.supports? 'Window.pageOffset'
+    def position
+      Position.new(`#@native.pageXOffset`, `#@native.pageYOffset`)
+    end
+  else
+    def position
+      raise NotImplementedError, 'window scroll unsupported'
+    end
   end
 
-  # @abstract
   def x
-    raise NotImplementedError, 'window scroll unsupported'
+    position.x
   end
 
-  # @abstract
   def y
-    raise NotImplementedError, 'window scroll unsupported'
+    position.y
   end
 
   def to(what)

@@ -15,14 +15,22 @@ class Size
     self
   end
 
-  # @abstract
-  def width
-    raise NotImplementedError, 'window outer size not supported'
-  end
+  if Browser.supports? 'Window.outerSize'
+    def width
+      `#@native.outerWidth`
+    end
 
-  # @abstract
-  def height
-    raise NotImplementedError, 'window outer size not supported'
+    def height
+      `#@native.outerHeight`
+    end
+  else
+    def width
+      raise NotImplementedError, 'window outer size not supported'
+    end
+
+    def height
+      raise NotImplementedError, 'window outer size not supported'
+    end
   end
 
   def width=(value)
