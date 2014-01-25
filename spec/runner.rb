@@ -13,6 +13,8 @@ cap['browser_version'] = ENV['SELENIUM_VERSION'] if ENV['SELENIUM_VERSION']
 cap['browserstack.tunnel'] = 'true'
 cap['browserstack.debug']  = 'false'
 
+print 'Loading...'
+
 begin
   loop do
     uri           = URI.parse("https://www.browserstack.com/automate/plan.json")
@@ -31,23 +33,25 @@ begin
     sleep 30
   end
 
-  puts "\rRunning specs..."
-  puts
-
   browser = Selenium::WebDriver.for(:remote, url: url, desired_capabilities: cap)
   browser.navigate.to('http://localhost:9292')
 rescue Exception
   retry
 end
 
+print "\rRunning specs..."
+
 begin
-  Selenium::WebDriver::Wait.new(timeout: 540, interval: 5) \
-    .until { not browser.find_element(:css, 'p#totals').text.strip.empty? }
+  Selenium::WebDriver::Wait.new(timeout: 1200, interval: 30).until {
+    print '.'
+
+    not browser.find_element(:css, 'p#totals').text.strip.empty?
+  }
 
   totals   = browser.find_element(:css, 'p#totals').text
   duration = browser.find_element(:css, 'p#duration').find_element(:css, 'strong').text
 
-  puts "#{totals} in #{duration}"
+  puts "\r#{totals} in #{duration}"
   puts
 
   if totals =~ / 0 failures/
