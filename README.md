@@ -138,15 +138,3 @@ this means you'll need external polyfills for this.
 The suggested polyfill is
 [wgxpath](https://code.google.com/p/wicked-good-xpath/), require it **before**
 opal-browser.
-
-Notes
------
-Right now all features are implemented with the stable or working-drafts API
-which aren't implemented everywhere.
-
-The current approach is to have a file for each method in the `compatibility`
-directory where alternatives based on functional-presence are implemented.
-
-You can see an example for the matches selector API [here][1].
-
-[1]: https://github.com/opal/opal-browser/blob/master/opal/browser/compatibility/dom/element/matches.rb
