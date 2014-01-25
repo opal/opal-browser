@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class DeviceProximity < Event
   def self.supported?
-    not $$[:DeviceProximityEvent].nil?
+    Browser.supports? 'Event.DeviceProximity'
   end
 
   class Definition < Definition
@@ -19,9 +19,11 @@ class DeviceProximity < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new DeviceProximityEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new DeviceProximityEvent(#{name}, #{desc})`
+    end
+  end if supported?
 
   alias_native :value
   alias_native :min

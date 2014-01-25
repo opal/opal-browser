@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class DeviceOrientation < Event
   def self.supported?
-    not $$[:DeviceOrientationEvent].nil?
+    Browser.supports? 'Event.DeviceOrientation'
   end
 
   class Definition < Definition
@@ -23,9 +23,21 @@ class DeviceOrientation < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new DeviceOrientationEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new DeviceOrientationEvent(#{name}, #{desc})`
+    end
+  elsif Browser.supports? 'Event.create'
+    def self.construct(name, desc)
+      %x{
+        var event = document.createEvent("DeviceOrientationEvent");
+            event.initDeviceOrientationEvent(name, desc.bubbles, desc.cancelable,
+              desc.alpha, desc.beta, desc.gamma, desc.absolute);
+
+        return event;
+      }
+    end
+  end if supported?
 
   alias_native :absolute
   alias_native :alpha

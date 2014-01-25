@@ -4,7 +4,7 @@ module Browser; module DOM; class Event
 
 class Custom < Event
   def self.supported?
-    not $$[:CustomEvent].nil?
+    Browser.supports? 'Event.Custom'
   end
 
   class Definition < Definition
@@ -17,7 +17,10 @@ class Custom < Event
 
   if Browser.supports? 'Event.constructor'
     def self.construct(name, desc)
-      `new CustomEvent(name, desc)`
+      `new CustomEvent(name, {
+        bubbles:    desc.bubbles,
+        cancelable: desc.cancelable,
+        detail:     desc })`
     end
   elsif Browser.supports? 'Event.create'
     def self.construct(name, desc)
@@ -37,8 +40,12 @@ class Custom < Event
         detail:     desc }`).to_n
     end
   else
-    def self.construct(*)
-      raise NotImplementedError
+    def self.construct(name, desc)
+      Native(desc).merge!(`{
+        type:       name,
+        bubbles:    desc.bubbles,
+        cancelable: desc.cancelable,
+        detail:     desc }`).to_n
     end
   end
 

@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class Keyboard < UI
   def self.supported?
-    not $$[:KeyboardEvent].nil?
+    Browser.supports? 'Event.Keyboard'
   end
 
   class Definition < UI::Definition
@@ -37,31 +37,53 @@ class Keyboard < UI
     def repeat!
       `#@native.repeat = true`
     end
+
+    def locale=(value)
+      `#@native.locale = value`
+    end
   end
 
-  def self.construct(name, desc)
-    `new KeyboardEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new KeyboardEvent(#{name}, #{desc})`
+    end
+  elsif Browser.supports? 'Event.create'
+    def self.construct(name, desc)
+      %x{
+        var modifiers = "";
 
-  def alt?
-    `#@native.altKey`
-  end
+        if (desc.altKey) {
+          modifiers += "Alt ";
+        }
 
-  def ctrl?
-    `#@native.ctrlKey`
-  end
+        if (desc.ctrlKey) {
+          modifiers += "Ctrl ";
+        }
 
-  def meta?
-    `#@native.metaKey`
-  end
+        if (desc.shiftKey) {
+          modifiers += "Shift" ;
+        }
 
-  def shift?
-    `#@native.shiftKey`
-  end
+        if (desc.metaKey) {
+          modifiers += "Meta ";
+        }
 
-  def repeat?
-    `#@native.repeat`
-  end
+        var event = document.createEvent("KeyboardEvent");
+            event.initKeyboardEvent(name, desc.bubbles, desc.cancelable,
+              desc.view || window, desc.which, 0,
+              modifiers, desc.repeat, desc.locale);
+
+        return event;
+      }
+    end
+  end if supported?
+
+  alias_native :alt?, :altKey
+  alias_native :ctrl?, :ctrlKey
+  alias_native :meta?, :metaKey
+  alias_native :shift?, :shiftKey
+  alias_native :locale
+  alias_native :repeat?, :repeat
 
   def key
     `#@native.key || #@native.keyIdentifier || nil`

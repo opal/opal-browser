@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class Storage < Event
   def self.supported?
-    not $$[:StorageEvent].nil?
+    Browser.supports? 'Event.Storage'
   end
 
   class Definition < Definition
@@ -27,9 +27,11 @@ class Storage < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new StorageEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new StorageEvent(#{name}, #{desc})`
+    end
+  end if supported?
 
   alias_native :key
   alias_native :new, :newValue

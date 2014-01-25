@@ -2,12 +2,14 @@ module Browser; module DOM; class Event
 
 class BeforeUnload < Event
   def self.supported?
-    not $$[:BeforeUnloadEvent].nil?
+    Browser.supports? 'Event.BeforeUnload'
   end
 
-  def self.construct(name, desc)
-    `new BeforeUnloadEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new BeforeUnloadEvent(#{name}, #{desc})`
+    end
+  end if supported?
 end
 
 end; end; end

@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class Touch < Event
   def self.supported?
-    not $$[:TouchEvent].nil?
+    Browser.supports? 'Event.Touch'
   end
 
   class Definition < Definition
@@ -23,25 +23,16 @@ class Touch < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new TouchEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new TouchEvent(#{name}, #{desc})`
+    end
+  end if supported?
 
-  def alt?
-    `#@native.altKey`
-  end
-
-  def ctrl?
-    `#@native.ctrlKey`
-  end
-
-  def meta?
-    `#@native.metaKey`
-  end
-
-  def shift?
-    `#@native.shiftKey`
-  end
+  alias_native :alt?, :altKey
+  alias_native :ctrl?, :ctrlKey
+  alias_native :meta?, :metaKey
+  alias_native :shift?, :shiftKey
 
   # TODO: implement touches and targetTouches
 

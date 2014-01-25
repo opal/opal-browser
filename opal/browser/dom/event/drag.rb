@@ -3,7 +3,7 @@ module Browser; module DOM; class Event
 # TODO: handle transfers
 class Drag < Event
   def self.supported?
-    not $$[:DragEvent].nil?
+    Browser.supports? 'Event.Drag'
   end
 
   class Definition < Definition
@@ -56,35 +56,39 @@ class Drag < Event
     end
 
     def related=(elem)
-      `#@native.relatedTarget = #{Native.try_convert(elem)}`
+      `#@native.relatedTarget = #{Native.convert(elem)}`
+    end
+
+    def transfer=(value)
+      `#@native.dataTransfer = #{Native.convert(elem)}`
     end
   end
 
-  def self.construct(name, desc)
-    `new DragEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new DragEvent(#{name}, #{desc})`
+    end
+  elsif Browser.supports? 'Event.create'
+    def self.construct(name, desc)
+      %x{
+        var event = document.createEvent("DragEvent");
+            event.initDragEvent(name, desc.bubbles, desc.cancelable,
+              desc.view || window, 0,
+              desc.screenX || 0, desc.screenY || 0,
+              desc.clientX || 0, desc.clientY || 0,
+              desc.ctrlKey, desc.altKey, desc.shiftKey, desc.metaKey,
+              desc.button || 0, desc.relatedTarget, desc.dataTransfer);
 
-  Position = Struct.new(:x, :y)
+        return event;
+      }
+    end
+  end if supported?
 
-  def alt?
-    `#@native.altKey`
-  end
-
-  def ctrl?
-    `#@native.ctrlKey`
-  end
-
-  def meta?
-    `#@native.metaKey`
-  end
-
-  def shift?
-    `#@native.shiftKey`
-  end
-
-  def button
-    `#@native.button`
-  end
+  alias_native :alt?, :altKey
+  alias_native :ctrl?, :ctrlKey
+  alias_native :meta?, :metaKey
+  alias_native :shift?, :shiftKey
+  alias_native :button
 
   def client
     Position.new(`#@native.clientX`, `#@native.clientY`)
@@ -104,6 +108,11 @@ class Drag < Event
 
   def related
     DOM(`#@native.relatedTarget`)
+  end
+
+  # @see https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer
+  def transfer
+    raise NotImplementedError
   end
 end
 

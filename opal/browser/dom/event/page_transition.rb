@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class PageTransition < Event
   def self.supported?
-    not $$[:PageTransitionEvent].nil?
+    Browser.supports? 'Event.PageTransition'
   end
 
   class Definition < Definition
@@ -11,9 +11,11 @@ class PageTransition < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new PageTransitionEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.PageTransition'
+    def self.construct(name, desc)
+      `new PageTransitionEvent(name, desc)`
+    end
+  end if supported?
 
   alias_native :persisted?, :persisted
 end

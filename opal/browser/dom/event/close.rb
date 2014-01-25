@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class Close < Event
   def self.supported?
-    not $$[:CloseEvent].nil?
+    Browser.supports? 'Event.Close'
   end
 
   class Definition < Definition
@@ -37,15 +37,7 @@ class Close < Event
         return event;
       }
     end
-  elsif Browser.supports? 'Event.createObject'
-    def self.construct(name, desc)
-      Native(`document.createEventObject()`).merge!(desc).to_n
-    end
-  else
-    def self.construct(*)
-      raise NotImplementedError
-    end
-  end
+  end if supported?
 
   alias_native :code
   alias_native :reason

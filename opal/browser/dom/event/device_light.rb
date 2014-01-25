@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class DeviceLight < Event
   def self.supported?
-    not $$[:DeviceLightEvent].nil?
+    Browser.supports? 'Event.DeviceLight'
   end
 
   class Definition < Definition
@@ -11,9 +11,11 @@ class DeviceLight < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new DeviceLightEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new DeviceLightEvent(#{name}, #{desc})`
+    end
+  end if supported?
 
   alias_native :value
 end

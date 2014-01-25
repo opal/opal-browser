@@ -131,14 +131,6 @@ class Event
       else
         Custom
     end
-
-    if type == Custom
-      Custom
-    elsif type.supported?
-      type
-    else
-      Event
-    end
   end
 
   def self.supported?
@@ -149,7 +141,7 @@ class Event
     name  = name_for(name)
     klass = class_for(name)
 
-    event           = klass.new(klass.construct(name, klass.const_get(:Definition).new(&block)))
+    event = klass.new(klass.construct(name, klass.const_get(:Definition).new(&block)))
     event.arguments = args
 
     event
@@ -165,14 +157,14 @@ class Event
         var event = document.createEvent("HTMLEvents");
             event.initEvent(name, desc.bubbles, desc.cancelable);
 
-        return event;
+        #{return Native(`event`).merge!(desc)};
       }
     end
   elsif Browser.supports? 'Event.createObject'
     def self.construct(name, desc)
       Native(`document.createEventObject()`) \
-        .merge!(`{ type: name }`) \
         .merge!(desc) \
+        .merge!(`{ type: name }`) \
         .to_n
     end
   else

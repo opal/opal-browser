@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class Clipboard < Event
   def self.supported?
-    not $$[:ClipboardEvent].nil?
+    Browser.supports? 'Event.Clipboard'
   end
 
   class Definition < Definition
@@ -15,9 +15,11 @@ class Clipboard < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new ClipboardEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new ClipboardEvent(#{name}, #{desc})`
+    end
+  end if supported?
 
   alias_native :data
   alias_native :type, :dataType

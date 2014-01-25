@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class HashChange < Event
   def self.supported?
-    not $$[:HashChangeEvent].nil?
+    Browser.supports? 'Event.HashChange'
   end
 
   class Definition < Definition
@@ -15,9 +15,11 @@ class HashChange < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new HashChangeEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new HashChangeEvent(#{name}, #{desc})`
+    end
+  end if supported?
 
   alias_native :old, :oldURL
   alias_native :new, :newURL

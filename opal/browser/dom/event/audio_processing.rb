@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class AudioProcessing < Event
   def self.supported?
-    not $$[:AudioProcessingEvent].nil?
+    Browser.supports? 'Event.AudioProcessing'
   end
 
   class Definition < Definition
@@ -19,9 +19,11 @@ class AudioProcessing < Event
     end
   end
 
-  def self.construct(name, desc)
-    `new AudioProcessingEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new AudioProcessingEvent(#{name}, #{desc})`
+    end
+  end if supported?
 
   alias_native :time, :playbackTime
   alias_native :input, :inputBuffer

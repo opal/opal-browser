@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class Composition < UI
   def self.supported?
-    not $$[:CompositionEvent].nil?
+    Browser.supports? 'Event.Composition'
   end
 
   class Definition < UI::Definition
@@ -24,21 +24,12 @@ class Composition < UI
       %x{
         var event = document.createEvent("CompositionEvent");
             event.initCompositionEvent(name, desc.bubbles, desc.cancelable,
-              window, desc.data, desc.locale);
+              desc.view || window, desc.data, desc.locale);
 
         return event;
       }
     end
-  elsif Browser.supports? 'Event.createObject'
-    def self.construct(name, desc)
-      Native(`document.createEventObject()`).merge!(desc).to_n
-    end
-  else
-    def self.construct(*)
-      raise NotImplementedError
-    end
-  end
-
+  end if supported?
 
   alias_native :data
   alias_native :locale

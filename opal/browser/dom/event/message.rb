@@ -4,18 +4,38 @@ module Browser; module DOM; class Event
 
 class Message < Event
   def self.supported?
-    not $$[:MessageEvent].nil?
+    Browser.supports? 'Event.Message'
   end
 
   class Definition < Definition
     def data=(value)
-      `#@native.data = #{value.to_n}`
+      `#@native.data = value`
+    end
+
+    def origin=(value)
+      `#@native.origin = value`
+    end
+
+    def source=(value)
+      `#@native.source = #{Native.convert(value)}`
     end
   end
 
-  def self.construct(name, desc)
-    `new MessageEvent(#{name}, #{desc})`
-  end
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new MessageEvent(#{name}, #{desc})`
+    end
+  elsif Browser.supports? 'Event.create'
+    def self.construct(name, desc)
+      %x{
+        var event = document.createEvent("MessageEvent");
+            event.initMessageEvent(name, desc.bubbles, desc.cancelable,
+              desc.data, desc.origin, "", desc.source || window);
+
+        return event;
+      }
+    end
+  end if supported?
 
   def data
     %x{

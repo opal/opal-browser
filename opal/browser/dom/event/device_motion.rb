@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class DeviceMotion < Event
   def self.supported?
-    not $$[:DeviceMotionEvent].nil?
+    Browser.supports? 'Event.DeviceMotion'
   end
 
   Acceleration = Struct.new(:x, :y, :z)
@@ -40,16 +40,7 @@ class DeviceMotion < Event
         return event;
       }
     end
-  elsif Browser.supports? 'Event.createObject'
-    def self.construct(name, desc)
-      Native(`document.createEventObject()`).merge!(desc).to_n
-    end
-  else
-    def self.construct(*)
-      raise NotImplementedError
-    end
-  end
-
+  end if supported?
 
   alias_native :acceleration
   alias_native :acceleration_with_gravity, :accelerationIncludingGravity

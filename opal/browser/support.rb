@@ -156,6 +156,9 @@ module Browser
       when 'Event.fire'
         defined?(`document.fireEvent`)
 
+      when /^Event\.([A-Z].*?)$/
+        `(#{$1} + "Event") in window`
+
       when 'Document.view'
         defined?(`document.defaultView`)
 

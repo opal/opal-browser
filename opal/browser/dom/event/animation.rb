@@ -2,7 +2,7 @@ module Browser; module DOM; class Event
 
 class Animation < Event
   def self.supported?
-    not $$[:AnimationEvent].nil?
+    Browser.supports? 'Event.Animation'
   end
 
   class Definition < Definition
@@ -29,15 +29,7 @@ class Animation < Event
         return event;
       }
     end
-  elsif Browser.supports? 'Event.createObject'
-    def self.construct(name, desc)
-      Native(`document.createEventObject()`).merge!(desc).to_n
-    end
-  else
-    def self.construct(*)
-      raise NotImplementedError
-    end
-  end
+  end if supported?
 
   alias_native :name, :animationName
   alias_native :elapsed, :elapsedTime

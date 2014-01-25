@@ -6,25 +6,6 @@ class Mouse < UI
   end
 
   class Definition < UI::Definition
-    def initialize(*)
-      super
-
-      %x{
-        #@native.view    = #@native.view    || window;
-        #@native.screenX = #@native.screenX || 0;
-        #@native.screenY = #@native.screenY || 0;
-        #@native.clientX = #@native.clientX || 0;
-        #@native.clientY = #@native.clientY || 0;
-
-        #@native.button   = #@native.button   || 0;
-        #@native.detail   = #@native.detail   || 0;
-        #@native.ctrlKey  = #@native.ctrlKey  || false;
-        #@native.altKey   = #@native.altKey   || false;
-        #@native.shiftKey = #@native.shiftKey || false;
-        #@native.metaKey  = #@native.metaKey  || false;
-      }
-    end
-
     class Client
       include Native
 
@@ -165,49 +146,24 @@ class Mouse < UI
   elsif Browser.supports? 'Event.create'
     def self.construct(name, desc)
       %x{
-        var event = document.createEvent("MouseEvents");
+        var event = document.createEvent("MouseEvent");
             event.initMouseEvent(name, desc.bubbles, desc.cancelable,
-              window, 0,
-              desc.screenX, desc.screenY,
-              desc.clientX, desc.clientY,
+              desc.view || window, desc.detail || 0,
+              desc.screenX || 0, desc.screenY || 0,
+              desc.clientX || 0, desc.clientY || 0,
               desc.ctrlKey, desc.altKey, desc.shiftKey, desc.metaKey,
-              desc.button, desc.relatedTarget);
+              desc.button || 0, desc.relatedTarget);
 
         return event;
       }
     end
-  elsif Browser.supports? 'Event.createObject'
-    def self.construct(name, desc)
-      Native(`document.createEventObject()`).merge!(desc).to_n
-    end
-  else
-    def self.construct(*)
-      raise NotImplementedError
-    end
-  end
+  end if supported?
 
-
-  Position = Struct.new(:x, :y)
-
-  def alt?
-    `#@native.altKey`
-  end
-
-  def ctrl?
-    `#@native.ctrlKey`
-  end
-
-  def meta?
-    `#@native.metaKey`
-  end
-
-  def shift?
-    `#@native.shiftKey`
-  end
-
-  def button
-    `#@native.button`
-  end
+  alias_native :alt?, :altKey
+  alias_native :ctrl?, :ctrlKey
+  alias_native :meta?, :metaKey
+  alias_native :shift?, :shiftKey
+  alias_native :button
 
   def client
     Position.new(`#@native.clientX`, `#@native.clientY`)
