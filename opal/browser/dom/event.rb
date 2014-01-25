@@ -41,34 +41,6 @@ class Event
     (aliases[name] || name).gsub(?:, '')
   end
 
-  def self.classes
-    @classes ||= {
-      Animation         => $$[:AnimationEvent],
-      AudioProcessing   => $$[:AudioProcessingEvent],
-      BeforeUnload      => $$[:BeforeUnloadEvent],
-      Composition       => $$[:CompositionEvent],
-      Clipboard         => $$[:ClipboardEvent],
-      DeviceLight       => $$[:DeviceLightEvent],
-      DeviceMotion      => $$[:DeviceMotionEvent],
-      DeviceOrientation => $$[:DeviceOrientationEvent],
-      DeviceProximity   => $$[:DeviceProximityEvent],
-      Drag              => $$[:DragEvent],
-      Gamepad           => $$[:GamepadEvent],
-      HashChange        => $$[:HashChangeEvent],
-      Progress          => $$[:ProgressEvent],
-      PageTransition    => $$[:PageTransitionEvent],
-      PopState          => $$[:PopStateEvent],
-      Storage           => $$[:StorageEvent],
-      Touch             => $$[:TouchEvent],
-      Sensor            => $$[:SensorEvent],
-      Mouse             => $$[:MouseEvent],
-      Keyboard          => $$[:KeyboardEvent],
-      Focus             => $$[:FocusEvent],
-      Wheel             => $$[:WheelEvent],
-      Custom            => $$[:CustomEvent]
-    }
-  end
-
   def self.class_for(name)
     type = case name_for(name)
       when 'animationend', 'animationiteration', 'animationstart'
@@ -169,11 +141,15 @@ class Event
     end
   end
 
+  def self.supported?
+    true
+  end
+
   def self.create(name, *args, &block)
     name  = name_for(name)
     klass = class_for(name)
 
-    event           = new(klass.construct(name, klass.const_get(:Definition).new(&block)))
+    event           = klass.new(klass.construct(name, klass.const_get(:Definition).new(&block)))
     event.arguments = args
 
     event
@@ -185,12 +161,12 @@ class Event
   end
 
   def self.new(value, *args)
-    klass, _ = classes.find {|_, constructor|
-      Native.is_a?(value, constructor)
-    }
+    return super unless self == Event
 
-    if !klass || klass == self
-      super(value, *args)
+    klass = class_for(`value.type`)
+
+    if klass == Event
+      super
     else
       klass.new(value, *args)
     end
