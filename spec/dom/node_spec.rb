@@ -75,8 +75,11 @@ describe Browser::DOM::Node do
   describe '#next' do
     html <<-HTML
       <div id="spec-1"></div>
+      a
       <div id="spec-2"></div>
+      b
       <div id="spec-3"></div>
+      c
     HTML
 
     it 'should return the next sibling' do
@@ -93,8 +96,11 @@ describe Browser::DOM::Node do
   describe '#next_element' do
     html <<-HTML
       <div id="spec-1"></div>
+      a
       <div id="spec-2"></div>
+      b
       <div id="spec-3"></div>
+      c
     HTML
 
     it 'should return the next element sibling' do
@@ -109,8 +115,11 @@ describe Browser::DOM::Node do
 
   describe '#previous' do
     html <<-HTML
+      a
       <div id="spec-1"></div>
+      b
       <div id="spec-2"></div>
+      c
       <div id="spec-3"></div>
     HTML
 
@@ -127,8 +136,11 @@ describe Browser::DOM::Node do
 
   describe '#previous_element' do
     html <<-HTML
+      a
       <div id="spec-1"></div>
+      b
       <div id="spec-2"></div>
+      c
       <div id="spec-3"></div>
     HTML
 
