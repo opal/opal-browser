@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 require 'selenium/webdriver'
-require 'net/https'
+require 'rest_client'
 require 'json'
 
 url = "http://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@hub.browserstack.com/wd/hub"
@@ -17,13 +17,8 @@ print 'Loading...'
 
 begin
   loop do
-    uri           = URI.parse("https://www.browserstack.com/automate/plan.json")
-    agent         = Net::HTTP.new(uri.host, uri.port)
-    agent.use_ssl = true
-    request       = Net::HTTP::Get.new(uri.request_uri)
-    request.basic_auth(ENV['BS_USERNAME'], ENV['BS_AUTHKEY'])
-
-    state = JSON.parse(agent.request(request).body)
+    response = RestClient.get("https://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@www.browserstack.com/automate/plan.json")
+    state    = JSON.parse(response.to_str)
 
     if state["parallel_sessions_running"] < state["parallel_sessions_max_allowed"]
       break
@@ -39,14 +34,6 @@ rescue Exception
   retry
 end
 
-def screenshot(browser)
-  browser.capture_entire_page_screenshot('screenshot.png')
-  request  = Net::HTTP.new('imgur.com')
-  response = request.post('/api/upload.json', image: File.open('screenshot.png'))
-
-  JSON.parse(response.body)['rsp']['image']['original_image']
-end
-
 print "\rRunning specs..."
 
 begin
@@ -60,20 +47,25 @@ begin
   duration = browser.find_element(:css, 'p#duration').find_element(:css, 'strong').text
 
   puts "\r#{totals} in #{duration}"
-  puts
 
   if totals =~ / 0 failures/
     exit 0
   end
-
-  puts screenshot(browser)
 rescue Selenium::WebDriver::Error::NoSuchElementError
+  puts "\rNo such element? You dun goof'd"
+  puts
   puts browser.page_source
 rescue Selenium::WebDriver::Error::TimeOutError
-  puts "\rTimeout, have fun: #{screenshot(browser)}"
-
-  exit 0
+  puts "\rTimeout, have fun."
 ensure
+  browser.save_screenshot('screenshot.png')
+  response = RestClient.post('https://api.imgur.com/3/upload',
+    { image: File.open('screenshot.png') },
+    { 'Authorization' => 'Client-ID 1979876fe2a097e' })
+
+  puts
+  puts JSON.parse(response.to_str)['data']['link']
+
   browser.quit
 end
 
