@@ -29,7 +29,7 @@ class DeviceMotion < Event
     def self.construct(name, desc)
       `new DeviceMotionEvent(#{name}, #{desc})`
     end
-  elsif Browser.supports? 'Event.constructor'
+  elsif Browser.supports? 'Event.create'
     def self.construct(name, desc)
       %x{
         var event = document.createEvent("DeviceMotionEvent");
