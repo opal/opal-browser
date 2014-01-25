@@ -15,6 +15,31 @@ class Composition < UI
     end
   end
 
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new CompositionEvent(#{name}, #{desc})`
+    end
+  elsif Browser.supports? 'Event.create'
+    def self.construct(name, desc)
+      %x{
+        var event = document.createEvent("CompositionEvent");
+            event.initCompositionEvent(name, desc.bubbles, desc.cancelable,
+              window, desc.data, desc.locale);
+
+        return event;
+      }
+    end
+  elsif Browser.supports? 'Event.createObject'
+    def self.construct(name, desc)
+      Native(`document.createEventObject()`).merge!(desc).to_n
+    end
+  else
+    def self.construct(*)
+      raise NotImplementedError
+    end
+  end
+
+
   alias_native :data
   alias_native :locale
 

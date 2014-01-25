@@ -15,6 +15,33 @@ class Custom < Event
     end
   end
 
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new CustomEvent(name, desc)`
+    end
+  elsif Browser.supports? 'Event.create'
+    def self.construct(name, desc)
+      %x{
+        var event = document.createEvent("CustomEvent");
+            event.initCustomEvent(name, desc.bubbles, desc.cancelable, desc);
+
+        return event;
+      }
+    end
+  elsif Browser.supports? 'Event.createObject'
+    def self.construct(name, desc)
+      Native(`document.createEventObject()`).merge!(`{
+        type:       name,
+        bubbles:    desc.bubbles,
+        cancelable: desc.cancelable,
+        detail:     desc }`).to_n
+    end
+  else
+    def self.construct(*)
+      raise NotImplementedError
+    end
+  end
+
   def initialize(native)
     super(native); @native = native # FIXME: remove this when super is fixed
 

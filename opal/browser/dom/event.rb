@@ -155,6 +155,32 @@ class Event
     event
   end
 
+  if Browser.supports? 'Event.constructor'
+    def self.construct(name, desc)
+      `new Event(#{name}, #{desc})`
+    end
+  elsif Browser.supports? 'Event.create'
+    def self.construct(name, desc)
+      %x{
+        var event = document.createEvent("HTMLEvents");
+            event.initEvent(name, desc.bubbles, desc.cancelable);
+
+        return event;
+      }
+    end
+  elsif Browser.supports? 'Event.createObject'
+    def self.construct(name, desc)
+      Native(`document.createEventObject()`) \
+        .merge!(`{ type: name }`) \
+        .merge!(desc) \
+        .to_n
+    end
+  else
+    def self.construct(name, desc)
+      Native(desc).merge!(`{ type: name }`).to_n
+    end
+  end
+
   # @private
   def self.construct(name, desc)
     raise NotImplementedError

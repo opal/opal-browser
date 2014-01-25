@@ -152,16 +152,53 @@ class Event
       attach!(callback)
     end
 
-    # @private
-    # @abstract
-    def attach(callback)
-      raise NotImplementedError
-    end
+    if Browser.supports? 'Event.addListener'
+      def attach(callback)
+        `#@native.addEventListener(#{callback.name}, #{callback.to_n})`
 
-    # @private
-    # @abstract
-    def attach!(callback)
-      raise NotImplementedError
+        callback
+      end
+
+      def attach!(callback)
+        `#@native.addEventListener(#{callback.name}, #{callback.to_n}, true)`
+
+        callback
+      end
+    elsif Browser.supports? 'Event.attach'
+      def attach(callback)
+        if callback.event == Custom
+        else
+          `#@native.attachEvent("on" + #{callback.name}, #{callback.to_n})`
+        end
+
+        callback
+      end
+
+      def attach!(callback)
+        case callback.name
+        when :blur
+          `#@native.attachEvent("onfocusout", #{callback.to_n})`
+
+        when :focus
+          `#@native.attachEvent("onfocusin", #{callback.to_n})`
+
+        else
+          warn "attach: capture doesn't work on this browser"
+          attach(callback)
+        end
+
+        callback
+      end
+    else
+      # @todo implement polyfill
+      def attach(*)
+        raise NotImplementedError
+      end
+
+      # @todo implement polyfill
+      def attach!(*)
+        raise NotImplementedError
+      end
     end
 
     def off(what = nil)
@@ -203,10 +240,19 @@ class Event
       end
     end
 
-    # @private
-    # @abstract
-    def detach(callback)
-      raise NotImplementedError
+    if Browser.supports? 'Event.removeListener'
+      def detach(callback)
+        `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
+      end
+    elsif Browser.supports? 'Event.detach'
+      def detach(callback)
+        `#@native.detachEvent("on" + #{callback.name}, #{callback.to_n})`
+      end
+    else
+      # @todo implement internal handler thing
+      def detach(callback)
+        raise NotImplementedError
+      end
     end
 
     def trigger(event, *args, &block)
@@ -225,10 +271,23 @@ class Event
       end
     end
 
-    # @private
-    # @abstract
-    def dispatch(event)
-      raise NotImplementedError
+    if Browser.supports? 'Event.dispatch'
+      def dispatch(event)
+        `#@native.dispatchEvent(#{event.to_n})`
+      end
+    elsif Browser.supports? 'Event.fire'
+      def dispatch(event)
+        if Custom === event
+          `#@native.fireEvent("ondataavailable", #{event.to_n})`
+        else
+          `#@native.fireEvent("on" + #{event.name}, #{event.to_n})`
+        end
+      end
+    else
+      # @todo implement polyfill
+      def dispatch(*)
+        raise NotImplementedError
+      end
     end
 
   private
