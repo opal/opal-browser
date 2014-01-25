@@ -128,22 +128,22 @@ module Browser
           defined?(`document.createEventObject`)
 
         when :addListener
-          defined?(`window.addEventListener`)
+          defined?(`document.documentElement.addEventListener`)
 
         when :attach
-          defined?(`window.attachEvent`)
+          defined?(`document.documentElement.attachEvent`)
 
         when :removeListener
-          defined?(`window.removeEventListener`)
+          defined?(`document.documentElement.removeEventListener`)
 
         when :detach
-          defined?(`window.detachEvent`)
+          defined?(`document.documentElement.detachEvent`)
 
         when :dispatch
-          defined?(`window.dispatchEvent`)
+          defined?(`document.documentElement.dispatchEvent`)
 
         when :fire
-          defined?(`window.fireEvent`)
+          defined?(`document.documentElement.fireEvent`)
         end
 
       when :document
