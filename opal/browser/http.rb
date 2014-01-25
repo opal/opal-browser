@@ -5,8 +5,6 @@ require 'browser/http/headers'
 require 'browser/http/request'
 require 'browser/http/response'
 
-require 'browser/compatibility/http'
-
 module Browser
 
 module HTTP

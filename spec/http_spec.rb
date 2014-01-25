@@ -84,4 +84,4 @@ describe Browser::HTTP do
       expect(Browser::HTTP.delete!(path).text).to eq('lol')
     end
   end
-end
+end if Browser::HTTP.supported?

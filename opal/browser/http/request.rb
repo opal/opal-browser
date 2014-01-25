@@ -1,6 +1,10 @@
 module Browser; module HTTP
 
 class Request
+  def self.supported?
+    Browser.supports?('XHR') || Browser.supports?('ActiveXObject')
+  end
+
   include Native
 
   # Open and send a request.
@@ -62,10 +66,20 @@ class Request
     end if block
   end
 
-  # @private
-  # @abstract
-  def transport
-    raise NotImplementedError, 'no supported transport'
+  # @!method transport
+  #   @private
+  if Browser.supports? :XHR
+    def transport
+      `new XMLHttpRequest()`
+    end
+  elsif Browser.supports? :ActiveX
+    def transport
+      `new ActiveXObject("MSXML2.XMLHTTP.3.0")`
+    end
+  else
+    def transport
+      raise NotImplementedError
+    end
   end
 
   # Check if the request has been opened.
