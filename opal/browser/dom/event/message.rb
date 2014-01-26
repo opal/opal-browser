@@ -39,10 +39,10 @@ class Message < Event
 
   def data
     %x{
-      if (#@native.data instanceof ArrayBuffer) {
+      if (window.ArrayBuffer && #@native.data instanceof ArrayBuffer) {
         return #{Buffer.new(`#@native.data`)};
       }
-      else if (#@native.data instanceof Blob) {
+      else if (window.Blob && #@native.data instanceof Blob) {
         return #{Blob.new(`#@native.data`)};
       }
       else {
@@ -57,7 +57,7 @@ class Message < Event
     %x{
       var source = #@native.source;
 
-      if (source instanceof window.Window) {
+      if (window.Window && source instanceof window.Window) {
         return #{Window.new(`source`)};
       }
       else {
