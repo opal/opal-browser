@@ -60,14 +60,18 @@ begin
 rescue Selenium::WebDriver::Error::TimeOutError
   print "\rTimeout, have fun."
 ensure
-  browser.save_screenshot('screenshot.png')
-  response = RestClient.post('https://api.imgur.com/3/upload',
-    { image: File.open('screenshot.png') },
-    { 'Authorization' => 'Client-ID 1979876fe2a097e' })
+  begin
+    browser.save_screenshot('screenshot.png')
+    response = RestClient.post('https://api.imgur.com/3/upload',
+      { image: File.open('screenshot.png') },
+      { 'Authorization' => 'Client-ID 1979876fe2a097e' })
 
-  print " ("
-  print JSON.parse(response.to_str)['data']['link']
-  print ")"
+    print " ("
+    print JSON.parse(response.to_str)['data']['link']
+    puts  ")"
+  rescue Exception
+    puts
+  end
 
   browser.quit
 end
