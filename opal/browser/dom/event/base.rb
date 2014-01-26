@@ -145,8 +145,8 @@ class Event
     def on!(name, &block)
       raise ArgumentError, 'no block has been given' unless block
 
-      name = Event.name_for(name)
-      callback = Callback.new(self, name, selector, &block)
+      name     = Event.name_for(name)
+      callback = Callback.new(self, name, &block)
       callbacks.push(callback)
 
       attach!(callback)
