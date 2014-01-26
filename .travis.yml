@@ -38,14 +38,6 @@ env:
 matrix:
   fast_finish: true
 
-  allow_failures:
-    - env: SELENIUM_BROWSER=chrome SELENIUM_VERSION=31
-    - env: SELENIUM_BROWSER=chrome SELENIUM_VERSION=30
-
-    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=6
-    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=7
-    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=8
-
 before_install:
   - gem update bundler
   - bundle --version
