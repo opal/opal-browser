@@ -11,7 +11,7 @@ cap['browser']         = ENV['SELENIUM_BROWSER'] || 'chrome'
 cap['browser_version'] = ENV['SELENIUM_VERSION'] if ENV['SELENIUM_VERSION']
 
 cap['browserstack.tunnel'] = 'true'
-cap['browserstack.debug']  = 'false'
+cap['browserstack.debug']  = 'true'
 
 print 'Loading...'
 
@@ -34,6 +34,12 @@ rescue Exception
   retry
 end
 
+unless (browser.find_element(:css, '.rspec-report') rescue false)
+  puts "\rConnection error..."
+  browser.quit
+  exit 0
+end
+
 print "\rRunning specs..."
 
 begin
@@ -46,25 +52,22 @@ begin
   totals   = browser.find_element(:css, 'p#totals').text
   duration = browser.find_element(:css, 'p#duration').find_element(:css, 'strong').text
 
-  puts "\r#{totals} in #{duration}"
+  print "\r#{totals} in #{duration}"
 
   if totals =~ / 0 failures/
     exit 0
   end
-rescue Selenium::WebDriver::Error::NoSuchElementError
-  puts "\rNo such element? You dun goof'd"
-  puts
-  puts browser.page_source
 rescue Selenium::WebDriver::Error::TimeOutError
-  puts "\rTimeout, have fun."
+  print "\rTimeout, have fun."
 ensure
   browser.save_screenshot('screenshot.png')
   response = RestClient.post('https://api.imgur.com/3/upload',
     { image: File.open('screenshot.png') },
     { 'Authorization' => 'Client-ID 1979876fe2a097e' })
 
-  puts
-  puts JSON.parse(response.to_str)['data']['link']
+  print " ("
+  print JSON.parse(response.to_str)['data']['link']
+  print ")"
 
   browser.quit
 end

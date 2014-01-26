@@ -57,6 +57,7 @@ before_script:
   - sleep 10
   - wget http://www.browserstack.com/BrowserStackTunnel.jar
   - java -jar BrowserStackTunnel.jar $BS_AUTHKEY localhost,9292,0 &
+  #- java -jar BrowserStackTunnel.jar -tunnelIdentifier $TRAVIS_JOB_ID $BS_AUTHKEY localhost,9292,0 &
   - sleep 10
 
 script:
