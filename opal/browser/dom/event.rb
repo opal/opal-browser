@@ -208,24 +208,14 @@ class Event
     return @on if @on
 
     if @callback
-      Target.convert(@callback.target)
+      @callback.target
     else
       Target.convert(`#@native.currentTarget`)
     end
   end
 
-  if Browser.supports? 'Event.target'
-    def target
-      Target.convert(`#@native.target`)
-    end
-  elsif Browser.supports? 'Event.srcElement'
-    def target
-      Target.convert(`#@native.srcElement`)
-    end
-  else
-    def target
-      raise NotImplementedError, 'event target unsupported'
-    end
+  def target
+    Target.convert(`#@native.srcElement || #@native.target`)
   end
 
   def arguments
