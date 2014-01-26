@@ -38,7 +38,7 @@ class Document < Element
       }
     }
 
-    xpath(what).first || css(what).first
+    css(what).first || xpath(what).first
   end
 
   alias at []
