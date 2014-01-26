@@ -55,21 +55,26 @@ class Event
       attr_reader :target, :name, :selector
 
       def initialize(target, name, selector = nil, &block)
-        %x{
-          #@function = function(event) {
-            event = #{::Browser::DOM::Event.new(`event`, `this`, `self`)};
-
-            if (!#{`event`.stopped?}) {
-              #{block.call(`event`, *`event`.arguments)};
-            }
-
-            return !#{`event`.stopped?};
-          }
-        }
-
         @target   = target
         @name     = name
         @selector = selector
+        @block    = block
+      end
+
+      def call(e)
+        to_proc.call(e)
+      end
+
+      def to_proc
+        @proc ||= -> event {
+          event = Event.new(event, self)
+
+          unless event.stopped?
+            @block.call(event, *event.arguments)
+          end
+
+          !event.prevented?
+        }
       end
 
       def event
@@ -78,10 +83,6 @@ class Event
 
       def off
         target.off(self)
-      end
-
-      def to_n
-        @function
       end
     end
 
@@ -154,21 +155,36 @@ class Event
 
     if Browser.supports? 'Event.addListener'
       def attach(callback)
-        `#@native.addEventListener(#{callback.name}, #{callback.to_n})`
+        `#@native.addEventListener(#{callback.name}, #{callback.to_proc})`
 
         callback
       end
 
       def attach!(callback)
-        `#@native.addEventListener(#{callback.name}, #{callback.to_n}, true)`
+        `#@native.addEventListener(#{callback.name}, #{callback.to_proc}, true)`
 
         callback
       end
     elsif Browser.supports? 'Event.attach'
       def attach(callback)
         if callback.event == Custom
+          %x{
+            if (!#@native.$custom) {
+              #@native.$custom = function(event) {
+                for (var i = 0, length = #@native.$callbacks.length; i < length; i++) {
+                  var callback = #@native.$callbacks[i];
+
+                  if (#{`callback`.event == Custom}) {
+                    #{`callback`.call(`event`)};
+                  }
+                }
+              };
+
+              #@native.attachEvent("ondataavailable", #@native.$custom);
+            }
+          }
         else
-          `#@native.attachEvent("on" + #{callback.name}, #{callback.to_n})`
+          `#@native.attachEvent("on" + #{callback.name}, #{callback.to_proc})`
         end
 
         callback
@@ -177,10 +193,10 @@ class Event
       def attach!(callback)
         case callback.name
         when :blur
-          `#@native.attachEvent("onfocusout", #{callback.to_n})`
+          `#@native.attachEvent("onfocusout", #{callback.to_proc})`
 
         when :focus
-          `#@native.attachEvent("onfocusin", #{callback.to_n})`
+          `#@native.attachEvent("onfocusin", #{callback.to_proc})`
 
         else
           warn "attach: capture doesn't work on this browser"
@@ -242,11 +258,21 @@ class Event
 
     if Browser.supports? 'Event.removeListener'
       def detach(callback)
-        `#@native.removeEventListener(#{callback.name}, #{callback.to_n}, false)`
+        `#@native.removeEventListener(#{callback.name}, #{callback.to_proc}, false)`
       end
     elsif Browser.supports? 'Event.detach'
       def detach(callback)
-        `#@native.detachEvent("on" + #{callback.name}, #{callback.to_n})`
+        if callback.event == Custom
+          if callbacks.none? { |c| c.event == Custom }
+            %x{
+              #@native.detachEvent("ondataavailable", #@native.$custom);
+
+              delete #@native.$custom;
+            }
+          end
+        else
+          `#@native.detachEvent("on" + #{callback.name}, #{callback.to_proc})`
+        end
       end
     else
       # @todo implement internal handler thing
@@ -312,12 +338,12 @@ class Event
     end
 
     def delegate(delegates, event, element = event.target)
-      return if element.nil? || element == event.element
+      return if element.nil? || element == event.on
 
       delegates.handlers.each {|selector, block|
         if element.matches? selector
-          new         = event.dup
-          new.element = element
+          new    = event.dup
+          new.on = element
 
           block.call new, *new.arguments
         end

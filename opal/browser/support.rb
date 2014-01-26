@@ -156,6 +156,13 @@ module Browser
       when 'Event.fire'
         defined?(`document.fireEvent`)
 
+      # TODO: implement this
+      when 'Event.target'
+        supports? 'Event.constructor'
+
+      when 'Event.srcElement'
+        supports? 'Event.createObject'
+
       when /^Event\.([A-Z].*?)$/
         `(#{$1} + "Event") in window`
 

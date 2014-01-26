@@ -49,10 +49,10 @@ class Custom < Event
     end
   end
 
-  def initialize(native)
-    super(native); @native = native # FIXME: remove this when super is fixed
+  def initialize(event, callback = nil)
+    super(event, callback)
 
-    @detail = Hash.new(`#{native}.detail`)
+    @detail = Hash.new(`#{event}.detail`)
   end
 
   def method_missing(id, *)

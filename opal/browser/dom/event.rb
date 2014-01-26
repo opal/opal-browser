@@ -117,15 +117,17 @@ class Event
       when 'wheel'
         Wheel
 
-      when 'abort', 'afterprint', 'beforeprint', 'cached', 'canplay', 'canplaythrough',
-           'change', 'chargingchange', 'chargingtimechange', 'checking', 'close',
-           'dischargingtimechange', 'DOMContentLoaded', 'downloading', 'durationchange',
-           'emptied', 'ended', 'error', 'fullscreenchange', 'fullscreenerror', 'input',
-           'invalid', 'levelchange', 'loadeddata', 'loadedmetadata', 'noupdate', 'obsolete',
-           'offline', 'online', 'open', 'orientationchange', 'pause', 'pointerlockchange',
-           'pointerlockerror', 'play', 'playing', 'ratechange', 'readystatechange', 'reset',
-           'seeked', 'seeking', 'stalled', 'submit', 'success', 'suspend', 'timeupdate',
-           'updateready', 'visibilitychange', 'volumechange', 'waiting'
+      when 'abort', 'afterprint', 'beforeprint', 'cached', 'canplay',
+           'canplaythrough', 'change', 'chargingchange', 'chargingtimechange',
+           'checking', 'close', 'dischargingtimechange', 'DOMContentLoaded',
+           'downloading', 'durationchange', 'emptied', 'ended', 'error',
+           'fullscreenchange', 'fullscreenerror', 'input', 'invalid',
+           'levelchange', 'loadeddata', 'loadedmetadata', 'noupdate', 'obsolete',
+           'offline', 'online', 'open', 'orientationchange', 'pause',
+           'pointerlockchange', 'pointerlockerror', 'play', 'playing',
+           'ratechange', 'readystatechange', 'reset', 'seeked', 'seeking',
+           'stalled', 'submit', 'success', 'suspend', 'timeupdate', 'updateready',
+           'visibilitychange', 'volumechange', 'waiting'
         Event
 
       else
@@ -173,38 +175,57 @@ class Event
     end
   end
 
-  def self.new(value, *args)
+  def self.new(value, callback = nil)
     return super unless self == Event
 
-    klass = class_for(`value.type`)
+    klass = class_for(callback ? callback.name : `value.type`)
 
     if klass == Event
       super
     else
-      klass.new(value, *args)
+      klass.new(value, callback)
     end
   end
 
   attr_reader :callback
-  attr_writer :element
+  attr_writer :on
 
-  def initialize(event, element = nil, callback = nil)
+  def initialize(event, callback = nil)
     super(event)
 
-    @element  = element
     @callback = callback
   end
 
-  def element
-    Target.convert(@element)
+  def name
+    if @callback
+      @callback.name
+    else
+      `#@native.type`
+    end
   end
 
-  def target
-    Target.convert(`#@native.target`)
+  def on
+    return @on if @on
+
+    if @callback
+      Target.convert(@callback.target)
+    else
+      Target.convert(`#@native.currentTarget`)
+    end
   end
 
-  def off
-    @callback.off if @callback
+  if Browser.supports? 'Event.target'
+    def target
+      Target.convert(`#@native.target`)
+    end
+  elsif Browser.supports? 'Event.srcElement'
+    def target
+      Target.convert(`#@native.srcElement`)
+    end
+  else
+    def target
+      raise NotImplementedError, 'event target unsupported'
+    end
   end
 
   def arguments
@@ -217,10 +238,13 @@ class Event
 
   alias_native :bubbles?, :bubbles
   alias_native :cancelable?, :cancelable
-  alias_native :name, :type
   alias_native :data
   alias_native :phase, :eventPhase
   alias_native :at, :timeStamp
+
+  def off
+    @callback.off if @callback
+  end
 
   def stopped?
     `!!#@native.stopped`
