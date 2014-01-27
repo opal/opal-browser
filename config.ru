@@ -5,6 +5,7 @@ apps = []
 apps << Opal::Server.new { |s|
   s.append_path 'spec'
   s.main = 'opal/rspec/sprockets_runner'
+  s.index_path = 'index.html.erb'
   s.debug = false
 }
 

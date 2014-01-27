@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Opal Browser - RSpec Runner</title>
+
+  <script>
+    window.onerror = function(msg, url, line) {
+      var error = document.createElement("div");
+          error.setAttribute("id", "rspec-error");
+          error.innerHTML  = "Error: " + msg + "<br/>";
+          error.innerHTML += "Line: " + line + "<br/>";
+          error.innerHTML += "URL: " + url + "<br/>";
+
+      document.body.appendChild(error);
+    }
+  </script>
+</head>
+<body>
+  <%= javascript_include_tag @server.main %>
+</body>
+</html>
+

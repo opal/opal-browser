@@ -3,6 +3,20 @@ require 'selenium/webdriver'
 require 'rest_client'
 require 'json'
 
+# setup tunnel
+begin
+  File.open('tunnel.jar', 'w') {|f|
+    f.write RestClient.get('http://www.browserstack.com/BrowserStackTunnel.jar').to_str
+  }
+
+  tunnel = IO.popen 'java -jar tunnel.jar $BS_AUTHKEY localhost,9292,0 -tunnelIdentifier $TRAVIS_JOB_ID'
+
+  loop do
+    break if tunnel.gets.start_with? 'You can now access'
+  end
+end
+
+# configure based on environment variables
 hub  = "http://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@hub.browserstack.com/wd/hub"
 plan = "https://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@www.browserstack.com/automate/plan.json"
 cap  = Selenium::WebDriver::Remote::Capabilities.new
@@ -17,6 +31,7 @@ cap['browserstack.debug']            = 'false'
 
 print 'Loading...'
 
+# wait until there's a spot in the parallel jobs
 begin
   loop do
     response = RestClient.get(plan)
@@ -36,53 +51,61 @@ rescue Exception
   retry
 end
 
-begin
-  Selenium::WebDriver::Wait.new(timeout: 60, interval: 10).until {
-    browser.find_element(:class, 'rspec-report')
-  }
-rescue Selenium::WebDriver::Error::TimeOutError
-  puts "\rThe specs failed loading."
+# if we don't quit the browser it will stall
+at_exit {
   browser.quit
+}
+
+# the title is a good way to know if anything went wrong while fetching the
+# page
+unless browser.title =~ /Opal Browser/
+  puts "\rThe page failed loading."
   exit 1
-rescue Exception
-  browser.quit
-  raise
 end
+
+# wait until the specs are running or there has been an error in the loading of
+# the specs
+begin
+  Selenium::WebDriver::Wait.new(timeout: 30, interval: 5).until {
+    (browser['rspec-error'] rescue false) ||
+    (browser[class: 'rspec-report'] rescue false)
+  }
+
+  if element = browser['rspec-error'] rescue nil
+    puts "\r#{element.text}"
+    exit 1
+  end
+rescue Selenium::WebDriver::Error::TimeOutError; end
 
 print "\rRunning specs..."
 
+# wait until the specs have finished, thus changing the content of #totals
+Selenium::WebDriver::Wait.new(timeout: 1200, interval: 30).until {
+  print '.'
+
+  not browser['totals'].text.strip.empty?
+}
+
+totals   = browser['totals'].text
+duration = browser[css: '#duration strong'].text
+
+print "\r#{totals} in #{duration}"
+
+# take a screenshot and upload it to imgur
 begin
-  Selenium::WebDriver::Wait.new(timeout: 1200, interval: 30).until {
-    print '.'
+  browser.save_screenshot('screenshot.png')
+  response = RestClient.post('https://api.imgur.com/3/upload',
+    { image: File.open('screenshot.png') },
+    { 'Authorization' => 'Client-ID 1979876fe2a097e' })
 
-    not browser.find_element(:id, 'totals').text.strip.empty?
-  }
-
-  totals   = browser.find_element(:id, 'totals').text
-  duration = browser.find_element(:id, 'duration').find_element(:tag_name, 'strong').text
-
-  print "\r#{totals} in #{duration}"
-
-  if totals =~ / 0 failures/
-    exit 0
-  end
-rescue Selenium::WebDriver::Error::TimeOutError
-  print "\rTimeout, have fun."
-ensure
-  begin
-    browser.save_screenshot('screenshot.png')
-    response = RestClient.post('https://api.imgur.com/3/upload',
-      { image: File.open('screenshot.png') },
-      { 'Authorization' => 'Client-ID 1979876fe2a097e' })
-
-    print " ("
-    print JSON.parse(response.to_str)['data']['link']
-    puts  ")"
-  rescue Exception
-    puts
-  end
-
-  browser.quit
+  print " ("
+  print JSON.parse(response.to_str)['data']['link']
+  puts  ")"
+rescue Exception
+  puts
 end
 
-exit 1
+# no failures, happy times
+unless totals =~ / 0 failures/
+  exit 1
+end

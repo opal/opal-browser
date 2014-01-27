@@ -54,9 +54,6 @@ before_install:
 before_script:
   - bundle exec rackup -p 9292 &
   - sleep 10
-  - wget http://www.browserstack.com/BrowserStackTunnel.jar
-  - java -jar BrowserStackTunnel.jar $BS_AUTHKEY localhost,9292,0 -tunnelIdentifier $TRAVIS_JOB_ID &
-  - sleep 10
 
 script:
   - bundle exec spec/runner.rb
