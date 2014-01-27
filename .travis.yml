@@ -34,8 +34,6 @@ env:
     - SELENIUM_BROWSER=ie SELENIUM_VERSION=11
 
 matrix:
-  fast_finish: true
-
   allow_failures:
     # I know these fail
     - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=6
