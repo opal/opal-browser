@@ -10,8 +10,9 @@ cap['platform']        = ENV['SELENIUM_PLATFORM'] || 'ANY'
 cap['browser']         = ENV['SELENIUM_BROWSER'] || 'chrome'
 cap['browser_version'] = ENV['SELENIUM_VERSION'] if ENV['SELENIUM_VERSION']
 
-cap['browserstack.tunnel'] = 'true'
-cap['browserstack.debug']  = 'true'
+cap['browserstack.tunnelIdentifier'] = ENV['TRAVIS_JOB_ID']
+cap['browserstack.tunnel']           = 'true'
+cap['browserstack.debug']            = 'false'
 
 print 'Loading...'
 
@@ -35,9 +36,9 @@ rescue Exception
 end
 
 unless (browser.find_element(:css, '.rspec-report') rescue false)
-  puts "\rConnection error..."
+  puts "\rThe specs didn't load."
   browser.quit
-  exit 0
+  exit 1
 end
 
 print "\rRunning specs..."
