@@ -5,7 +5,6 @@ require 'wgxpath.install'
 require 'browser'
 require 'browser/console'
 
-
 module HtmlHelper
   # Add some html code to the body tag ready for testing. This will
   # be added before each test, then removed after each test. It is
