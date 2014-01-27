@@ -70,6 +70,11 @@ class Event
 
       def to_proc
         @proc ||= -> event {
+          %x{
+            event.currentTarget = self.target.native;
+            event.type          = self.name;
+          }
+
           event = Event.new(event, self)
 
           unless event.stopped?

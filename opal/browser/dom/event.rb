@@ -197,21 +197,11 @@ class Event
   end
 
   def name
-    if @callback
-      @callback.name
-    else
-      `#@native.type`
-    end
+    `#@native.type`
   end
 
   def on
-    return @on if @on
-
-    if @callback
-      @callback.target
-    else
-      Target.convert(`#@native.currentTarget`)
-    end
+    @on || Target.convert(`#@native.currentTarget`)
   end
 
   def target
