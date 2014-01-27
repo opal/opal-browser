@@ -35,4 +35,23 @@ describe Browser::History do
       $window.history.back
     end
   end
+
+  describe '#state' do
+    async 'gets the right state' do
+      $window.history.push('/wut', 42)
+      $window.history.state.should eq(42)
+      $window.history.push('/omg', 23)
+      $window.history.state.should eq(23)
+
+      $window.on 'pop:state' do |e|
+        run_async {
+          true.should eq(true)
+        }
+
+        e.off
+      end
+
+      $window.history.back(2)
+    end
+  end if Browser.supports? 'History.state'
 end if Browser::History.supported?

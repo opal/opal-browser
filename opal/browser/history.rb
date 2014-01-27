@@ -6,8 +6,9 @@ module Browser
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/API/History
 class History
+  # Check if HTML5 history is supported.
   def self.supported?
-    Browser.supports? :history
+    Browser.supports? 'History'
   end
 
   include Native
@@ -58,8 +59,23 @@ class History
 
   # @!attribute [r] state
   # @return [Object] the current state
-  def state
-    `#@native.state`
+  if Browser.supports? 'History.state'
+    def state
+      %x{
+        var state = #@native.state;
+
+        if (state == null) {
+          return nil;
+        }
+        else {
+          return state;
+        }
+      }
+    end
+  else
+    def state
+      raise NotImplementedError, 'history state unsupported'
+    end
   end
 end
 
