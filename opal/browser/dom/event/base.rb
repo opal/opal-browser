@@ -23,14 +23,17 @@ class Event
   end
 
   module Target
+    # @private
     def self.converters
       @converters ||= []
     end
 
+    # @private
     def self.register(&block)
       converters << block
     end
 
+    # @private
     def self.convert(value)
       return value unless native?(value)
 
