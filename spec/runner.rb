@@ -37,8 +37,8 @@ rescue Exception
 end
 
 begin
-  Selenium::WebDriver::Wait.new(timeout: 30, interval: 1).until {
-    browser.find_element(:css, '.rspec-report')
+  Selenium::WebDriver::Wait.new(timeout: 60, interval: 10).until {
+    browser.find_element(:class, 'rspec-report')
   }
 rescue Selenium::WebDriver::Error::TimeOutError
   puts "\rThe specs failed loading."
@@ -55,11 +55,11 @@ begin
   Selenium::WebDriver::Wait.new(timeout: 1200, interval: 30).until {
     print '.'
 
-    not browser.find_element(:css, 'p#totals').text.strip.empty?
+    not browser.find_element(:id, 'totals').text.strip.empty?
   }
 
-  totals   = browser.find_element(:css, 'p#totals').text
-  duration = browser.find_element(:css, 'p#duration').find_element(:css, 'strong').text
+  totals   = browser.find_element(:id, 'totals').text
+  duration = browser.find_element(:id, 'duration').find_element(:tag_name, 'strong').text
 
   print "\r#{totals} in #{duration}"
 
