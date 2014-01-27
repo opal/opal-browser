@@ -3,8 +3,9 @@ require 'selenium/webdriver'
 require 'rest_client'
 require 'json'
 
-url = "http://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@hub.browserstack.com/wd/hub"
-cap = Selenium::WebDriver::Remote::Capabilities.new
+hub  = "http://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@hub.browserstack.com/wd/hub"
+plan = "https://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@www.browserstack.com/automate/plan.json"
+cap  = Selenium::WebDriver::Remote::Capabilities.new
 
 cap['platform']        = ENV['SELENIUM_PLATFORM'] || 'ANY'
 cap['browser']         = ENV['SELENIUM_BROWSER'] || 'chrome'
@@ -18,7 +19,7 @@ print 'Loading...'
 
 begin
   loop do
-    response = RestClient.get("https://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@www.browserstack.com/automate/plan.json")
+    response = RestClient.get(plan)
     state    = JSON.parse(response.to_str)
 
     if state["parallel_sessions_running"] < state["parallel_sessions_max_allowed"]
@@ -29,16 +30,21 @@ begin
     sleep 30
   end
 
-  browser = Selenium::WebDriver.for(:remote, url: url, desired_capabilities: cap)
+  browser = Selenium::WebDriver.for(:remote, url: hub, desired_capabilities: cap)
   browser.navigate.to('http://localhost:9292')
 rescue Exception
   retry
 end
 
-unless (browser.find_element(:css, '.rspec-report') rescue false)
-  puts "\rThe specs didn't load."
+begin
+  browser.find_element(:css, '.rspec-report')
+rescue Selenium::WebDriver::Error::NoSuchElementError
+  puts "\rThe specs failed loading."
   browser.quit
   exit 1
+rescue Exception
+  browser.quit
+  raise
 end
 
 print "\rRunning specs..."
