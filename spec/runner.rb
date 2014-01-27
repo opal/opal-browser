@@ -37,8 +37,10 @@ rescue Exception
 end
 
 begin
-  browser.find_element(:css, '.rspec-report')
-rescue Selenium::WebDriver::Error::NoSuchElementError
+  Selenium::WebDriver::Wait.new(timeout: 30, interval: 1).until {
+    browser.find_element(:css, '.rspec-report')
+  }
+rescue Selenium::WebDriver::Error::TimeOutError
   puts "\rThe specs failed loading."
   browser.quit
   exit 1
