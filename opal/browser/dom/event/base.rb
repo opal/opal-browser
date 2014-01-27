@@ -215,11 +215,13 @@ class Event
       end
     else
       # @todo implement polyfill
+      # @private
       def attach(*)
         raise NotImplementedError
       end
 
       # @todo implement polyfill
+      # @private
       def attach!(*)
         raise NotImplementedError
       end
@@ -284,6 +286,7 @@ class Event
       end
     else
       # @todo implement internal handler thing
+      # @private
       def detach(callback)
         raise NotImplementedError
       end
@@ -319,6 +322,7 @@ class Event
       end
     else
       # @todo implement polyfill
+      # @private
       def dispatch(*)
         raise NotImplementedError
       end
