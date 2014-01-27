@@ -151,8 +151,9 @@ class Mouse < UI
               desc.view || window, desc.detail || 0,
               desc.screenX || 0, desc.screenY || 0,
               desc.clientX || 0, desc.clientY || 0,
-              desc.ctrlKey, desc.altKey, desc.shiftKey, desc.metaKey,
-              desc.button || 0, desc.relatedTarget);
+              desc.ctrlKey || false, desc.altKey || false,
+              desc.shiftKey || false, desc.metaKey || false,
+              desc.button || 0, desc.relatedTarget || null);
 
         return event;
       }
