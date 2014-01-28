@@ -34,8 +34,7 @@ print 'Loading...'
 # wait until there's a spot in the parallel jobs
 begin
   loop do
-    response = RestClient.get(plan)
-    state    = JSON.parse(response.to_str)
+    state = JSON.parse(RestClient.get(plan).to_str)
 
     if state["parallel_sessions_running"] < state["parallel_sessions_max_allowed"]
       break
@@ -58,6 +57,10 @@ at_exit {
 
 # the title is a good way to know if anything went wrong while fetching the
 # page
+Selenium::WebDriver::Wait.new(timeout: 30, interval: 5).until {
+  not browser.title.strip.empty?
+}
+
 unless browser.title =~ /Opal Browser/
   puts "\rThe page failed loading."
   exit 1
