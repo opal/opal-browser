@@ -76,7 +76,7 @@ class Window
   end
 end
 
-class DOM::Document
+class DOM::Document < DOM::Element
   # @!attribute [r] location
   # @return [Location] the location for the document
   def location
