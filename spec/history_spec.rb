@@ -44,7 +44,7 @@ describe Browser::History do
       $window.history.state.should eq(23)
 
       $window.on 'pop:state' do |e|
-        run_async {
+        async {
           true.should eq(true)
         }
 
