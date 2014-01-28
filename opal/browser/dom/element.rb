@@ -260,9 +260,7 @@ class Element < Node
       style.replace(data)
     elsif data.is_a?(Enumerable)
       style.assign(data)
-    end
-
-    if block
+    elsif block
       style.apply(&block)
     end
 
