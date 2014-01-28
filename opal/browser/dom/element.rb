@@ -1,6 +1,7 @@
 require 'browser/dom/element/position'
 require 'browser/dom/element/offset'
 require 'browser/dom/element/scroll'
+require 'browser/dom/element/size'
 
 require 'browser/dom/element/input'
 require 'browser/dom/element/image'
@@ -114,7 +115,23 @@ class Element < Node
   end
 
   def size(*inc)
-    Size.new(`#@native.offsetWidth`, `#@native.offsetHeight`)
+    Size.new(self, *inc)
+  end
+
+  def height
+    size.height
+  end
+
+  def height=(value)
+    size.height = value
+  end
+
+  def width
+    size.width
+  end
+
+  def width=(value)
+    size.width = value
   end
 
   def position
