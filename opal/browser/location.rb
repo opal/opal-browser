@@ -76,4 +76,12 @@ class Window
   end
 end
 
+class DOM::Document
+  # @!attribute [r] location
+  # @return [Location] the location for the document
+  def location
+    Location.new(`#@native.location`) if `#@native.location`
+  end
+end
+
 end

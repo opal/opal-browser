@@ -55,10 +55,6 @@ class Document < Element
     "#<DOM::Document: #{children.inspect}>"
   end
 
-  def location
-    Location.new(`#@native.location`) if `#@native.location`
-  end
-
   def title
     `#@native.title`
   end
