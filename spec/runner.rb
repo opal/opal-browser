@@ -46,7 +46,7 @@ begin
 
   browser = Selenium::WebDriver.for(:remote, url: hub, desired_capabilities: cap)
   browser.navigate.to('http://localhost:9292')
-rescue Exception
+rescue Selenium::WebDriver::Error::UnknownError
   retry
 end
 
