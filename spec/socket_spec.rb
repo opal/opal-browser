@@ -28,6 +28,8 @@ describe Browser::Socket do
   async 'sends messages' do
     Browser::Socket.new ws do |s|
       s.on :message do |e|
+        e.off
+
         s.print 'omg'
 
         s.on :message do |e|
@@ -35,8 +37,6 @@ describe Browser::Socket do
             expect(e.data).to eq('omg')
           }
         end
-
-        e.off
       end
     end
   end

@@ -25,11 +25,11 @@ describe Browser::History do
       expect($window.history.current).to eq('/wut')
 
       $window.on 'pop:state' do |e|
+        e.off
+
         async {
           expect($window.history.current).to eq('/')
         }
-
-        e.off
       end
 
       $window.history.back
@@ -44,11 +44,11 @@ describe Browser::History do
       $window.history.state.should eq(23)
 
       $window.on 'pop:state' do |e|
-        async {
-          true.should eq(true)
-        }
-
         e.off
+
+        async {
+          expect(true).to eq(true)
+        }
       end
 
       $window.history.back(2)
