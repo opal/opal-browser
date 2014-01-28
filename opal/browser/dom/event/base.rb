@@ -71,8 +71,9 @@ class Event
       def to_proc
         @proc ||= -> event {
           %x{
-            event.currentTarget = self.target.native;
-            event.type          = self.name;
+            if (!event.currentTarget) {
+              event.currentTarget = self.target.native;
+            }
           }
 
           event = Event.new(event, self)
@@ -183,6 +184,8 @@ class Event
                   var callback = #@native.$callbacks[i];
 
                   if (#{`callback`.event == Custom}) {
+                    event.type = callback.name;
+
                     #{`callback`.call(`event`)};
                   }
                 }
