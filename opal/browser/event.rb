@@ -1,33 +1,33 @@
-require 'browser/dom/event/base'
-require 'browser/dom/event/ui'
-require 'browser/dom/event/mouse'
-require 'browser/dom/event/keyboard'
-require 'browser/dom/event/focus'
-require 'browser/dom/event/wheel'
-require 'browser/dom/event/composition'
-require 'browser/dom/event/animation'
-require 'browser/dom/event/audio_processing'
-require 'browser/dom/event/before_unload'
-require 'browser/dom/event/composition'
-require 'browser/dom/event/clipboard'
-require 'browser/dom/event/device_light'
-require 'browser/dom/event/device_motion'
-require 'browser/dom/event/device_orientation'
-require 'browser/dom/event/device_proximity'
-require 'browser/dom/event/drag'
-require 'browser/dom/event/gamepad'
-require 'browser/dom/event/hash_change'
-require 'browser/dom/event/progress'
-require 'browser/dom/event/page_transition'
-require 'browser/dom/event/pop_state'
-require 'browser/dom/event/storage'
-require 'browser/dom/event/touch'
-require 'browser/dom/event/sensor'
-require 'browser/dom/event/custom'
-require 'browser/dom/event/message'
-require 'browser/dom/event/close'
+require 'browser/event/base'
+require 'browser/event/ui'
+require 'browser/event/mouse'
+require 'browser/event/keyboard'
+require 'browser/event/focus'
+require 'browser/event/wheel'
+require 'browser/event/composition'
+require 'browser/event/animation'
+require 'browser/event/audio_processing'
+require 'browser/event/before_unload'
+require 'browser/event/composition'
+require 'browser/event/clipboard'
+require 'browser/event/device_light'
+require 'browser/event/device_motion'
+require 'browser/event/device_orientation'
+require 'browser/event/device_proximity'
+require 'browser/event/drag'
+require 'browser/event/gamepad'
+require 'browser/event/hash_change'
+require 'browser/event/progress'
+require 'browser/event/page_transition'
+require 'browser/event/pop_state'
+require 'browser/event/storage'
+require 'browser/event/touch'
+require 'browser/event/sensor'
+require 'browser/event/custom'
+require 'browser/event/message'
+require 'browser/event/close'
 
-module Browser; module DOM
+module Browser
 
 class Event
   def self.aliases
@@ -42,7 +42,7 @@ class Event
   end
 
   def self.class_for(name)
-    type = case name_for(name)
+    case name_for(name)
       when 'animationend', 'animationiteration', 'animationstart'
         Animation
 
@@ -250,4 +250,4 @@ class Event
   end
 end
 
-end; end
+end

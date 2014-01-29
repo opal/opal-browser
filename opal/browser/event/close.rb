@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Close < Event
   def self.supported?
@@ -44,4 +44,4 @@ class Close < Event
   alias_native :clean?, :wasClean
 end
 
-end; end; end
+end; end

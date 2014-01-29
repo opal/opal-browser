@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Animation < Event
   def self.supported?
@@ -35,4 +35,4 @@ class Animation < Event
   alias_native :elapsed, :elapsedTime
 end
 
-end; end; end
+end; end

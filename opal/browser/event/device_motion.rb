@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class DeviceMotion < Event
   def self.supported?
@@ -48,4 +48,4 @@ class DeviceMotion < Event
   alias_native :interval
 end
 
-end; end; end
+end; end

@@ -1,4 +1,3 @@
-require 'browser/dom/event'
 require 'browser/dom/node_set'
 require 'browser/dom/node'
 require 'browser/dom/attribute'
@@ -74,12 +73,6 @@ end
 module Browser
 
 class Window
-  include DOM::Event::Target
-
-  target {|value|
-    $window if `#{value} == window`
-  }
-
   # Get the {DOM::Document} for this window.
   #
   # @return [DOM::Document]

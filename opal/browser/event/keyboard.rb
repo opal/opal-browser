@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Keyboard < UI
   def self.supported?
@@ -112,4 +112,4 @@ class Keyboard < UI
   end
 end
 
-end; end; end
+end; end

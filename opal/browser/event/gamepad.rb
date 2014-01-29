@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Gamepad < Event
   def self.supported?
@@ -57,4 +57,4 @@ class Gamepad < Event
   end
 end
 
-end; end; end
+end; end

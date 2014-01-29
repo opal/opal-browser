@@ -34,6 +34,11 @@ class Window
   end
 
   include Native
+  include Event::Target
+
+  target {|value|
+    $window if `#{value} == window`
+  }
 
   # Alert the passed string.
   def alert(value)

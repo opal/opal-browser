@@ -10,7 +10,7 @@ class EventSource
   end
 
   include Native
-  include DOM::Event::Target
+  include Event::Target
 
   target {|value|
     EventSource.new(value) if Native.is_a?(value, `window.EventSource`)

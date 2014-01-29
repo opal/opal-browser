@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Focus < UI
   def self.supported?
@@ -36,4 +36,4 @@ class Focus < UI
   end
 end
 
-end; end; end
+end; end

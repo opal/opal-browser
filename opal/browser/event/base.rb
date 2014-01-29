@@ -1,4 +1,4 @@
-module Browser; module DOM
+module Browser
 
 class Event
   include Native
@@ -49,7 +49,7 @@ class Event
     def self.included(klass)
       klass.instance_eval {
         def self.target(&block)
-          DOM::Event::Target.register(&block)
+          Event::Target.register(&block)
         end
       }
     end
@@ -369,4 +369,4 @@ class Event
   end
 end
 
-end; end
+end

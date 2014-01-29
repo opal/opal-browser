@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Storage < Event
   def self.supported?
@@ -40,4 +40,4 @@ class Storage < Event
   alias_native :url
 end
 
-end; end; end
+end; end

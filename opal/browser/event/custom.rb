@@ -1,6 +1,6 @@
 require 'ostruct'
 
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Custom < Event
   def self.supported?
@@ -62,4 +62,4 @@ class Custom < Event
   end
 end
 
-end; end; end
+end; end

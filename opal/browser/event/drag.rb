@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 # TODO: handle transfers
 class Drag < Event
@@ -116,4 +116,4 @@ class Drag < Event
   end
 end
 
-end; end; end
+end; end

@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class DeviceLight < Event
   def self.supported?
@@ -20,4 +20,4 @@ class DeviceLight < Event
   alias_native :value
 end
 
-end; end; end
+end; end

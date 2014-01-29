@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Mouse < UI
   def self.supported?
@@ -251,4 +251,4 @@ class Mouse < UI
   end
 end
 
-end; end; end
+end; end

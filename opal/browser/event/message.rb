@@ -1,6 +1,6 @@
 require 'buffer'
 
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Message < Event
   def self.supported?
@@ -67,4 +67,4 @@ class Message < Event
   end
 end
 
-end; end; end
+end; end

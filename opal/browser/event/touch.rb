@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Touch < Event
   def self.supported?
@@ -57,4 +57,4 @@ class Touch < Event
   end
 end
 
-end; end; end
+end; end

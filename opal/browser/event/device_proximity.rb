@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class DeviceProximity < Event
   def self.supported?
@@ -30,4 +30,4 @@ class DeviceProximity < Event
   alias_native :max
 end
 
-end; end; end
+end; end

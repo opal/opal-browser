@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class HashChange < Event
   def self.supported?
@@ -25,4 +25,4 @@ class HashChange < Event
   alias_native :new, :newURL
 end
 
-end; end; end
+end; end

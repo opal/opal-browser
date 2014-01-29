@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class UI < Event
   def self.supported?
@@ -35,4 +35,4 @@ class UI < Event
   alias_native :view
 end
 
-end; end; end
+end; end

@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class AudioProcessing < Event
   def self.supported?
@@ -30,4 +30,4 @@ class AudioProcessing < Event
   alias_native :output, :outputBuffer
 end
 
-end; end; end
+end; end

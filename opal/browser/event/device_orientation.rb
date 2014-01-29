@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class DeviceOrientation < Event
   def self.supported?
@@ -45,4 +45,4 @@ class DeviceOrientation < Event
   alias_native :gamma
 end
 
-end; end; end
+end; end

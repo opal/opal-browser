@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Clipboard < Event
   def self.supported?
@@ -25,4 +25,4 @@ class Clipboard < Event
   alias_native :type, :dataType
 end
 
-end; end; end
+end; end

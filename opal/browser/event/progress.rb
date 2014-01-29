@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Progress < Event
   def self.supported?
@@ -40,4 +40,4 @@ class Progress < Event
   alias_native :total
 end
 
-end; end; end
+end; end

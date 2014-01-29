@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class PopState < Event
   def self.supported?
@@ -30,4 +30,4 @@ class PopState < Event
   alias_native :state
 end
 
-end; end; end
+end; end

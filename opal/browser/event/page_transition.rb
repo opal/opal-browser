@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class PageTransition < Event
   def self.supported?
@@ -20,4 +20,4 @@ class PageTransition < Event
   alias_native :persisted?, :persisted
 end
 
-end; end; end
+end; end

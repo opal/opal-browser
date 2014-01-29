@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Wheel < UI
   def self.supported?
@@ -46,4 +46,4 @@ class Wheel < UI
   end
 end
 
-end; end; end
+end; end

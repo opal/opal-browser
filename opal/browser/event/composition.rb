@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Composition < UI
   def self.supported?
@@ -47,4 +47,4 @@ class Composition < UI
   end
 end
 
-end; end; end
+end; end

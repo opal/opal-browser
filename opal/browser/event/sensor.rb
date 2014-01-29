@@ -1,4 +1,4 @@
-module Browser; module DOM; class Event
+module Browser; class Event
 
 class Sensor < Event
   def self.supported?
@@ -12,4 +12,4 @@ class Sensor < Event
   end if supported?
 end
 
-end; end; end
+end; end

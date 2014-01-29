@@ -11,7 +11,7 @@ class Socket
 
   include Native
   include IO::Writable
-  include DOM::Event::Target
+  include Event::Target
 
   target {|value|
     Socket.new(value) if Native.is_a?(value, `window.WebSocket`)

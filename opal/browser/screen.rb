@@ -5,7 +5,7 @@ module Browser
 # @see https://developer.mozilla.org/en-US/docs/Web/API/Window.screen
 class Screen
   include Native
-  include DOM::Event::Target
+  include Event::Target
 
   target {|value|
     Screen.new(value) if Native.is_a?(value, `window.Screen`)
