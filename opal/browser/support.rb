@@ -1,9 +1,13 @@
+# The engine the browser is running.
+#
+# Keep in mind it uses the user agent to know, so it's not reliable.
 BROWSER_ENGINE = `/MSIE|WebKit|Presto|Gecko/.exec(navigator.userAgent)[0]`.downcase rescue :unknown
 
 module Browser
   # @private
   @support = `{}`
 
+  # Check if the browser supports the given feature.
   def self.supports?(feature)
     if defined?(`#@support[#{feature}]`)
       return `#@support[#{feature}]`
@@ -220,6 +224,7 @@ module Browser
     `#@support[#{feature}] = #{support}`
   end
 
+  # Check if the given polyfill is loaded.
   def self.loaded?(name)
     case name
     when 'Sizzle'
