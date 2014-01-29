@@ -8,6 +8,7 @@ require 'browser/http/response'
 module Browser
 
 module HTTP
+  # Check if HTTP requests are supported.
   def self.supported?
     Browser.supports?('XHR') || Browser.supports?('ActiveXObject')
   end
@@ -17,6 +18,8 @@ module HTTP
   # @param method [Symbol] the HTTP method to use
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
+  #
+  # @yieldparam request [Request] the request to configure
   #
   # @return [Promise] a promise that will be resolved with the response
   def self.send(method, url, data = nil, &block)
@@ -37,6 +40,8 @@ module HTTP
   #
   # @param url [String] the URL to request
   #
+  # @yieldparam request [Request] the request to configure
+  #
   # @return [Promise] a promise that will be resolved with the response
   def self.get(url, &block)
     send(:get, url, &block)
@@ -45,6 +50,8 @@ module HTTP
   # Send an asynchronous HEAD request.
   #
   # @param url [String] the URL to request
+  #
+  # @yieldparam request [Request] the request to configure
   #
   # @return [Promise] a promise that will be resolved with the response
   def self.head(url, &block)
@@ -56,6 +63,8 @@ module HTTP
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
   #
+  # @yieldparam request [Request] the request to configure
+  #
   # @return [Promise] a promise that will be resolved with the response
   def self.post(url, data = nil, &block)
     send(:post, url, data, &block)
@@ -66,6 +75,8 @@ module HTTP
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
   #
+  # @yieldparam request [Request] the request to configure
+  #
   # @return [Promise] a promise that will be resolved with the response
   def self.put(url, data = nil, &block)
     send(:put, url, data, &block)
@@ -75,6 +86,8 @@ module HTTP
   #
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
+  #
+  # @yieldparam request [Request] the request to configure
   #
   # @return [Promise] a promise that will be resolved with the response
   def self.delete(url, data = nil, &block)
@@ -87,6 +100,8 @@ module HTTP
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
   #
+  # @yieldparam request [Request] the request to configure
+  #
   # @return [Response] the response
   def self.send!(method, url, data = nil, &block)
     Request.new(&block).open(method, url, false).send(data)
@@ -96,6 +111,8 @@ module HTTP
   #
   # @param url [String] the URL to request
   #
+  # @yieldparam request [Request] the request to configure
+  #
   # @return [Response] the response
   def self.get!(url, &block)
     send!(:get, url, &block)
@@ -104,6 +121,8 @@ module HTTP
   # Send a synchronous HEAD request.
   #
   # @param url [String] the URL to request
+  #
+  # @yieldparam request [Request] the request to configure
   #
   # @return [Response] the response
   def self.head!(url, &block)
@@ -115,6 +134,8 @@ module HTTP
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
   #
+  # @yieldparam request [Request] the request to configure
+  #
   # @return [Response] the response
   def self.post!(url, data = nil, &block)
     send!(:post, url, data, &block)
@@ -125,6 +146,8 @@ module HTTP
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
   #
+  # @yieldparam request [Request] the request to configure
+  #
   # @return [Response] the response
   def self.put!(url, data = nil, &block)
     send!(:put, url, data, &block)
@@ -134,6 +157,8 @@ module HTTP
   #
   # @param url [String] the URL to request
   # @param data [String, Hash] the data to send
+  #
+  # @yieldparam request [Request] the request to configure
   #
   # @return [Response] the response
   def self.delete!(url, data = nil, &block)
