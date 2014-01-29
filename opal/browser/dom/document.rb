@@ -43,10 +43,6 @@ class Document < Element
 
   alias at []
 
-  def cookies
-    Cookies.new(@native) if defined?(`#@native.cookie`)
-  end
-
   def document
     self
   end
