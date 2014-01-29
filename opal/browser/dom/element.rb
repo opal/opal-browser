@@ -244,7 +244,11 @@ class Element < Node
     end
   elsif Browser.loaded? 'Sizzle'
     def css(path)
-      NodeSet.new(document, `Sizzle(#{path}, #@native)`)
+      begin
+        NodeSet.new(document, `Sizzle(path, #@native)`)
+      rescue
+        NodeSet.new(document)
+      end
     end
   else
     def css(selector)
