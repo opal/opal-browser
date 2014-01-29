@@ -51,7 +51,7 @@ class Storage
   # @!attribute [r] encoded_name
   # @return [String] the generated name
   def encoded_name
-    "$opal.storage.#@name"
+    "opal.storage.#@name"
   end
 
   # Check if autosaving is enabled.
