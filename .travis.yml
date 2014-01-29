@@ -35,10 +35,6 @@ env:
 
 matrix:
   allow_failures:
-    # I know these fail
-    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=6
-    - env: SELENIUM_BROWSER=ie SELENIUM_VERSION=7
-
     # ChromeDriver be broken
     - env: SELENIUM_BROWSER=chrome SELENIUM_VERSION=31
     - env: SELENIUM_BROWSER=chrome SELENIUM_VERSION=30

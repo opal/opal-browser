@@ -1,6 +1,7 @@
-# The engine the browser is running.
+# The engine the browser is running on.
 #
-# Keep in mind it uses the user agent to know, so it's not reliable.
+# Keep in mind it uses the user agent to know, so it's not reliable in case of
+# spoofing.
 BROWSER_ENGINE = `/MSIE|WebKit|Presto|Gecko/.exec(navigator.userAgent)[0]`.downcase rescue :unknown
 
 module Browser
@@ -30,7 +31,7 @@ module Browser
         defined?(`window.ActiveXObject`)
 
       when 'Query.css'
-        defined?(`Element.prototype.querySelectorAll`)
+        defined?(`document.querySelectorAll`)
 
       when 'Query.xpath'
         defined?(`document.evaluate`)
@@ -92,7 +93,7 @@ module Browser
         defined?(`window.pageXOffset`)
 
       when 'Element.addBehavior'
-        defined?(`document.body.addBehavior`)
+        defined?(`document.documentElement.addBehavior`)
 
       when 'Element.className'
         %x{

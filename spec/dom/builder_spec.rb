@@ -2,27 +2,35 @@ require 'spec_helper'
 
 describe Browser::DOM::Builder do
   it 'builds an element' do
-    expect(DOM {
+    res = DOM {
       div
-    }.name).to eq('DIV')
+    }
+
+    expect(res.name).to eq('DIV')
   end
 
   it 'builds an element with text content' do
-    expect(DOM {
+    res = DOM {
       div "foo bar"
-    }.text).to eq('foo bar')
+    }
 
-    expect(DOM {
+    expect(res.text).to eq('foo bar')
+
+    res = DOM {
       div {
         "foo bar"
       }
-    }.text).to eq('foo bar')
+    }
+
+    expect(res.text).to eq('foo bar')
   end
 
   it 'builds an element with attributes' do
-    expect(DOM {
+    res = DOM {
       div class: :wut
-    }.class_name).to eq(:wut)
+    }
+
+    expect(res.class_name).to eq(:wut)
   end
 
   it 'builds deeper trees' do

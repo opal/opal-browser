@@ -1,7 +1,3 @@
-require 'json2'
-require 'sizzle'
-require 'wgxpath.install'
-
 require 'browser'
 require 'browser/console'
 

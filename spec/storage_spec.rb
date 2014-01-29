@@ -22,5 +22,5 @@ describe Browser::Window do
       expect($window.session_storage.name).to eq(:default)
       expect($window.session_storage(:spec).name).to eq(:spec)
     end
-  end
+  end if Browser::SessionStorage.supported?
 end
