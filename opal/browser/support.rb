@@ -94,6 +94,22 @@ module Browser
       when 'Element.addBehavior'
         defined?(`document.body.addBehavior`)
 
+      when 'Element.className'
+        %x{
+          var div = document.createElement("div");
+              div.setAttribute('className', 'x');
+
+          return div.className === 'x';
+        }
+
+      when 'Element.class'
+        %x{
+          var div = document.createElement("div");
+              div.setAttribute('class', 'x');
+
+          return div.className === 'x';
+        }
+
       when 'Element.clientSize'
         defined?(`document.documentElement.clientHeight`)
 

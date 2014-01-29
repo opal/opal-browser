@@ -73,19 +73,45 @@ class Element < Node
     Attributes.new(self, options)
   end
 
-  def get(name, options = {})
-    if namespace = options[:namespace]
-      `#@native.getAttributeNS(#{namespace.to_s}, #{name.to_s}) || nil`
-    else
-      `#@native.getAttribute(#{name.to_s}) || nil`
-    end
-  end
+  if Browser.supports? 'Element.className'
+    def get(name, options = {})
+      if name == :class
+        name = :className
+      end
 
-  def set(name, value, options = {})
-    if namespace = options[:namespace]
-      `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
-    else
-      `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+      if namespace = options[:namespace]
+        `#@native.getAttributeNS(#{namespace.to_s}, #{name.to_s}) || nil`
+      else
+        `#@native.getAttribute(#{name.to_s}) || nil`
+      end
+    end
+
+    def set(name, value, options = {})
+      if name == :class
+        name = :className
+      end
+
+      if namespace = options[:namespace]
+        `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
+      else
+        `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+      end
+    end
+  else
+    def get(name, options = {})
+      if namespace = options[:namespace]
+        `#@native.getAttributeNS(#{namespace.to_s}, #{name.to_s}) || nil`
+      else
+        `#@native.getAttribute(#{name.to_s}) || nil`
+      end
+    end
+
+    def set(name, value, options = {})
+      if namespace = options[:namespace]
+        `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
+      else
+        `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+      end
     end
   end
 
