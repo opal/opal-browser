@@ -1,6 +1,7 @@
 module Browser
 
 class AnimationFrame
+  # Execute the block to update an animation before the next repaint.
   def initialize(window, &block)
     @window = window
     @native = window.to_n
@@ -78,8 +79,15 @@ end
 
 end
 
+module Kernel
+  # (see Browser::AnimationFrame.new)
+  def animation_frame(&block)
+    Browser::AnimationFrame.new($window, &block)
+  end
+end
+
 class Proc
-  # Execute a block to update an animation before the next repaint.
+  # (see Browser::AnimationFrame.new)
   def animation_frame
     Browser::AnimationFrame.new($window, &self)
   end
