@@ -132,6 +132,13 @@ end
 
 end
 
+module Kernel
+  # (see Immediate.new)
+  def defer(*args, &block)
+    Browser::Immediate.new(block, args).tap(&:dispatch)
+  end
+end
+
 class Proc
   # (see Immediate.new)
   def defer(*args, &block)
