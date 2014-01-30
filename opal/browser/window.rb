@@ -1,6 +1,3 @@
-require 'browser/interval'
-require 'browser/delay'
-
 require 'browser/window/view'
 require 'browser/window/size'
 require 'browser/window/scroll'
