@@ -1,7 +1,22 @@
 module Browser
 
+# Allows you to wrap a block to use in an animation rendering cycle.
+#
+# @see https://developer.mozilla.org/en/docs/Web/API/window.requestAnimationFrame
 class AnimationFrame
+  def self.supported?
+    ['Animation.request',
+     'Animation.request (Chrome)',
+     'Animation.request (Firefox)',
+     'Animation.request (Opera)',
+     'Animation.request (Internet Explorer)'].any? {|feature|
+       Browser.supports? feature
+     }
+  end
+
   # Execute the block to update an animation before the next repaint.
+  #
+  # @param window [Window] the window to request the frame on
   def initialize(window, &block)
     @window = window
     @native = window.to_n
@@ -29,6 +44,7 @@ class AnimationFrame
       `#@native.msRequestAnimationFrame(#{block.to_n})`
     end
   else
+    # Request the animation frame.
     def request
       raise NotImplementedError, 'window requestAnimationFrame unsupported'
     end
@@ -71,6 +87,7 @@ class AnimationFrame
       `#@native.msCancelRequestAnimationFrame(#@id)`
     end
   else
+    # Cancel the animation frame request.
     def cancel
       raise NotImplementedError, 'window cancelAnimationFrame unsupported'
     end
