@@ -96,11 +96,15 @@ begin
   print "\r#{totals} in #{duration}"
 
   # no failures, happy times
-  unless totals =~ / 0 failures/
-    exit 1
+  if totals =~ / 0 failures/
+    exit 0
   end
 rescue Selenium::WebDriver::Error::TimeOutError
-  print "\rThe specs have timed out."
+  if element = browser['rspec-error'] rescue nil
+    print "\r#{element.text}"
+  else
+    print "\rThe specs have timed out."
+  end
 ensure
   # take a screenshot and upload it to imgur
   begin
@@ -116,3 +120,5 @@ ensure
     puts
   end
 end
+
+exit 1
