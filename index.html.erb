@@ -7,9 +7,7 @@
     window.onerror = function(msg, url, line) {
       var error = document.createElement("div");
           error.setAttribute("id", "rspec-error");
-          error.innerHTML  = "Error: " + msg + "<br/>";
-          error.innerHTML += "Line: " + line + "<br/>";
-          error.innerHTML += "URL: " + url + "<br/>";
+          error.appendChild(document.createTextNode(msg));
 
       document.body.appendChild(error);
     }
