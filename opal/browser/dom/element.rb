@@ -230,25 +230,15 @@ class Element < Node
 
   if Browser.supports? 'Query.css'
     def css(path)
-      %x{
-        try {
-          var result = #@native.querySelectorAll(path);
-
-          return #{NodeSet.new(document,
-            Native::Array.new(`result`))};
-        }
-        catch(e) {
-          return #{NodeSet.new(document)};
-        }
-      }
+      NodeSet.new(document, Native::Array.new(`#@native.querySelectorAll(path)`))
+    rescue
+      NodeSet.new(document)
     end
   elsif Browser.loaded? 'Sizzle'
     def css(path)
-      begin
-        NodeSet.new(document, `Sizzle(path, #@native)`)
-      rescue
-        NodeSet.new(document)
-      end
+      NodeSet.new(document, `Sizzle(path, #@native)`)
+    rescue
+      NodeSet.new(document)
     end
   else
     def css(selector)
@@ -262,18 +252,13 @@ class Element < Node
     end
 
     def xpath(path)
-      %x{
-        try {
-          var result = (#@native.ownerDocument || #@native).evaluate(path,
-            #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-
-          return #{NodeSet.new(document,
-            Native::Array.new(`result`, get: :snapshotItem, length: :snapshotLength))};
-        }
-        catch (e) {
-          return #{NodeSet.new(document)};
-        }
-      }
+      NodeSet.new(document, Native::Array.new(
+        `(#@native.ownerDocument || #@native).evaluate(path,
+           #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)`,
+        get:    :snapshotItem,
+        length: :snapshotLength))
+    rescue
+      NodeSet.new(document)
     end
   else
     def xpath(path)
