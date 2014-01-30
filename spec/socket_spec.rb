@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'browser/location'
 require 'browser/socket'
 
 describe Browser::Socket do
