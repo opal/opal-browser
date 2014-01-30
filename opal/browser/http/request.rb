@@ -3,18 +3,8 @@ module Browser; module HTTP
 class Request
   include Native
 
-  # Open and send a request.
-  #
-  # @param method [Symbol] the HTTP method to use
-  # @param url [String, #to_s] the URL to request
-  # @param parameters [String, Hash] the parameters to send
-  def self.open(method, url, parameters = nil, &block)
-    request = new(&block)
-    request.open(method, url)
-    request.send(*parameters)
-  end
-
-  DEFAULT_HEADERS = {
+  # Default headers.
+  HEADERS = {
     'X-Requested-With' => 'XMLHttpRequest',
     'X-Opal-Version'   => RUBY_ENGINE_VERSION,
     'Accept'           => 'text/javascript, text/html, application/xml, text/xml, */*'
@@ -45,7 +35,7 @@ class Request
 
     @parameters   = {}
     @query        = {}
-    @headers      = Headers[DEFAULT_HEADERS]
+    @headers      = Headers[HEADERS]
     @method       = :get
     @asynchronous = true
     @binary       = false
@@ -104,21 +94,13 @@ class Request
   end
 
   # Make the request asynchronous.
-  #
-  # @return [self]
   def asynchronous!
     @asynchronous = true
-
-    self
   end
 
   # Make the request synchronous.
-  #
-  # @return [self]
   def synchronous!
     @asynchronous = false
-
-    self
   end
 
   # Check the request is binary.
@@ -129,8 +111,6 @@ class Request
   # Make the request binary.
   def binary!
     @binary = true
-
-    self
   end
 
   # Check if the request is cacheable.
@@ -139,12 +119,8 @@ class Request
   end
 
   # Disable caching for this request.
-  #
-  # @return [self]
   def no_cache!
     @cacheable = false
-
-    self
   end
 
   # Get or set the user used for authentication.
@@ -213,13 +189,10 @@ class Request
   # Register an event on the request.
   #
   # @param what [Symbol, String] the event name
-  # @yield [response] yields the {Response}
   #
-  # @return [self]
+  # @yieldparam response [Response] the response for the event
   def on(what, &block)
     @callbacks[what] << block
-
-    self
   end
 
   # Open the request.
@@ -242,12 +215,15 @@ class Request
 
     url = @url
 
+    # add a dummy random parameter to the query to try circumvent caching
     unless cacheable?
       @query[:_] = rand
     end
 
+    # add the encoded query to the @url, prepending the right character if
+    # there was already a query in the defined @url or not
     unless @query.empty?
-      if url.include???
+      if url.include? ??
         url += ?&
       else
         url += ??
@@ -258,6 +234,8 @@ class Request
 
     `#@native.open(#{@method.to_s.upcase}, #{url.to_s}, #{@asynchronous}, #{@user.to_n}, #{@password.to_n})`
 
+    # if there are no registered callbacks no point in setting the event
+    # handler
     unless @callbacks.empty?
       `#@native.onreadystatechange = #{callback}`
     end
@@ -277,6 +255,8 @@ class Request
 
     raise 'the request has already been sent' if sent?
 
+    # try to circumvent caching setting an If-Modified-Since header with a very
+    # old date
     unless cacheable?
       `#@native.setRequestHeader("If-Modified-Since", "Tue, 11 Sep 2001 12:46:00 GMT")`
     end
@@ -327,17 +307,13 @@ class Request
   end
 
   # Abort the request.
-  #
-  # @return [self]
   def abort
     `#@native.abort()`
-
-    self
   end
 
 private
   def callback
-    proc {|event|
+    -> event {
       state = %w[uninitialized loading loaded interactive complete][`#@native.readyState`]
       res   = response
 
@@ -354,7 +330,7 @@ private
           @callbacks[:failure].each { |b| b.(res) }
         end
       end
-    }.to_n
+    }
   end
 end
 
