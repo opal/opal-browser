@@ -73,16 +73,16 @@ end
 
 end
 
-class Proc
-  # (see Browser::Window#every)
-  def every(time)
-    $window.every(time, &self)
-  end
-end
-
 module Kernel
   # (see Browser::Window#every)
   def every(time, &block)
     $window.every(time, &block)
+  end
+end
+
+class Proc
+  # (see Browser::Window#every)
+  def every(time)
+    $window.every(time, &self)
   end
 end
