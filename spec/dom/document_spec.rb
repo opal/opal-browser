@@ -37,4 +37,24 @@ describe Browser::DOM::Document do
       expect($document["doo-dah"]).to be_nil
     end
   end
+
+  describe "#ready" do
+    async "calls the block when the document is ready" do
+      $document.ready do
+        async {
+          expect(true).to be_truthy
+        }
+      end
+    end
+  end
+
+  describe "#ready?" do
+    async "is true inside a #ready block" do
+      $document.ready do
+        async {
+          expect($document.ready?).to be_truthy
+        }
+      end
+    end
+  end
 end
