@@ -82,33 +82,37 @@ rescue Selenium::WebDriver::Error::TimeOutError; end
 
 print "\rRunning specs..."
 
-# wait until the specs have finished, thus changing the content of #totals
-Selenium::WebDriver::Wait.new(timeout: 1200, interval: 30).until {
-  print '.'
-
-  not browser['totals'].text.strip.empty?
-}
-
-totals   = browser['totals'].text
-duration = browser[css: '#duration strong'].text
-
-print "\r#{totals} in #{duration}"
-
-# take a screenshot and upload it to imgur
 begin
-  browser.save_screenshot('screenshot.png')
-  response = RestClient.post('https://api.imgur.com/3/upload',
-    { image: File.open('screenshot.png') },
-    { 'Authorization' => 'Client-ID 1979876fe2a097e' })
+  # wait until the specs have finished, thus changing the content of #totals
+  Selenium::WebDriver::Wait.new(timeout: 1200, interval: 30).until {
+    print '.'
 
-  print " ("
-  print JSON.parse(response.to_str)['data']['link']
-  puts  ")"
-rescue Exception
-  puts
-end
+    not browser['totals'].text.strip.empty?
+  }
 
-# no failures, happy times
-unless totals =~ / 0 failures/
-  exit 1
+  totals   = browser['totals'].text
+  duration = browser[css: '#duration strong'].text
+
+  print "\r#{totals} in #{duration}"
+
+  # no failures, happy times
+  unless totals =~ / 0 failures/
+    exit 1
+  end
+rescue Selenium::WebDriver::Error::TimeOutError
+  print "\rThe specs have timed out."
+ensure
+  # take a screenshot and upload it to imgur
+  begin
+    browser.save_screenshot('screenshot.png')
+    response = RestClient.post('https://api.imgur.com/3/upload',
+      { image: File.open('screenshot.png') },
+      { 'Authorization' => 'Client-ID 1979876fe2a097e' })
+
+    print " ("
+    print JSON.parse(response.to_str)['data']['link']
+    puts  ")"
+  rescue Exception
+    puts
+  end
 end
