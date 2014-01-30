@@ -14,6 +14,8 @@ class Headers
   end
 
   # Create {Headers} from a hash.
+  #
+  # @param hash [Hash]
   def self.[](hash)
     result = new
 
@@ -36,9 +38,11 @@ class Headers
     @hash.clear
   end
 
-  # Iterate over the headers.
+  # Enumerate over the headers.
   #
-  # @yield [name, value] the header name and value
+  # @yieldparam name [String] the name of the header
+  # @yieldparam value [String] the value of the header
+  #
   # @return [self]
   def each(&block)
     return enum_for :each unless block
@@ -51,10 +55,18 @@ class Headers
   end
 
   # Get the value of a header.
+  #
+  # @param name [String] the name of the header
+  #
+  # @return value [String] the value of the header
   def [](name)
     @hash[name.downcase]
   end
 
+  # Set a value for the header.
+  #
+  # @param name [String] the name of the header
+  # @param value [String] the value of the header
   def []=(name, value)
     header = Header.new(name, value)
 
@@ -64,6 +76,7 @@ class Headers
   # Push a header.
   #
   # @param header [Header] the header to push
+  #
   # @return [self]
   def <<(header)
     @hash[header.name.downcase] = header
@@ -76,6 +89,7 @@ class Headers
   # Merge in place other headers.
   #
   # @param other [Headers, Hash, #each] the headers to merge
+  #
   # @return [self]
   def merge!(other)
     other.each {|name, value|
