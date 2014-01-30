@@ -45,16 +45,16 @@ end
 
 end
 
-class Proc
-  # (see Browser::Window#after)
-  def after(time)
-    $window.after(time, &self)
-  end
-end
-
 module Kernel
   # (see Browser::Window#after)
   def after(time, &block)
     $window.after(time, &block)
+  end
+end
+
+class Proc
+  # (see Browser::Window#after)
+  def after(time)
+    $window.after(time, &self)
   end
 end
