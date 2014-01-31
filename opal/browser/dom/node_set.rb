@@ -45,7 +45,7 @@ class NodeSet
   end
 
   def filter(expression)
-    NodeSet.new(document, @literal.select { |node| node.matches?(expression) })
+    NodeSet.new(document, @literal.select { |node| node =~ expression })
   end
 
   def after(node)

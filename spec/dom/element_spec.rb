@@ -28,7 +28,7 @@ describe Browser::DOM::Element do
     end
   end
 
-  describe '#matches?' do
+  describe '#=~' do
     html <<-HTML
       <div id="matches" class="not me">
         <span class="yes me"></span>
@@ -36,11 +36,11 @@ describe Browser::DOM::Element do
     HTML
 
     it 'matches on class and id' do
-      expect($document[:matches].matches?('#matches.not.me')).to be_truthy
+      expect($document[:matches] =~ '#matches.not.me').to be_truthy
     end
 
     it 'matches on class and name' do
-      expect($document[:matches].first_element_child.matches?('span.yes')).to be_truthy
+      expect($document[:matches].first_element_child =~ 'span.yes').to be_truthy
     end
   end
 end

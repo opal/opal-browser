@@ -45,15 +45,6 @@ class Node
     `#@native === #{Native.try_convert(other)}`
   end
 
-  # Return true if the node name matches the given name case-insensitively.
-  #
-  # @param name [String] the name to match with
-  #
-  # @return [Boolean]
-  def =~(name)
-    self.name.downcase == name.downcase
-  end
-
   # Append a child to the node.
   #
   # When passing a {String} a text node will be created.
@@ -143,9 +134,7 @@ class Node
     end
 
     if expression
-      parents.select! {|p|
-        p.matches? expression
-      }
+      parents.select! { |p| p =~ expression }
     end
 
     NodeSet.new document, parents
@@ -275,13 +264,6 @@ class Node
   # @return [Element?] the last element child
   def last_element_child
     element_children.last
-  end
-
-  # Check if the node matches the given CSS selector.
-  #
-  # @param expression [String] the CSS selector
-  def matches?(expression)
-    false
   end
 
   # @!attribute name

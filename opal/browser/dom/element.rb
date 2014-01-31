@@ -33,7 +33,35 @@ class Element < Node
     DOM(value) rescue nil
   }
 
-  alias_native :id
+  if Browser.supports? 'Element.matches'
+    def =~(selector)
+      `#@native.matches(#{selector})`
+    end
+  elsif Browser.supports? 'Element.matches (Opera)'
+    def =~(selector)
+      `#@native.oMatchesSelector(#{selector})`
+    end
+  elsif Browser.supports? 'Element.matches (Internet Explorer)'
+    def =~(selector)
+      `#@native.msMatchesSelector(#{selector})`
+    end
+  elsif Browser.supports? 'Element.matches (Firefox)'
+    def =~(selector)
+      `#@native.mozMatchesSelector(#{selector})`
+    end
+  elsif Browser.supports? 'Element.matches (Chrome)'
+    def =~(selector)
+      `#@native.webkitMatchesSelector(#{selector})`
+    end
+  elsif Browser.loaded? 'Sizzle'
+    def =~(selector)
+      `Sizzle.matchesSelector(#@native, #{selector})`
+    end
+  else
+    def =~(selector)
+      raise NotImplementedError, 'selector matching unsupported'
+    end
+  end
 
   def add_class(*names)
     classes = class_names + names
@@ -182,6 +210,8 @@ class Element < Node
     Scroll.new(self)
   end
 
+  alias_native :id
+
   def inner_dom(&block)
     # FIXME: when block passing is fixed
     doc = document
@@ -320,36 +350,6 @@ class Element < Node
           return value;
         }
       }
-    end
-  end
-
-  if Browser.supports? 'Element.matches'
-    def matches?(selector)
-      `#@native.matches(#{selector})`
-    end
-  elsif Browser.supports? 'Element.matches (Opera)'
-    def matches?(selector)
-      `#@native.oMatchesSelector(#{selector})`
-    end
-  elsif Browser.supports? 'Element.matches (Internet Explorer)'
-    def matches?(selector)
-      `#@native.msMatchesSelector(#{selector})`
-    end
-  elsif Browser.supports? 'Element.matches (Firefox)'
-    def matches?(selector)
-      `#@native.mozMatchesSelector(#{selector})`
-    end
-  elsif Browser.supports? 'Element.matches (Chrome)'
-    def matches?(selector)
-      `#@native.webkitMatchesSelector(#{selector})`
-    end
-  elsif Browser.loaded? 'Sizzle'
-    def matches?(selector)
-      `Sizzle.matchesSelector(#@native, #{selector})`
-    end
-  else
-    def matches?(selector)
-      raise NotImplementedError, 'selector matching unsupported'
     end
   end
 

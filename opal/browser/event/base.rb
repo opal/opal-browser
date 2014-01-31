@@ -356,7 +356,7 @@ class Event
       return if element.nil? || element == event.on
 
       delegates.handlers.each {|selector, block|
-        if element.matches? selector
+        if element =~ selector
           new    = event.dup
           new.on = element
 
