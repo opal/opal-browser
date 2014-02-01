@@ -46,7 +46,7 @@ module Kernel
       if roots.length == 1
         roots.first
       else
-        Browser::DOM::NodeSet.new(document, roots)
+        Browser::DOM::NodeSet.new(roots)
       end
     else
       what     = args.shift

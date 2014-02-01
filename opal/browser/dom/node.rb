@@ -121,7 +121,7 @@ class Node
   #
   # @return [NodeSet]
   def ancestors(expression = nil)
-    return NodeSet.new(document) unless parent
+    return NodeSet[] unless parent
 
     parents = [parent]
 
@@ -137,7 +137,7 @@ class Node
       parents.select! { |p| p =~ expression }
     end
 
-    NodeSet.new document, parents
+    NodeSet.new(parents)
   end
 
   alias before add_previous_sibling
@@ -198,7 +198,7 @@ class Node
   # @!attribute children
   # @return [NodeSet] the children of the node
   def children
-    NodeSet.new(document, Native::Array.new(`#@native.childNodes`))
+    NodeSet[Native::Array.new(`#@native.childNodes`)]
   end
 
   def children=(node)

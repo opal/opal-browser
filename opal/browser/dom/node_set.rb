@@ -1,27 +1,21 @@
 module Browser; module DOM
 
+# Allows manipulation of a set of {Node}s.
 class NodeSet
-  attr_reader :document
+  def self.[](*nodes)
+    new(nodes.flatten.map { |x| DOM(Native.convert(x)) })
+  end
 
-  def initialize(document, list = [])
-    @document = document
-    @literal  = []
-
-    list.each {|el|
-      if NodeSet === el
-        @literal.concat(el.to_a)
-      else
-        @literal.push DOM(Native.convert(el))
-      end
-    }
+  def initialize(array)
+    @array = array
   end
 
   def respond_to_missing?(name)
-    @literal.respond_to?(name)
+    @array.respond_to?(name)
   end
 
   def method_missing(name, *args, &block)
-    unless @literal.respond_to? name
+    unless @array.respond_to? name
       each {|el|
         el.__send__(name, *args, &block)
       }
@@ -29,23 +23,23 @@ class NodeSet
       return self
     end
 
-    result = @literal.__send__ name, *args, &block
+    result = @array.__send__ name, *args, &block
 
-    if `result === #@literal`
+    if `result === #@array`
       self
     elsif Array === result
-      NodeSet.new(@document, result)
+      NodeSet.new(result)
     else
       result
     end
   end
 
   def dup
-    NodeSet.new(document, to_ary.dup)
+    NodeSet.new(@array.dup)
   end
 
   def filter(expression)
-    NodeSet.new(document, @literal.select { |node| node =~ expression })
+    NodeSet.new(@array.select { |node| node =~ expression })
   end
 
   def after(node)
@@ -69,7 +63,7 @@ class NodeSet
   end
 
   def children
-    result = NodeSet.new(document)
+    result = NodeSet.new([])
 
     each { |n| result.concat(n.children) }
 
@@ -84,8 +78,14 @@ class NodeSet
     map { |n| n.search(*what) }.flatten.uniq
   end
 
+  def to_a
+    @array
+  end
+
+  alias to_ary to_a
+
   def inspect
-    "#<DOM::NodeSet: #{@literal.inspect[1 .. -2]}"
+    "#<DOM::NodeSet: #{@array.inspect[1 .. -2]}"
   end
 end
 

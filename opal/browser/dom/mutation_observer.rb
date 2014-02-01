@@ -49,7 +49,7 @@ class MutationObserver
         []
       end
 
-      NodeSet.new($document, array)
+      NodeSet[array]
     end
 
     # @!attribute [r] removed
@@ -61,7 +61,7 @@ class MutationObserver
         []
       end
 
-      NodeSet.new($document, array)
+      NodeSet[array]
     end
 
     # @!attribute [r] target

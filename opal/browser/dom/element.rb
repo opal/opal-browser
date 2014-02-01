@@ -253,22 +253,22 @@ class Element < Node
   end
 
   def search(*selectors)
-    NodeSet.new document, selectors.map {|selector|
+    NodeSet.new selectors.map {|selector|
       xpath(selector).to_a.concat(css(selector).to_a)
     }.flatten.uniq
   end
 
   if Browser.supports? 'Query.css'
     def css(path)
-      NodeSet.new(document, Native::Array.new(`#@native.querySelectorAll(path)`))
+      NodeSet[Native::Array.new(`#@native.querySelectorAll(path)`)]
     rescue
-      NodeSet.new(document)
+      NodeSet[]
     end
   elsif Browser.loaded? 'Sizzle'
     def css(path)
-      NodeSet.new(document, `Sizzle(path, #@native)`)
+      NodeSet.new(`Sizzle(path, #@native)`)
     rescue
-      NodeSet.new(document)
+      NodeSet[]
     end
   else
     def css(selector)
@@ -282,13 +282,13 @@ class Element < Node
     end
 
     def xpath(path)
-      NodeSet.new(document, Native::Array.new(
+      NodeSet[Native::Array.new(
         `(#@native.ownerDocument || #@native).evaluate(path,
            #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)`,
         get:    :snapshotItem,
-        length: :snapshotLength))
+        length: :snapshotLength)]
     rescue
-      NodeSet.new(document)
+      NodeSet[]
     end
   else
     def xpath(path)
