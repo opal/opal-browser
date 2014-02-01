@@ -266,7 +266,7 @@ class Element < Node
     end
   elsif Browser.loaded? 'Sizzle'
     def css(path)
-      NodeSet.new(`Sizzle(path, #@native)`)
+      NodeSet[`Sizzle(path, #@native)`.map { |x| Native(x) }]
     rescue
       NodeSet[]
     end
