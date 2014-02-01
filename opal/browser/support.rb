@@ -67,6 +67,9 @@ module Browser
         defined?(`document.documentElement.currentStyle`)
 
       when 'Window.send'
+        defined?(`window.postMessage`)
+
+      when 'Window.send (Asynchronous)'
         if defined?(`window.postMessage`) && !defined?(`window.importScripts`)
           %x{
             var ok  = true,
@@ -75,10 +78,13 @@ module Browser
             window.onmessage = function() { ok = false; };
             window.postMessage("", "*")
             window.onmessage = old;
-          }
 
-          `ok`
+            return ok;
+          }
         end
+
+      when 'Window.send (Synchronous)'
+        !supports?('Window.send (Asynchronous)')
 
       when 'Window.innerSize'
         defined?(`window.innerHeight`)

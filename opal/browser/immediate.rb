@@ -58,7 +58,7 @@ class Immediate
     def prevent
       `window.msClearImmediate(#@id)`
     end
-  elsif Browser.supports? 'Window.send'
+  elsif Browser.supports? 'Window.send (Asynchronous)'
     # @private
     @@tasks  = {}
 
@@ -77,7 +77,7 @@ class Immediate
       @id          = rand(1_000_000).to_s
       @@tasks[@id] = [@function, @arguments, @block]
 
-      $window.send! "#{@@prefix}#{@id}"
+      $window.send "#{@@prefix}#{@id}"
     end
 
     def prevent

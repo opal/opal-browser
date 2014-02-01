@@ -75,12 +75,18 @@ class Window
     Scroll.new(self)
   end
 
-  # Send a message to the window.
-  #
-  # @param message [String] the message
-  # @param options [Hash] optional `to: target`
-  def send!(message, options = {})
-    `#@native.postMessage(#{message}, #{options[:to] || '*'})`
+  if Browser.supports? 'Window.send'
+    def send(message, options = {})
+      `#@native.postMessage(#{message}, #{options[:to] || '*'})`
+    end
+  else
+    # Send a message to the window.
+    #
+    # @param message [String] the message
+    # @param options [Hash] optional `to: target`
+    def send(message, options = {})
+      raise NotImplementedError, 'message sending unsupported'
+    end
   end
 
   def close
