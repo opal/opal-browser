@@ -79,10 +79,12 @@ class NodeSet
   end
 
   def to_a
-    @array
+    @array.dup
   end
 
-  alias to_ary to_a
+  def to_ary
+    self
+  end
 
   def inspect
     "#<DOM::NodeSet: #{@array.inspect[1 .. -2]}"
