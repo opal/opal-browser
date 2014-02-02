@@ -68,6 +68,23 @@ describe Browser::DOM::Element do
     end
   end
 
+  describe '#inner_dom' do
+    html <<-HTML
+      <div id="lol">
+        <div id="wut"></div>
+      </div>
+    HTML
+
+    it 'builds the DOM and inserts it' do
+      $document["lol"].inner_dom {
+        div.omg!
+      }
+
+      expect($document["#lol #omg"]).to be_truthy
+      expect($document["#lol #wut"]).to be_falsy
+    end
+  end
+
   describe '#inspect' do
     it 'uses the node name' do
       el = $document.create_element('div')

@@ -228,15 +228,19 @@ class Element < Node
   end
 
   def inner_dom(&block)
+    clear
+
     # FIXME: when block passing is fixed
     doc = document
-    clear; Builder.new(doc, self, &block)
+    Builder.new(doc, self, &block)
 
     self
   end
 
   def inner_dom=(node)
-    clear; self << node
+    clear
+
+    self << node
   end
 
   def /(*paths)
