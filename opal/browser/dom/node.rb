@@ -149,7 +149,7 @@ class Node
 
   # Remove all the children of the node.
   def clear
-    children.each(&:remove)
+    children.remove
   end
 
   # @!attribute content
