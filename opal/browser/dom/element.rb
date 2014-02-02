@@ -372,7 +372,17 @@ class Element < Node
   end
 
   def inspect
-    "#<DOM::Element: #{name}>"
+    inspect = name.downcase
+
+    if id
+      inspect += '.' + id + '!'
+    end
+
+    unless class_names.empty?
+      inspect += '.' + class_names.join('.')
+    end
+
+    "#<DOM::Element: #{inspect}>"
   end
 
   class Attributes
