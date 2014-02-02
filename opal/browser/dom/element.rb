@@ -210,7 +210,20 @@ class Element < Node
     Scroll.new(self)
   end
 
-  alias_native :id
+  def id
+    %x{
+      var id = #@native.id;
+
+      if (id === "") {
+        return nil;
+      }
+      else {
+        return id;
+      }
+    }
+  end
+
+  alias_native :id=
 
   def inner_dom(&block)
     # FIXME: when block passing is fixed
