@@ -3,11 +3,35 @@ require 'spec_helper'
 describe Browser::DOM::Element do
   describe '#id' do
     html <<-HTML
-      <div id="lol"></div>
+      <div id="lol"><div class="wut"></div></div>
     HTML
 
     it 'gets the proper id' do
       expect($document["lol"].id).to eq('lol')
+    end
+
+    it 'returns nil when there is no id' do
+      expect($document["#lol .wut"].id).to be_nil
+    end
+  end
+
+  describe '#id=' do
+    html <<-HTML
+      <div id="lol"></div>
+    HTML
+
+    it 'sets the id' do
+      el = $document["lol"]
+      el.id = 'wut'
+
+      expect(el.id).to eq('wut')
+    end
+
+    it 'removes the id when the value is nil' do
+      el = $document["lol"]
+      el.id = nil
+
+      expect(el.id).to be_nil
     end
   end
 
@@ -41,6 +65,36 @@ describe Browser::DOM::Element do
 
     it 'matches on class and name' do
       expect($document[:matches].first_element_child =~ 'span.yes').to be_truthy
+    end
+  end
+
+  describe '#inspect' do
+    it 'uses the node name' do
+      el = $document.create_element('div')
+
+      expect(el.inspect).to match(/: div>/)
+    end
+
+    it 'uses the id' do
+      el = $document.create_element('div')
+      el.id = 'lol'
+
+      expect(el.inspect).to match(/: div.lol!>/)
+    end
+
+    it 'uses the classes' do
+      el = $document.create_element('div')
+      el.add_class 'lol', 'wut'
+
+      expect(el.inspect).to match(/: div.lol.wut>/)
+    end
+
+    it 'uses the id and the classes' do
+      el = $document.create_element('div')
+      el.id = 'omg'
+      el.add_class 'lol', 'wut'
+
+      expect(el.inspect).to match(/: div.omg!.lol.wut>/)
     end
   end
 end
