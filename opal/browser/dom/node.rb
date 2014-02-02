@@ -42,7 +42,7 @@ class Node
   #
   # @return [Boolean]
   def ==(other)
-    `#@native === #{Native.try_convert(other)}`
+    `#@native === #{Native.convert(other)}`
   end
 
   # Append a child to the node.
