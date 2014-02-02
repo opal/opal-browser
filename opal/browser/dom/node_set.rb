@@ -45,12 +45,6 @@ class NodeSet
     @literal.select { |node| node =~ expression }
   end
 
-  # @!attribute [r] children
-  # @return [NodeSet] recursively collected children of the nodes in the set
-  def children
-    map(&:children).flatten
-  end
-
   # Search for multiple selectors
   def search(*what)
     map { |n| n.search(*what) }.flatten.uniq
