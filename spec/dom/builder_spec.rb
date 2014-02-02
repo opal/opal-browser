@@ -74,4 +74,13 @@ describe Browser::DOM::Builder do
     expect(res.name).to eq('I')
     expect(res.class_names).to eq(%w[icon-legal])
   end
+
+  it 'sets the id' do
+    res = DOM {
+      div.omg!
+    }
+
+    expect(res.name).to eq('DIV')
+    expect(res.id).to eq('omg')
+  end
 end
