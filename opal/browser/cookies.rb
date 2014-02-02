@@ -43,17 +43,15 @@ class Cookies
 
   # Set a cookie.
   #
-  # Options
-  # -------
-  # + **max_age** - the max age of the cookie in seconds
-  # + **expires** - the expire date as {Time}
-  # + **path** - the path where the cookie is valid on
-  # + **domain** - the domain where the cookie is valid on
-  # + **secure** - whether the cookie is secure or not
-  #
   # @param name [String] the name of the cookie
   # @param value [Object] the data to set
   # @param options [Hash] the options for the cookie
+  #
+  # @option options [Integer] :max_age the max age of the cookie in seconds
+  # @option options [Time]    :expires the expire date
+  # @option options [String]  :path    the path the cookie is valid on
+  # @option options [String]  :domain  the domain the cookie is valid on
+  # @option options [Boolean] :secure  whether the cookie is secure or not
   def []=(name, value, options = {})
     `#@document.cookie = #{encode name, value.is_a?(String) ? value : JSON.dump(value), @options.merge(options)}`
   end
