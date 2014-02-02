@@ -223,7 +223,9 @@ class Element < Node
     }
   end
 
-  alias_native :id=
+  def id=(value)
+    `#@native.id = #{value.to_s}`
+  end
 
   def inner_dom(&block)
     # FIXME: when block passing is fixed
