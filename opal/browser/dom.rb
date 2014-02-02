@@ -39,9 +39,7 @@ module Kernel
   def DOM(*args, &block)
     if block
       document = args.shift || $document
-      element  = args.shift
-
-      roots = Browser::DOM::Builder.new(document, element, &block).to_a
+      roots    = Browser::DOM::Builder.new(document, &block).to_a
 
       if roots.length == 1
         roots.first
