@@ -232,9 +232,8 @@ class Element < Node
 
     # FIXME: when block passing is fixed
     doc = document
-    Builder.new(doc, self, &block)
 
-    self
+    self << Builder.new(doc, self, &block).to_a
   end
 
   def inner_dom=(node)
