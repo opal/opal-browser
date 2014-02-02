@@ -321,7 +321,7 @@ class Node
   end
 
   def parent=(node)
-    `#@native.parentNode = #{Native.try_convert(node)}`
+    `#@native.parentNode = #{Native.convert(node)}`
   end
 
   def parse(text, options = {})
