@@ -117,6 +117,22 @@ module Browser
           return div.className === 'x';
         }
 
+      when 'Element.for'
+        %x{
+          var div = document.createElement("div");
+              div.setAttribute('for', 'x');
+
+          return div.htmlFor === 'x';
+        }
+
+      when 'Element.htmlFor'
+        %x{
+          var div = document.createElement("div");
+              div.setAttribute('htmlFor', 'x');
+
+          return div.htmlFor === 'x';
+        }
+
       when 'Element.clientSize'
         defined?(`document.documentElement.clientHeight`)
 
