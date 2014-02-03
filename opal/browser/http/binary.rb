@@ -24,6 +24,7 @@ class Binary
   # Iterate over each byte in the binary.
   #
   # @yield [byte] the byte
+  #
   # @return [self]
   def each(&block)
     return enum_for :each unless block
