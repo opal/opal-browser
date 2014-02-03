@@ -41,8 +41,8 @@ describe Browser::DOM::Element::Attributes do
 
   describe '#each' do
     it 'enumerates over the attributes' do
-      expect($document[:lol].attributes.to_a).to eq \
-        [[:id, :lol], [:class, :name], [:for, :hue]]
+      expect($document[:lol].attributes.to_a.sort).to eq \
+        [[:class, :name], [:for, :hue], [:id, :lol]]
     end
   end
 end
