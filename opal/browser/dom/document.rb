@@ -65,6 +65,8 @@ class Document < Element
 
   if Browser.supports? 'Event.addListener'
     def ready(&block)
+      raise ArgumentError, 'no block given' unless block
+
       return block.call if ready?
 
       on 'dom:load' do |e|
@@ -75,6 +77,8 @@ class Document < Element
     end
   elsif Browser.supports? 'Event.attach'
     def ready(&block)
+      raise ArgumentError, 'no block given' unless block
+
       return block.call if ready?
 
       on 'ready:state:change' do |e|
