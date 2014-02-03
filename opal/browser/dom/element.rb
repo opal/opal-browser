@@ -1,3 +1,5 @@
+require 'browser/dom/element/attributes'
+require 'browser/dom/element/data'
 require 'browser/dom/element/position'
 require 'browser/dom/element/offset'
 require 'browser/dom/element/scroll'
@@ -58,11 +60,51 @@ class Element < Node
       `Sizzle.matchesSelector(#@native, #{selector})`
     end
   else
+    # Check whether the element matches the given selector.
+    #
+    # @param selector [String] the CSS selector
     def =~(selector)
       raise NotImplementedError, 'selector matching unsupported'
     end
   end
 
+  # Query for children with the given XPpaths.
+  #
+  # @param paths [Array<String>] the XPaths to look for
+  #
+  # @return [NodeSet]
+  def /(*paths)
+    NodeSet[paths.map { |path| xpath(path) }]
+  end
+
+  # Get the attribute with the given name.
+  #
+  # @param name [String] the attribute name
+  # @param options [Hash] options for the attribute
+  #
+  # @option options [String] :namespace the namespace for the attribute
+  #
+  # @return [String?]
+  def [](name, options = {})
+    attributes.get(name, options)
+  end
+
+  # Set the attribute with the given name and value.
+  #
+  # @param name [String] the attribute name
+  # @param value [Object] the attribute value
+  # @param options [Hash] the options for the attribute
+  #
+  # @option options [String] :namespace the namespace for the attribute
+  def []=(name, value, options = {})
+    attributes.set(name, value, options)
+  end
+
+  # Add class names to the element.
+  #
+  # @param names [Array<String>] class names to add
+  #
+  # @return [self]
   def add_class(*names)
     classes = class_names + names
 
@@ -73,105 +115,119 @@ class Element < Node
     self
   end
 
-  def remove_class(*names)
-    classes = class_names - names
+  # Get the first node that matches the given CSS selector or XPath.
+  #
+  # @param path_or_selector [String] an XPath or CSS selector
+  #
+  # @return [Node?]
+  def at(path_or_selector)
+    xpath(path_or_selector).first || css(path_or_selector).first
+  end
 
-    if classes.empty?
-      `#@native.removeAttribute('class')`
+  # Get the first node matching the given CSS selectors.
+  #
+  # @param rules [Array<String>] the CSS selectors to match with
+  #
+  # @return [Node?]
+  def at_css(*rules)
+    rules.find_value {|rule|
+      css(rule).first
+    }
+  end
+
+  # Get the first node matching the given XPath.
+  #
+  # @param paths [Array<String>] the XPath to match with
+  #
+  # @return [Node?]
+  def at_xpath(*paths)
+    paths.find_value {|path|
+      xpath(path).first
+    }
+  end
+
+  alias attr []
+
+  alias attribute []
+
+  # @!attribute [r] attributes
+  # @return [Attributes] the attributes for the element
+  def attributes(options = {})
+    Attributes.new(self, options)
+  end
+
+  # @!attribute [r] attribute_nodes
+  # @return [NodeSet] the attribute nodes for the element
+  def attribute_nodes
+    NodeSet[Native::Array.new(`#@native.attributes`, get: :item)]
+  end
+
+  # @!attribute [r] class_name
+  # @return [String] all the element class names
+  alias_native :class_name, :className
+
+  # @!attribute [r] class_names
+  # @return [Array<String>] all the element class names
+  def class_names
+    `#@native.className`.split(/\s+/).reject(&:empty?)
+  end
+
+  if Browser.supports? 'Query.css'
+    def css(path)
+      NodeSet[Native::Array.new(`#@native.querySelectorAll(path)`)]
+    rescue
+      NodeSet[]
+    end
+  elsif Browser.loaded? 'Sizzle'
+    def css(path)
+      NodeSet[`Sizzle(path, #@native)`]
+    rescue
+      NodeSet[]
+    end
+  else
+    # Query for children matching the given CSS selector.
+    #
+    # @param selector [String] the CSS selector
+    #
+    # @return [NodeSet]
+    def css(selector)
+      raise NotImplementedError, 'query by CSS selector unsupported'
+    end
+  end
+
+  # @overload data()
+  #
+  #   Return the data for the element.
+  #
+  #   @return [Data]
+  #
+  # @overload data(hash)
+  #
+  #   Set data on the element.
+  #
+  #   @param hash [Hash] the data to set
+  #
+  #   @return [self]
+  def data(data = nil)
+    data = Data.new(self)
+
+    return data unless data
+
+    if Hash === data
+      data.assign(data)
     else
-      `#@native.className = #{classes.join ' '}`
+      raise ArgumentError, 'unknown data type'
     end
 
     self
   end
 
-  alias_native :class_name, :className
+  alias get_attribute []
 
-  def class_names
-    `#@native.className`.split(/\s+/).reject(&:empty?)
-  end
+  alias get []
 
-  alias attribute attr
-
-  def attribute_nodes
-    Native::Array.new(`#@native.attributes`, get: :item) { |e| DOM(e) }
-  end
-
-  def attributes(options = {})
-    Attributes.new(self, options)
-  end
-
-  if Browser.supports? 'Element.className'
-    def get(name, options = {})
-      if name == :class
-        name = :className
-      end
-
-      if namespace = options[:namespace]
-        `#@native.getAttributeNS(#{namespace.to_s}, #{name.to_s}) || nil`
-      else
-        `#@native.getAttribute(#{name.to_s}) || nil`
-      end
-    end
-
-    def set(name, value, options = {})
-      if name == :class
-        name = :className
-      end
-
-      if namespace = options[:namespace]
-        `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
-      else
-        `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
-      end
-    end
-  else
-    def get(name, options = {})
-      if namespace = options[:namespace]
-        `#@native.getAttributeNS(#{namespace.to_s}, #{name.to_s}) || nil`
-      else
-        `#@native.getAttribute(#{name.to_s}) || nil`
-      end
-    end
-
-    def set(name, value, options = {})
-      if namespace = options[:namespace]
-        `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
-      else
-        `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
-      end
-    end
-  end
-
-  alias [] get
-  alias []= set
-
-  alias attr get
-  alias attribute get
-
-  alias get_attribute get
-  alias set_attribute set
-
-  def key?(name)
-    !!self[name]
-  end
-
-  def keys
-    attributes_nodesmap(&:name)
-  end
-
-  def values
-    attribute_nodes.map(&:value)
-  end
-
-  def remove_attribute(name)
-    `#@native.removeAttribute(name)`
-  end
-
-  def size(*inc)
-    Size.new(self, *inc)
-  end
-
+  # @!attribute height
+  # @return [Integer] the height of the element
   def height
     size.height
   end
@@ -180,36 +236,8 @@ class Element < Node
     size.height = value
   end
 
-  def width
-    size.width
-  end
-
-  def width=(value)
-    size.width = value
-  end
-
-  def position
-    Position.new(self)
-  end
-
-  def offset(*values)
-    off = Offset.new(self)
-
-    unless values.empty?
-      off.set(*values)
-    end
-
-    off
-  end
-
-  def offset=(value)
-    offset.set(*value)
-  end
-
-  def scroll
-    Scroll.new(self)
-  end
-
+  # @!attribute id
+  # @return [String?] the ID of the element
   def id
     %x{
       var id = #@native.id;
@@ -227,6 +255,7 @@ class Element < Node
     `#@native.id = #{value.to_s}`
   end
 
+  # Set the inner DOM of the element using the {Builder}.
   def inner_dom(&block)
     clear
 
@@ -236,62 +265,169 @@ class Element < Node
     self << Builder.new(doc, self, &block).to_a
   end
 
+  # Set the inner DOM with the given node.
+  #
+  # (see #append_child)
   def inner_dom=(node)
     clear
 
     self << node
   end
 
-  def /(*paths)
-    paths.map { |path| xpath(path) }.flatten.uniq
+  def inspect
+    inspect = name.downcase
+
+    if id
+      inspect += '.' + id + '!'
+    end
+
+    unless class_names.empty?
+      inspect += '.' + class_names.join('.')
+    end
+
+    "#<DOM::Element: #{inspect}>"
   end
 
-  def at(path)
-    xpath(path).first || css(path).first
+  # @!attribute offset
+  # @return [Offset] the offset of the element
+  def offset(*values)
+    off = Offset.new(self)
+
+    unless values.empty?
+      off.set(*values)
+    end
+
+    off
   end
 
-  def at_css(*rules)
-    rules.each {|rule|
-      found = css(rule).first
-
-      return found if found
-    }
-
-    nil
+  def offset=(value)
+    offset.set(*value)
   end
 
-  def at_xpath(*paths)
-    paths.each {|path|
-      found = xpath(path).first
-
-      return found if found
-    }
-
-    nil
+  # @!attribute [r] position
+  # @return [Position] the position of the element
+  def position
+    Position.new(self)
   end
 
+  # @!attribute [r] scroll
+  # @return [Scroll] the scrolling for the element
+  def scroll
+    Scroll.new(self)
+  end
+
+  # Search for all the children matching the given XPaths or CSS selectors.
+  #
+  # @param selectors [Array<String>] mixed list of XPaths and CSS selectors
+  #
+  # @return [NodeSet]
   def search(*selectors)
     NodeSet.new selectors.map {|selector|
       xpath(selector).to_a.concat(css(selector).to_a)
     }.flatten.uniq
   end
 
-  if Browser.supports? 'Query.css'
-    def css(path)
-      NodeSet[Native::Array.new(`#@native.querySelectorAll(path)`)]
-    rescue
-      NodeSet[]
+  alias set []=
+
+  alias set_attribute []=
+
+  # @overload style()
+  #
+  #   Return the style for the element.
+  #
+  #   @return [CSS::Declaration]
+  #
+  # @overload style(data)
+  #
+  #   Set the CSS style as string or set of values.
+  #
+  #   @param data [String, Hash] the new style
+  #
+  #   @return [self]
+  #
+  # @overload style(&block)
+  #
+  #   Set the CSS style from a CSS builder DSL.
+  #
+  #   @return [self]
+  def style(data = nil, &block)
+    style = CSS::Declaration.new(`#@native.style`)
+
+    return style unless data || block
+
+    if String === data
+      style.replace(data)
+    elsif Hash === data
+      style.assign(data)
+    elsif block
+      style.apply(&block)
+    else
+      raise ArgumentError, 'unknown data type'
     end
-  elsif Browser.loaded? 'Sizzle'
-    def css(path)
-      NodeSet[`Sizzle(path, #@native)`]
-    rescue
-      NodeSet[]
+
+    self
+  end
+
+  if Browser.supports? 'CSS.computed'
+    def style!
+      CSS::Declaration.new(`#{window.to_n}.getComputedStyle(#@native, null)`)
+    end
+  elsif Browser.supports? 'CSS.current'
+    def style!
+      CSS::Declaration.new(`#@native.currentStyle`)
     end
   else
-    def css(selector)
-      raise NotImplementedError, 'query by CSS selector unsupported'
+    # @!attribute [r] style!
+    # @return [CSS::Declaration] get the computed style for the element
+    def style!
+      raise NotImplementedError, 'computed style unsupported'
     end
+  end
+
+  # Remove an attribute from the element.
+  #
+  # @param name [String] the attribute name
+  def remove_attribute(name)
+    `#@native.removeAttribute(name)`
+  end
+
+  # Remove class names from the element.
+  #
+  # @param names [Array<String>] class names to remove
+  #
+  # @return [self]
+  def remove_class(*names)
+    classes = class_names - names
+
+    if classes.empty?
+      `#@native.removeAttribute('class')`
+    else
+      `#@native.className = #{classes.join ' '}`
+    end
+
+    self
+  end
+
+  # @!attribute [r] size
+  # @return [Size] the size of the element
+  def size(*inc)
+    Size.new(self, *inc)
+  end
+
+  # @!attribute width
+  # @return [Integer] the width of the element
+  def width
+    size.width
+  end
+
+  def width=(value)
+    size.width = value
+  end
+
+  # @!attribute [r] window
+  # @return [Window] the window for the element
+  def window
+    document.window
   end
 
   if Browser.supports?('Query.xpath') || Browser.loaded?('wicked-good-xpath')
@@ -309,121 +445,13 @@ class Element < Node
       NodeSet[]
     end
   else
+    # Query for children matching the given XPath.
+    #
+    # @param path [String] the XPath
+    #
+    # @return [NodeSet]
     def xpath(path)
       raise NotImplementedError, 'query by XPath unsupported'
-    end
-  end
-
-  def style(data = nil, &block)
-    style = CSS::Declaration.new(`#@native.style`)
-
-    return style unless data || block
-
-    if data.is_a?(String)
-      style.replace(data)
-    elsif data.is_a?(Enumerable)
-      style.assign(data)
-    elsif block
-      style.apply(&block)
-    end
-
-    self
-  end
-
-  if Browser.supports? 'CSS.computed'
-    def style!
-      CSS::Declaration.new(`#{window.to_n}.getComputedStyle(#@native, null)`)
-    end
-  elsif Browser.supports? 'CSS.current'
-    def style!
-      CSS::Declaration.new(`#@native.currentStyle`)
-    end
-  else
-    def style!
-      raise NotImplementedError, 'computed style unsupported'
-    end
-  end
-
-  def data(what)
-    if Hash === what
-      unless defined?(`#@native.$data`)
-        `#@native.$data = {}`
-      end
-
-      what.each {|name, value|
-        `#@native.$data[name] = value`
-      }
-    else
-      return self["data-#{what}"] if self["data-#{what}"]
-
-      return unless defined?(`#@native.$data`)
-
-      %x{
-        var value = #@native.$data[what];
-
-        if (value === undefined) {
-          return nil;
-        }
-        else {
-          return value;
-        }
-      }
-    end
-  end
-
-  # @abstract
-  def window
-    document.window
-  end
-
-  def inspect
-    inspect = name.downcase
-
-    if id
-      inspect += '.' + id + '!'
-    end
-
-    unless class_names.empty?
-      inspect += '.' + class_names.join('.')
-    end
-
-    "#<DOM::Element: #{inspect}>"
-  end
-
-  class Attributes
-    include Enumerable
-
-    attr_reader :namespace
-
-    def initialize(element, options)
-      @element   = element
-      @namespace = options[:namespace]
-    end
-
-    def each(&block)
-      return enum_for :each unless block_given?
-
-      @element.attribute_nodes.each {|attr|
-        yield attr.name, attr.value
-      }
-
-      self
-    end
-
-    def [](name)
-      @element.get_attribute(name, namespace: @namespace)
-    end
-
-    def []=(name, value)
-      @element.set_attribute(name, value, namespace: @namespace)
-    end
-
-    def merge!(hash)
-      hash.each {|name, value|
-        self[name] = value
-      }
-
-      self
     end
   end
 end

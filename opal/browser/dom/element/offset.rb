@@ -1,6 +1,8 @@
 module Browser; module DOM; class Element < Node
 
 class Offset
+  attr_reader :element
+
   def initialize(element)
     @element = element
     @native  = element.to_n
