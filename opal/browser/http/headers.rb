@@ -58,7 +58,7 @@ class Headers
   #
   # @param name [String] the name of the header
   #
-  # @return value [String] the value of the header
+  # @return [String] the value of the header
   def [](name)
     @hash[name.downcase]
   end
