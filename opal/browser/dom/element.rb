@@ -7,6 +7,7 @@ require 'browser/dom/element/size'
 
 require 'browser/dom/element/input'
 require 'browser/dom/element/image'
+require 'browser/dom/element/template'
 
 module Browser; module DOM
 
