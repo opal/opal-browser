@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Browser::DOM::Element::Attributes do
   html <<-HTML
-    <div id="lol" class="name" for="hue"></div>
+    <label id="lol" class="name" for="hue"></div>
   HTML
 
   describe '#[]' do
@@ -41,7 +41,11 @@ describe Browser::DOM::Element::Attributes do
 
   describe '#each' do
     it 'enumerates over the attributes' do
-      expect($document[:lol].attributes.to_a.sort).to eq \
+      attributes = $document[:lol].attributes.select {|name, _|
+        %w[class for id].include?(name)
+      }
+
+      expect(attributes.sort).to eq \
         [[:class, :name], [:for, :hue], [:id, :lol]]
     end
   end
