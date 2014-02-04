@@ -29,10 +29,10 @@ cap['browserstack.tunnelIdentifier'] = ENV['TRAVIS_JOB_ID']
 cap['browserstack.tunnel']           = 'true'
 cap['browserstack.debug']            = 'false'
 
-cap['databaseEnabled']          = true
-cap['browserConnectionEnabled'] = true
-cap['locationContextEnabled']   = true
-cap['webStorageEnabled']        = true
+cap['databaseEnabled']          = 'true'
+cap['browserConnectionEnabled'] = 'true'
+cap['locationContextEnabled']   = 'true'
+cap['webStorageEnabled']        = 'true'
 
 print 'Loading...'
 
