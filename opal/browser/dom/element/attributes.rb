@@ -1,14 +1,14 @@
 module Browser; module DOM; class Element < Node
 
 class Attributes
-  @@normalize = {}
+  @@normalize = `{}`
 
   if Browser.supports? 'Element.className'
-    @@normalize[:class] = :className
+    `#@@normalize['class'] = 'className'`
   end
 
   if Browser.supports? 'Element.htmlFor'
-    @@normalize[:for] = :htmlFor
+    `#@@normalize['for'] = 'htmlFor'`
   end
 
   attr_reader :namespace
@@ -20,7 +20,7 @@ class Attributes
   end
 
   def [](name, options = {})
-    name = @@normalize[name] || name
+    name = `#@@normalize[name] || name`
 
     if namespace = options[:namespace] || @namespace
       `#@native.getAttributeNS(#{namespace.to_s}, #{name.to_s}) || nil`
@@ -30,7 +30,7 @@ class Attributes
   end
 
   def []=(name, value, options = {})
-    name = @@normalize[name] || name
+    name = `#@@normalize[name] || name`
 
     if namespace = options[:namespace] || @namespace
       `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`

@@ -122,7 +122,7 @@ module Browser
 
       when 'Element.for'
         %x{
-          var div = document.createElement("div");
+          var div = document.createElement("label");
               div.setAttribute('for', 'x');
 
           return div.htmlFor === 'x';
@@ -130,7 +130,7 @@ module Browser
 
       when 'Element.htmlFor'
         %x{
-          var div = document.createElement("div");
+          var div = document.createElement("label");
               div.setAttribute('htmlFor', 'x');
 
           return div.htmlFor === 'x';
