@@ -122,18 +122,18 @@ module Browser
 
       when 'Element.for'
         %x{
-          var div = document.createElement("label");
-              div.setAttribute('for', 'x');
+          var label = document.createElement("label");
+              label.setAttribute('for', 'x');
 
-          return div.htmlFor === 'x';
+          return label.htmlFor === 'x';
         }
 
       when 'Element.htmlFor'
         %x{
-          var div = document.createElement("label");
-              div.setAttribute('htmlFor', 'x');
+          var label = document.createElement("label");
+              label.setAttribute('htmlFor', 'x');
 
-          return div.htmlFor === 'x';
+          return label.htmlFor === 'x';
         }
 
       when 'Element.clientSize'
