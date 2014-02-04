@@ -1,16 +1,6 @@
 module Browser; module DOM; class Element < Node
 
 class Attributes
-  @@normalize = `{}`
-
-  if Browser.supports? 'Element.className'
-    `#@@normalize['class'] = 'className'`
-  end
-
-  if Browser.supports? 'Element.htmlFor'
-    `#@@normalize['for'] = 'htmlFor'`
-  end
-
   attr_reader :namespace
 
   def initialize(element, options)
@@ -19,23 +9,49 @@ class Attributes
     @namespace = options[:namespace]
   end
 
-  def [](name, options = {})
-    name = `#@@normalize[name] || name`
+  if Browser.supports?('Element.className') || Browser.supports?('Element.htmlFor')
+    def [](name, options = {})
+      if name == :class && Browser.supports?('Element.className')
+        name = :className
+      elsif name == :for && Browser.supports?('Element.htmlFor')
+        name = :htmlFor
+      end
 
-    if namespace = options[:namespace] || @namespace
-      `#@native.getAttributeNS(#{namespace.to_s}, #{name.to_s}) || nil`
-    else
-      `#@native.getAttribute(#{name.to_s}) || nil`
+      if namespace = options[:namespace] || @namespace
+        `#@native.getAttributeNS(#{namespace.to_s}, #{name.to_s}) || nil`
+      else
+        `#@native.getAttribute(#{name.to_s}) || nil`
+      end
     end
-  end
 
-  def []=(name, value, options = {})
-    name = `#@@normalize[name] || name`
+    def []=(name, value, options = {})
+      if name == :class && Browser.supports?('Element.className')
+        name = :className
+      elsif name == :for && Browser.supports?('Element.htmlFor')
+        name = :htmlFor
+      end
 
-    if namespace = options[:namespace] || @namespace
-      `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
-    else
-      `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+      if namespace = options[:namespace] || @namespace
+        `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
+      else
+        `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+      end
+    end
+  else
+    def [](name, options = {})
+      if namespace = options[:namespace] || @namespace
+        `#@native.getAttributeNS(#{namespace.to_s}, #{name.to_s}) || nil`
+      else
+        `#@native.getAttribute(#{name.to_s}) || nil`
+      end
+    end
+
+    def []=(name, value, options = {})
+      if namespace = options[:namespace] || @namespace
+        `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
+      else
+        `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+      end
     end
   end
 
