@@ -3,6 +3,7 @@ module Browser; module DOM; class Element < Node
 class Offset
   attr_reader :element
 
+  # @private
   def initialize(element)
     @element = element
     @native  = element.to_n
@@ -12,6 +13,8 @@ class Offset
     DOM(`#@native.offsetParent || #{@element.document.root.to_n}`)
   end
 
+  # @!attribute x
+  # @return [Integer]
   def x
     get.x
   end
@@ -20,6 +23,8 @@ class Offset
     set value, nil
   end
 
+  # @!attribute y
+  # @return [Integer]
   def y
     get.y
   end
