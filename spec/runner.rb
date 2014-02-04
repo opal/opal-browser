@@ -26,13 +26,13 @@ cap['browser']         = ENV['SELENIUM_BROWSER'] || 'chrome'
 cap['browser_version'] = ENV['SELENIUM_VERSION'] if ENV['SELENIUM_VERSION']
 
 cap['browserstack.tunnelIdentifier'] = ENV['TRAVIS_JOB_ID']
-cap['browserstack.tunnel']           = 'true'
-cap['browserstack.debug']            = 'false'
+cap['browserstack.tunnel']           = true
+cap['browserstack.debug']            = false
 
-cap['databaseEnabled']          = 'true'
-cap['browserConnectionEnabled'] = 'true'
-cap['locationContextEnabled']   = 'true'
-cap['webStorageEnabled']        = 'true'
+cap['databaseEnabled']          = true
+cap['browserConnectionEnabled'] = true
+cap['locationContextEnabled']   = true
+cap['webStorageEnabled']        = true
 
 print 'Loading...'
 
