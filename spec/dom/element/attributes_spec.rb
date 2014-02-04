@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Browser::DOM::Element::Attributes do
   html <<-HTML
-    <label id="lol" class="name" for="hue"></div>
+    <label id="lol" class="name" for="hue"></label>
   HTML
 
   describe '#[]' do

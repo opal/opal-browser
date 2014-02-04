@@ -117,7 +117,7 @@ describe Browser::DOM::Element do
 
   describe '#[]' do
     html <<-HTML
-      <div id="lol" class="name" for="hue"></div>
+      <label id="lol" class="name" for="hue"></label>
     HTML
 
     it 'gets an attribute' do
@@ -135,7 +135,7 @@ describe Browser::DOM::Element do
 
   describe '#[]=' do
     html <<-HTML
-      <div id="lol" class="name" for="hue"></div>
+      <label id="lol" class="name" for="hue"></label>
     HTML
 
     it 'sets an attribute' do
