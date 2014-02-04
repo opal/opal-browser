@@ -30,6 +30,9 @@ module Browser
       when 'ActiveX'
         defined?(`window.ActiveXObject`)
 
+      when 'WebSQL'
+        defined?(`window.openDatabase`)
+
       when 'Query.css'
         defined?(`document.querySelectorAll`)
 
