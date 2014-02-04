@@ -19,7 +19,7 @@ describe Browser::DOM::Element::Attributes do
     end
   end
 
-  describe '#[]' do
+  describe '#[]=' do
     it 'sets an attribute' do
       $document[:lol].attributes[:a] = :foo
 
