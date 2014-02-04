@@ -65,7 +65,7 @@ class Attributes
     self
   end
 
-  alias set []
+  alias set []=
 end
 
 end; end; end

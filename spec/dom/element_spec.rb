@@ -114,4 +114,45 @@ describe Browser::DOM::Element do
       expect(el.inspect).to match(/: div.omg!.lol.wut>/)
     end
   end
+
+  describe 'attribute shortcuts' do
+    html <<-HTML
+      <div id="lol" class="name" for="hue"></div>
+    HTML
+
+    describe '#[]' do
+      it 'gets an attribute' do
+        expect($document[:lol][:id]).to eq(:lol)
+      end
+
+      it 'gets the class attribute' do
+        expect($document[:lol][:class]).to eq(:name)
+      end
+
+      it 'gets the for attribute' do
+        expect($document[:lol][:for]).to eq(:hue)
+      end
+    end
+
+    describe '#[]=' do
+      it 'sets an attribute' do
+        $document[:lol].attributes[:a] = :foo
+
+        expect($document[:lol][:a]).to eq(:foo)
+      end
+
+      it 'sets the class attribute' do
+        $document[:lol][:class] = :bar
+
+        expect($document[:lol][:class]).to eq(:bar)
+      end
+
+      it 'sets the for attribute' do
+        $document[:lol][:for] = :baz
+
+        expect($document[:lol][:for]).to eq(:baz)
+      end
+    end
+
+  end
 end
