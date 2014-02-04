@@ -89,6 +89,18 @@ EventSource
 -----------
 Event sources have been implemented and are easily configurable with blocks.
 
+```ruby
+Browser::EventSource.new '/events' do |es|
+  es.on :message do |e|
+    alert e.data
+  end
+
+  es.on :custom do |e|
+    alert "custom #{e.data}"
+  end
+end
+```
+
 History
 -------
 The HTML5 History API has been fully wrapped.
@@ -97,6 +109,27 @@ Storage
 -------
 The HTML5 Storage API has been wrapped and it exports a single Storage class
 that uses the most appropriate and available API to store data locally.
+
+Database SQL
+------------
+WebSQL has been fully wrapped.
+
+```ruby
+db = Browser::Database::SQL.new 'test'
+db.transaction {|t|
+  t.query('CREATE TABLE test(ID INTEGER PRIMARY KEY ASC, text TEXT)').then {
+    t.query('INSERT INTO test (id, text) VALUES(?, ?)', 1, 'huehue')
+  }.then {
+    t.query('INSERT INTO test (id, text) VALUES(?, ?)', 2, 'jajaja')
+  }.then {
+    t.query('SELECT * FROM test')
+  }.then {|r|
+    r.each {|row|
+      alert row.inspect
+    }
+  }
+}
+```
 
 Browser support
 ===============
