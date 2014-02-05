@@ -28,7 +28,7 @@ cap['device']          = ENV['SELENIUM_DEVICE'] if ENV['SELENIUM_DEVICE']
 
 cap['browserstack.tunnelIdentifier'] = ENV['TRAVIS_JOB_ID']
 cap['browserstack.tunnel']           = true
-cap['browserstack.debug']            = false
+cap['browserstack.debug']            = true
 
 cap['databaseEnabled']          = true
 cap['browserConnectionEnabled'] = true
