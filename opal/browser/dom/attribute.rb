@@ -20,6 +20,10 @@ class Attribute
   def value
     `#@native.value`
   end
+
+  def value=(value)
+    `#@native.value = value`
+  end
 end
 
 end; end
