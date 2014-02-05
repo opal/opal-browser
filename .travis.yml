@@ -44,14 +44,19 @@ env:
 
 matrix:
   allow_failures:
-    # Problems with Safari and WebSQL
-    - env: SELENIUM_BROWSER=safari SELENIUM_VERSION=5.1
-    - env: SELENIUM_BROWSER=safari SELENIUM_VERSION=6.1
-    - env: SELENIUM_BROWSER=safari SELENIUM_VERSION=7.0
-
     # ChromeDriver be broken
     - env: SELENIUM_BROWSER=chrome SELENIUM_VERSION=31
     - env: SELENIUM_BROWSER=chrome SELENIUM_VERSION=30
+
+    # Mobile?
+    - env: SELENIUM_BROWSER=ipad   SELENIUM_DEVICE="iPad 2 (5.0)"
+    - env: SELENIUM_BROWSER=iphone SELENIUM_DEVICE="iPhone 4S"
+    - env: SELENIUM_BROWSER=iphone SELENIUM_DEVICE="iPhone 5"
+    - env: SELENIUM_BROWSER=iphone SELENIUM_DEVICE="iPhone 5S"
+
+    - env: SELENIUM_BROWSER=android SELENIUM_DEVICE="Samsung Galaxy Nexus"
+    - env: SELENIUM_BROWSER=android SELENIUM_DEVICE="Motorola Razr Maxx HD"
+    - env: SELENIUM_BROWSER=android SELENIUM_DEVICE="LG Nexus 4"
 
 before_install:
   - gem update bundler
