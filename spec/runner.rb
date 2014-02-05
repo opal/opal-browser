@@ -24,6 +24,7 @@ cap  = Selenium::WebDriver::Remote::Capabilities.new
 cap['platform']        = ENV['SELENIUM_PLATFORM'] || 'ANY'
 cap['browser']         = ENV['SELENIUM_BROWSER'] || 'chrome'
 cap['browser_version'] = ENV['SELENIUM_VERSION'] if ENV['SELENIUM_VERSION']
+cap['device']          = ENV['SELENIUM_DEVICE'] if ENV['SELENIUM_DEVICE']
 
 cap['browserstack.tunnelIdentifier'] = ENV['TRAVIS_JOB_ID']
 cap['browserstack.tunnel']           = true
