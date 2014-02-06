@@ -4,22 +4,17 @@ module Browser; module DOM
 class Attribute
   include Native
 
-  # Returns true if the attribute is an id.
-  def id?
-    `#@native.isId`
-  end
-
   # @!attribute [r] name
   # @return [String] the name of the attribute
-  def name
-    `#@native.name`
-  end
+  alias_native :name
 
-  # @!attribute [r] value
+  # @!attribute value
   # @return [String] the value of the attribute
-  def value
-    `#@native.value`
-  end
+  alias_native :value
+  alias_native :value=
+
+  # Returns true if the attribute is an id.
+  alias_native :id?, :isId
 end
 
 end; end
