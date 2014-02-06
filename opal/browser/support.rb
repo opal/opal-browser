@@ -103,10 +103,10 @@ module Browser
 
       when 'Attr.isId'
         %x{
-          var div = document.createElement('div')
+          var div = document.createElement('div');
               div.setAttribute('id', 'xxxxxxxxxxxxx');
 
-          return typeof(div.attributes.item('id').isId) !== "undefined";
+          return typeof(div.attributes['id'].isId) !== "undefined";
         }
 
       when 'Element.addBehavior'
