@@ -101,6 +101,14 @@ module Browser
       when 'Window.pageOffset'
         defined?(`window.pageXOffset`)
 
+      when 'Attr.isId'
+        %x{
+          var div = document.createElement('div')
+              div.setAttribute('id', 'xxxxxxxxxxxxx');
+
+          return typeof(div.attributes.item('id').isId) !== "undefined";
+        }
+
       when 'Element.addBehavior'
         defined?(`document.documentElement.addBehavior`)
 

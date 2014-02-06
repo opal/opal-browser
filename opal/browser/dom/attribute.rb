@@ -14,7 +14,13 @@ class Attribute
   alias_native :value=
 
   # Returns true if the attribute is an id.
-  alias_native :id?, :isId
+  if Browser.supports? 'Attr.isId'
+    alias_native :id?, :isId
+  else
+    def id?
+      name == :id
+    end
+  end
 end
 
 end; end
