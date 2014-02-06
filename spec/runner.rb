@@ -5,15 +5,17 @@ require 'json'
 
 # setup tunnel
 begin
-  File.open('tunnel.jar', 'w') {|f|
+  File.open('BrowserStackTunnel.jar', 'w') {|f|
     f.write RestClient.get('http://www.browserstack.com/BrowserStackTunnel.jar').to_str
   }
 
-  tunnel = IO.popen 'java -jar tunnel.jar $BS_AUTHKEY localhost,9292,0 -tunnelIdentifier $TRAVIS_JOB_ID'
+  tunnel = IO.popen 'java -jar BrowserStackTunnel.jar $BS_AUTHKEY localhost,9292,0 -tunnelIdentifier $TRAVIS_JOB_ID'
 
   loop do
     break if tunnel.gets.start_with? 'You can now access'
   end
+rescue
+  retry
 end
 
 # configure based on environment variables
