@@ -2,29 +2,30 @@ require 'spec_helper'
 require 'browser/database/sql'
 
 describe Browser::Database::SQL do
-  SQL = Browser::Database::SQL
+  SQL  = Browser::Database::SQL
+  SIZE = 1024 * 1024
 
   describe '#new' do
     it 'sets the attributes properly' do
-      sql = SQL.new('test', description: 'trains', size: 1024)
+      sql = SQL.new('test', description: 'trains', size: SIZE)
 
       expect(sql.name).to eq('test')
       expect(sql.description).to eq('trains')
-      expect(sql.size).to eq(1024)
+      expect(sql.size).to eq(SIZE)
     end
 
     it 'sets the version properly' do
-      sql = SQL.new('test2', version: '1.0')
+      sql = SQL.new('test2', version: '1.0', size: SIZE)
       expect(sql.version).to eq('1.0')
 
-      sql = SQL.new('test')
+      sql = SQL.new('test', size: SIZE)
       expect(sql.version).to eq('')
     end
   end
 
   describe '#transaction' do
     async 'calls the block with the transaction' do
-      sql = SQL.new('test')
+      sql = SQL.new('test', size: SIZE)
 
       sql.transaction {|t|
         async {
@@ -34,7 +35,7 @@ describe Browser::Database::SQL do
     end
 
     async 'the transaction database is the right one' do
-      sql = SQL.new('test')
+      sql = SQL.new('test', size: SIZE)
 
       sql.transaction {|t|
         async {
@@ -47,7 +48,7 @@ describe Browser::Database::SQL do
   describe SQL::Transaction do
     describe '#query' do
       async 'returns a promise' do
-        sql = SQL.new('test')
+        sql = SQL.new('test', size: SIZE)
 
         sql.transaction {|t|
           async {
@@ -57,7 +58,7 @@ describe Browser::Database::SQL do
       end
 
       async 'resolves on success' do
-        sql = SQL.new('test')
+        sql = SQL.new('test', size: SIZE)
 
         sql.transaction {|t|
           t.query('CREATE TABLE IF NOT EXISTS test(ID INTEGER PRIMARY KEY ASC, a TEXT)').then {|r|
@@ -69,7 +70,7 @@ describe Browser::Database::SQL do
       end
 
       async 'rejects on failure' do
-        sql = SQL.new('test')
+        sql = SQL.new('test', size: SIZE)
 
         sql.transaction {|t|
           t.query('huehue').rescue {|e|
@@ -85,7 +86,7 @@ describe Browser::Database::SQL do
   describe SQL::Result do
     describe '#length' do
       async 'has the proper length' do
-        sql = SQL.new('test')
+        sql = SQL.new('test', size: SIZE)
 
         sql.transaction {|t|
           t.query('SELECT 1').then {|r|
@@ -99,7 +100,7 @@ describe Browser::Database::SQL do
 
     describe '#[]' do
       async 'returns a row' do
-        sql = SQL.new('test')
+        sql = SQL.new('test', size: SIZE)
 
         sql.transaction {|t|
           t.query('SELECT 1, 2, 3').then {|r|
@@ -114,7 +115,7 @@ describe Browser::Database::SQL do
       end
 
       async 'returns nil on missing row' do
-        sql = SQL.new('test')
+        sql = SQL.new('test', size: SIZE)
 
         sql.transaction {|t|
           t.query('SELECT 1, 2, 3').then {|r|
