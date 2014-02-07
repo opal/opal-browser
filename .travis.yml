@@ -48,9 +48,12 @@ matrix:
     - env: SELENIUM_BROWSER=chrome SELENIUM_VERSION=31
     - env: SELENIUM_BROWSER=chrome SELENIUM_VERSION=30
 
-    # Mobile?
+    # Something's fishy
     - env: SELENIUM_BROWSER=ipad   SELENIUM_DEVICE="iPad 2 (5.0)"
     - env: SELENIUM_BROWSER=iphone SELENIUM_DEVICE="iPhone 5"
+
+    # Android's driver be broken
+    - env: SELENIUM_BROWSER=android SELENIUM_DEVICE="Samsung Galaxy Nexus"
     - env: SELENIUM_BROWSER=android SELENIUM_DEVICE="Motorola Razr Maxx HD"
     - env: SELENIUM_BROWSER=android SELENIUM_DEVICE="LG Nexus 4"
 
