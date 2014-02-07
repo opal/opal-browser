@@ -3,9 +3,11 @@ module Browser
 class Event
   include Native
 
+  # @see https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events
   class Definition
     include Native
 
+    # @private
     def self.new(&block)
       data = super(`{ bubbles: true, cancelable: true }`)
       block.call(data) if block
@@ -13,10 +15,12 @@ class Event
       data.to_n
     end
 
+    # Set the event as bubbling.
     def bubbles=(value)
       `#@native.bubbles = #{value}`
     end
 
+    # Set the event as cancelable.
     def cancelable=(value)
       `#@native.cancelable = #{value}`
     end
@@ -57,6 +61,7 @@ class Event
     class Callback
       attr_reader :target, :name, :selector
 
+      # @private
       def initialize(target, name, selector = nil, &block)
         @target   = target
         @name     = name
@@ -64,10 +69,14 @@ class Event
         @block    = block
       end
 
-      def call(e)
-        to_proc.call(e)
+      # Call the callback with the given event.
+      #
+      # @param event [native] the native event object
+      def call(event)
+        to_proc.call(event)
       end
 
+      # Get the native function linked to the callback.
       def to_proc
         @proc ||= -> event {
           %x{
@@ -86,10 +95,13 @@ class Event
         }
       end
 
+      # @!attribute [r] event
+      # @return [Class] the class for the event
       def event
         Event.class_for(@name)
       end
 
+      # Stop listening for the event linked to the callback.
       def off
         target.off(self)
       end
@@ -102,6 +114,7 @@ class Event
         @pair   = pair
       end
 
+      # Stop listening for the event linked to the delegate.
       def off
         delegate = @target.delegated[@name]
         delegate.last.delete(@pair)
@@ -115,6 +128,26 @@ class Event
 
     Delegates = Struct.new(:callback, :handlers)
 
+    # @overload on(name, &block)
+    #
+    #   Start listening for an event on the target.
+    #
+    #   @param name [String] the event name
+    #
+    #   @yieldparam event [Event] the event
+    #
+    #   @return [Callback]
+    #
+    # @overload on(name, selector, &block)
+    #
+    #   Start listening for an event on the target children.
+    #
+    #   @param name [String] the event name
+    #   @param selector [String] the CSS selector to trigger the event on
+    #
+    #   @yieldparam event [Event] the event
+    #
+    #   @return [Delegate]
     def on(name, selector = nil, &block)
       raise ArgumentError, 'no block has been given' unless block
 
@@ -152,6 +185,13 @@ class Event
       end
     end
 
+    # Start listening for an event in the capturing phase.
+    #
+    # @param name [String] the event name
+    #
+    # @yieldparam event [Event] the event
+    #
+    # @return [Callback]
     def on!(name, &block)
       raise ArgumentError, 'no block has been given' unless block
 
@@ -230,6 +270,13 @@ class Event
       end
     end
 
+    # @overload off()
+    #   Stop listening for any event.
+    #
+    # @overload off(what)
+    #   Stop listening for an event.
+    #
+    #   @param what [Callback, String, Regexp] what to stop listening for
     def off(what = nil)
       case what
       when Callback
@@ -295,6 +342,12 @@ class Event
       end
     end
 
+    # Trigger an event on the target.
+    #
+    # @param name [String] the event name
+    # @param args [Array] optional arguments to the event callback
+    #
+    # @yieldparam definition [Definition] definition to customize the event
     def trigger(event, *args, &block)
       if event.is_a? String
         event = Event.create(event, *args, &block)
@@ -303,7 +356,12 @@ class Event
       dispatch(event)
     end
 
-    # Trigger the event without bubbling.
+    # Trigger an event on the target without bubbling.
+    #
+    # @param name [String] the event name
+    # @param args [Array] optional arguments to the event callback
+    #
+    # @yieldparam definition [Definition] definition to customize the event
     def trigger!(event, *args, &block)
       trigger event, *args do |e|
         block.call(e) if block
