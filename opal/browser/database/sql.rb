@@ -50,7 +50,7 @@ class SQL
     @name        = name
     @description = options[:description] || name
     @version     = options[:version]     || ''
-    @size        = options[:size]        || 5 * 1024 * 1024
+    @size        = options[:size]        || 2 * 1024 * 1024
 
     super(`window.openDatabase(#{name}, #{@version}, #{@description}, #{@size})`)
   end

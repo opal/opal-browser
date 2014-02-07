@@ -127,4 +127,4 @@ describe Browser::Database::SQL do
       end
     end
   end
-end if Browser::Database::SQL.supported? && false
+end if Browser::Database::SQL.supported?
