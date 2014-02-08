@@ -131,9 +131,15 @@ class Element < Node
   #
   # @return [Node?]
   def at_css(*rules)
-    rules.find_value {|rule|
-      css(rule).first
+    result = nil
+
+    rules.each {|rule|
+      if result = css(rule).first
+        break
+      end
     }
+
+    result
   end
 
   # Get the first node matching the given XPath.
@@ -142,9 +148,15 @@ class Element < Node
   #
   # @return [Node?]
   def at_xpath(*paths)
-    paths.find_value {|path|
-      xpath(path).first
+    result = nil
+
+    paths.each {|path|
+      if result = xpath(path).first
+        break
+      end
     }
+
+    result
   end
 
   alias attr []

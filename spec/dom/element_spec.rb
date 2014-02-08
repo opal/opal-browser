@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Browser::DOM::Element do
+  DOM = Browser::DOM
+
   describe '#id' do
     html <<-HTML
       <div id="lol"><div class="wut"></div></div>
@@ -154,6 +156,26 @@ describe Browser::DOM::Element do
       $document[:lol][:for] = :baz
 
       expect($document[:lol][:for]).to eq(:baz)
+    end
+  end
+
+  describe '#at_css' do
+    html <<-HTML
+      <label id="lol" class="name" for="hue"></label>
+    HTML
+
+    it 'checks for all the selectors' do
+      expect($document.at_css('div', 'span', '#lol')).to be_a(DOM::Element)
+    end
+  end
+
+  describe '#at_xpath' do
+    html <<-HTML
+      <label id="lol" class="name" for="hue"></label>
+    HTML
+
+    it 'checks for all the paths' do
+      expect($document.at_xpath('//div', '//span', '//[@id="lol"]')).to be_a(DOM::Element)
     end
   end
 end
