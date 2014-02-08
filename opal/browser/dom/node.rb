@@ -371,6 +371,8 @@ class Node
     node
   end
 
+  alias replace_with replace
+
   alias text content
   alias text= content=
 
