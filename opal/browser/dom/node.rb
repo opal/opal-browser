@@ -59,7 +59,7 @@ class Node
     if native?(node)
       `#@native.appendChild(node)`
     elsif node.respond_to? :each
-      node.each { |n| add_child(n) }
+      node.each { |n| self << n }
     elsif String === node
       `#@native.appendChild(#@native.ownerDocument.createTextNode(node))`
     else
@@ -110,7 +110,7 @@ class Node
   #
   # @param node [Node] the node to append to
   def append_to(node)
-    node.add_child(self)
+    node << self
   end
 
   # Get an array of ancestors.
