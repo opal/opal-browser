@@ -366,7 +366,7 @@ class Node
   # @param node [Node] the node to replace with
   # @return [Node] the passed node
   def replace(node)
-    `#@native.parentNode.replaceChild(#@native, #{Native.convert(node)})`
+    `#@native.parentNode.replaceChild(#{Native.convert(node)}, #@native)`
 
     node
   end
