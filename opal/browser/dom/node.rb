@@ -367,12 +367,12 @@ class Node
   # @return [Node] the passed node
   def replace(node)
     if native?(node)
-      `#@native.parentNode.replaceChild(#@native, node)`
+      `#@native.parentNode.replaceChild(node, #@native)`
     elsif String === node
-      `#@native.parentNode.replaceChild(#@native,
-        #@native.ownerDocument.createTextNode(node))`
+      `#@native.parentNode.replaceChild(
+        #@native.ownerDocument.createTextNode(node), #@native)`
     else
-      `#@native.parentNode.replaceChild(#@native, #{Native.convert(node)})`
+      `#@native.parentNode.replaceChild(#{Native.convert(node)}, #@native)`
     end
 
     node
