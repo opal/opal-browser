@@ -20,7 +20,7 @@ class Element < Node
     if self == Element
       name = `node.nodeName`.capitalize
 
-      if Element.const_defined?(name)
+      if Element.constants.include?(name)
         Element.const_get(name).new(node)
       else
         super
