@@ -35,6 +35,47 @@ class NodeSet
     end
   end
 
+  # Get the first node matching the given CSS selectors.
+  #
+  # @param rules [Array<String>] the CSS selectors to match with
+  #
+  # @return [Node?]
+  def at_css(*rules)
+    each {|node|
+      if node = node.at_css(*rules)
+        return node
+      end
+    }
+
+    nil
+  end
+
+  # Get the first node matching the given XPath.
+  #
+  # @param paths [Array<String>] the XPath to match with
+  #
+  # @return [Node?]
+  def at_xpath(*paths)
+    each {|node|
+      if node = node.at_xpath(*paths)
+        return node
+      end
+    }
+
+    nil
+  end
+
+  # Query for children matching the given CSS selector.
+  #
+  # @param selector [String] the CSS selector
+  #
+  # @return [NodeSet]
+  def css(path)
+    NodeSet[@literal.map {|node|
+      node.css(path)
+    }]
+  end
+
   # Create another {NodeSet} with all the nodes that match the given
   # expression.
   #
@@ -47,7 +88,18 @@ class NodeSet
 
   # Search for multiple selectors
   def search(*what)
-    map { |n| n.search(*what) }.flatten.uniq
+    NodeSet[@literal.map { |node| node.search(*what) }]
+  end
+
+  # Query for children matching the given XPath.
+  #
+  # @param path [String] the XPath
+  #
+  # @return [NodeSet]
+  def xpath(path)
+    NodeSet[@literal.map {|node|
+      node.xpath(path)
+    }]
   end
 end
 
