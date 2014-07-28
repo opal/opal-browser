@@ -43,12 +43,12 @@ class Data
   end
 
   def [](name)
-    if data = @element["data-#{what}"]
+    if data = @element["data-#{name}"]
       return data
     end
 
     %x{
-      var value = #@native.$data[what];
+      var value = #@native.$data[name];
 
       if (value === undefined) {
         return nil;

@@ -221,13 +221,13 @@ class Element < Node
   #   @param hash [Hash] the data to set
   #
   #   @return [self]
-  def data(data = nil)
+  def data(value = nil)
     data = Data.new(self)
 
-    return data unless data
+    return data unless value
 
-    if Hash === data
-      data.assign(data)
+    if Hash === value
+      data.assign(value)
     else
       raise ArgumentError, 'unknown data type'
     end
