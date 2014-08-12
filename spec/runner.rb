@@ -116,14 +116,18 @@ rescue Selenium::WebDriver::Error::TimeOutError
 ensure
   # take a screenshot and upload it to imgur
   begin
-    browser.save_screenshot('screenshot.png')
-    response = RestClient.post('https://api.imgur.com/3/upload',
-      { image: File.open('screenshot.png') },
-      { 'Authorization' => 'Client-ID 1979876fe2a097e' })
+    upload = lambda do |filepath|
+      response = RestClient.post('https://api.imgur.com/3/upload',
+        { image: File.open(filepath) },
+        { 'Authorization' => 'Client-ID 1979876fe2a097e' })
 
-    print " ("
-    print JSON.parse(response.to_str)['data']['link']
-    puts  ")"
+      JSON.parse(response.to_str)['data']['link']
+    end
+
+    browser.capture_entire_page_screenshot('full-screenshot.png')
+    screenshot_url = upload['full-screenshot.png']
+    puts " (#{screenshot_url})"
+
   rescue Exception
     puts
   end
