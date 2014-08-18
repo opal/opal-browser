@@ -174,7 +174,7 @@ class Storage
     end
 
     def save
-      $document.cookies[encoded_name] = self
+      $document.cookies[encoded_name] = JSON.dump(self)
     end
   end
 
