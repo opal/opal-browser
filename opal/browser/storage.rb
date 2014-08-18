@@ -120,6 +120,10 @@ class Storage
     end
   end
 
+  def to_h
+    @data
+  end
+
   # @!method init
   #   @private
 
