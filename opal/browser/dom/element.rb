@@ -6,6 +6,7 @@ require 'browser/dom/element/scroll'
 require 'browser/dom/element/size'
 
 require 'browser/dom/element/input'
+require 'browser/dom/element/select'
 require 'browser/dom/element/image'
 require 'browser/dom/element/template'
 
