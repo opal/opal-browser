@@ -18,21 +18,16 @@ class Declaration
 
   def replace(string)
     `#@native.cssText = #{string}`
-
-    self
   end
 
   def apply(&block)
     Paggio::CSS::Definition.new(&block).each {|style|
-      # FIXME: use ternary operator when it's fixed
       if style.important
         `#@native.setProperty(#{style.name}, #{style.value}, "important")`
       else
         `#@native.setProperty(#{style.name}, #{style.value}, "")`
       end
     }
-
-    self
   end
 
   def delete(name)
