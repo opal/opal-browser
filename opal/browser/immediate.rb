@@ -37,7 +37,6 @@ class Immediate
 
   # @!method prevent
   #   Prevent the immediate from being called once scheduled.
-
   if Browser.supports? 'Immediate'
     def dispatch
       @id = `window.setImmediate(function() {
