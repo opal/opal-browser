@@ -98,7 +98,7 @@ class Storage
   # Delete a value from the storage.
   def delete(key)
     @data.delete(key).tap {
-      save if autosave
+      save if autosave?
     }
   end
 
