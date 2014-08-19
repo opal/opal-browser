@@ -117,6 +117,20 @@ class Scroll
 
     self
   end
+
+  if Browser.supports? 'Element.scrollIntoViewIfNeeded'
+    def to(align = true)
+      `#@native.scrollIntoViewIfNeeded(align)`
+    end
+  else
+    def to(align = true)
+      raise NotImplementedError
+    end
+  end
+
+  def to!(align = true)
+    `#@native.scrollIntoView(align)`
+  end
 end
 
 end; end; end
