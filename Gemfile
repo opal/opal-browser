@@ -12,5 +12,5 @@ gem 'selenium-webdriver', require: false
 gem 'rest-client', require: false
 
 # browser
-# gem 'opal', github: 'opal/opal'
+gem 'opal', github: 'opal/opal'
 gem 'paggio', github: 'meh/paggio'
