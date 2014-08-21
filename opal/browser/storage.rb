@@ -27,8 +27,6 @@ class Storage
     }]
   end
 
-  include Enumerable
-
   # @!attribute [r] name
   # @return [String] the name of the storage
   attr_reader :name
@@ -72,6 +70,8 @@ class Storage
     @autosave = false
   end
 
+  include Enumerable
+
   # Iterate over the (key, value) pairs in the storage.
   #
   # @yield [key, value]
@@ -83,9 +83,8 @@ class Storage
     self
   end
 
-  # Get a value in the storage.
-  def [](key)
-    @data[key]
+  def method_missing(*args, &block)
+    @data.__send__(*args, &block)
   end
 
   # Set a value in the storage.
