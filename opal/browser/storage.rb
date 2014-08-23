@@ -43,13 +43,7 @@ class Storage
     @data   = {}
 
     autosave!
-    init
-  end
-
-  # @!attribute [r] encoded_name
-  # @return [String] the generated name
-  def encoded_name
-    "opal.storage.#@name"
+    reload
   end
 
   # Check if autosaving is enabled.
@@ -123,57 +117,57 @@ class Storage
     @data
   end
 
-  # @!method init
-  #   @private
+  # @!method reload
+  #   Load the storage.
 
   # @!method save
   #   Persist the current state to the storage.
 
   if Browser.supports? 'Storage.local'
-    def init
-      replace `#@window.localStorage[#{encoded_name}] || '{}'`
+    def reload
+      replace `#@window.localStorage[#@name] || '{}'`
     end
 
     def save
-      `#@window.localStorage[#{encoded_name}] = #{JSON.dump(self)}`
+      `#@window.localStorage[#@name] = #{JSON.dump(self)}`
     end
   elsif Browser.supports? 'Storage.global'
-    def init
-      replace `#@window.globalStorage[#@window.location.hostname][#{encoded_name}] || '{}'`
+    def reload
+      replace `#@window.globalStorage[#@window.location.hostname][#@name] || '{}'`
     end
 
     def save
-      `#@window.globalStorage[#@window.location.hostname][#{encoded_name}] = #{JSON.dump(self)}`
+      `#@window.globalStorage[#@window.location.hostname][#@name] = #{JSON.dump(self)}`
     end
   elsif Browser.supports? 'Element.addBehavior'
-    def init
+    def reload
       %x{
         #@element = #@window.document.createElement('link');
         #@element.addBehavior('#default#userData');
 
         #@window.document.getElementsByTagName('head')[0].appendChild(#@element);
 
-        #@element.load(#{encoded_name});
+        #@element.load(#@name);
       }
 
-      replace `#@element.getAttribute(#{encoded_name}) || '{}'`
+      replace `#@element.getAttribute(#@name) || '{}'`
     end
 
     def save
       %x{
-        #@element.setAttribute(#{encoded_name}, #{JSON.dump(self)});
-        #@element.save(#{encoded_name});
+        #@element.setAttribute(#@name, #{JSON.dump(self)});
+        #@element.save(#@name);
       }
     end
   else
-    def init
+    def reload
       $document.cookies.options expires: 60 * 60 * 24 * 365
 
-      replace $document.cookies[encoded_name]
+      replace $document.cookies[@name]
     end
 
     def save
-      $document.cookies[encoded_name] = JSON.dump(self)
+      $document.cookies[@name] = JSON.dump(self)
     end
   end
 
@@ -185,7 +179,7 @@ class Storage
 
     io << JSON.create_id.to_json << ":" << self.class.name.to_json << ","
 
-    each {|key, value|
+    @data.each {|key, value|
       io << key.to_json.to_json << ":" << value.to_json << ","
     }
 
@@ -205,12 +199,12 @@ class SessionStorage < Storage
     Browser.supports? 'Storage.session'
   end
 
-  def init
-    replace `#@window.sessionStorage[#{encoded_name}] || '{}'`
+  def reload
+    replace `#@window.sessionStorage[#@name] || '{}'`
   end
 
   def save
-    `#@window.sessionStorage[#{encoded_name}] = #{JSON.dump(self)}`
+    `#@window.sessionStorage[#@name] = #{JSON.dump(self)}`
   end
 end
 
