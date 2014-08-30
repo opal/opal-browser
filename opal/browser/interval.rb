@@ -58,6 +58,11 @@ class Interval
 
     @id = `#@window.setInterval(#{@block.to_n}, #@every * 1000)`
   end
+
+  # Call the [Interval] block.
+  def call
+    @block.call
+  end
 end
 
 class Window
