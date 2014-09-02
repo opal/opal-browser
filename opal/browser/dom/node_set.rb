@@ -101,6 +101,10 @@ class NodeSet
       node.xpath(path)
     }]
   end
+
+  def to_ary
+    @literal
+  end
 end
 
 end; end
