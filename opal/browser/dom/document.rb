@@ -60,7 +60,7 @@ class Document < Element
   end
 
   def inspect
-    "#<DOM::Document: #{children.inspect}>"
+    "#<DOM::Document>"
   end
 
   if Browser.supports? 'Event.addListener'
