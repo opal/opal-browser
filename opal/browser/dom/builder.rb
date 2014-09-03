@@ -29,9 +29,11 @@ class Builder
   def self.build(builder, item)
     to_h.each {|klass, block|
       if klass === item
-        break block.call(builder, item)
+        return block.call(builder, item)
       end
     }
+
+    raise ArgumentError, "cannot build unknown item #{item}"
   end
 
   attr_reader :document, :element
