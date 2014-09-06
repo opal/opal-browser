@@ -113,6 +113,25 @@ class Storage
     end
   end
 
+  # Call the block between a [#reload] and [#save].
+  def commit(&block)
+    autosave  = @autosave
+    @autosave = false
+
+    reload
+
+    begin
+      block.call.tap {
+        save
+        @autosave = autosave
+      }
+    rescue
+      reload
+
+      raise
+    end
+  end
+
   def to_h
     @data
   end
