@@ -117,19 +117,21 @@ class Storage
   def commit(&block)
     autosave  = @autosave
     @autosave = false
+    result    = nil
 
     reload
 
     begin
-      block.call.tap {
-        save
-        @autosave = autosave
-      }
+      result = block.call
+      save
     rescue
       reload
-
       raise
+    ensure
+      @autosave = autosave
     end
+
+    result
   end
 
   def to_h
