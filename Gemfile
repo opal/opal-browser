@@ -5,7 +5,7 @@ gemspec
 gem 'rack'
 gem 'sinatra'
 gem 'sinatra-websocket'
-gem 'opal-rspec', '0.3.0.beta3'
+gem 'opal-rspec', '0.4.0.beta1'
 
 # runner
 gem 'selenium-webdriver', require: false
