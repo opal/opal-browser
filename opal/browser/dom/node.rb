@@ -56,14 +56,42 @@ class Node
   #
   # @return [self]
   def <<(node)
-    if native?(node)
-      `#@native.appendChild(node)`
-    elsif node.respond_to? :each
+    if Opal.respond_to? node, :each
       node.each { |n| self << n }
-    elsif String === node
-      `#@native.appendChild(#@native.ownerDocument.createTextNode(node))`
+      return self
+    end
+
+    unless native?(node)
+      if String === node
+        node = `#@native.ownerDocument.createTextNode(node)`
+      else
+        node = Native.convert(node)
+      end
+    end
+
+    `#@native.appendChild(node)`
+
+    self
+  end
+
+  def >>(node)
+    if Opal.respond_to? node, :each
+      node.each { |n| self >> n }
+      return self
+    end
+
+    unless native?(node)
+      if String === node
+        node = `#@native.ownerDocument.createTextNode(node)`
+      else
+        node = Native.convert(node)
+      end
+    end
+
+    if `#@native.firstChild == null`
+      `#@native.appendChild(node)`
     else
-      `#@native.appendChild(#{Native.convert(node)})`
+      `#@native.insertBefore(node, #@native.firstChild)`
     end
 
     self
@@ -77,15 +105,15 @@ class Node
   #
   # @param node [String, Node, #to_n] the node to add
   def add_next_sibling(node)
-    if native?(node)
-      `#@native.parentNode.insertBefore(node, #@native.nextSibling)`
-    elsif String === node
-      `#@native.parentNode.insertBefore(
-        #@native.ownerDocument.createTextNode(node), #@native.nextSibling)`
-    else
-      `#@native.parentNode.insertBefore(#{Native.convert(node)},
-        #@native.nextSibling)`
+    unless native?(node)
+      if String === node
+        node = `#@native.ownerDocument.createTextNode(node)`
+      else
+        node = Native.convert(node)
+      end
     end
+
+    `#@native.parentNode.insertBefore(node, #@native.nextSibling)`
   end
 
   # Add the passed node before this one.
@@ -94,14 +122,15 @@ class Node
   #
   # @param node [String, Node, #to_n] the node to add
   def add_previous_sibling(node)
-    if native?(node)
-      `#@native.parentNode.insertBefore(node, #@native)`
-    elsif String === node
-      `#@native.parentNode.insertBefore(
-        #@native.ownerDocument.createTextNode(node), #@native)`
-    else
-      `#@native.parentNode.insertBefore(#{Native.convert(node)}, #@native)`
+    unless native?(node)
+      if String === node
+        node = `#@native.ownerDocument.createTextNode(node)`
+      else
+        node = Native.convert(node)
+      end
     end
+
+    `#@native.parentNode.insertBefore(node, #@native)`
   end
 
   alias after add_next_sibling
@@ -332,6 +361,13 @@ class Node
     raise NotImplementedError
   end
 
+  # Prepend the node to the passed one.
+  #
+  # @param node [Node] the node to prepend to
+  def prepend_to(node)
+    node >> self
+  end
+
   # @!attribute previous
   # @return [Node?] the previous sibling of the node
   def previous
@@ -366,14 +402,15 @@ class Node
   # @param node [Node] the node to replace with
   # @return [Node] the passed node
   def replace(node)
-    if native?(node)
-      `#@native.parentNode.replaceChild(node, #@native)`
-    elsif String === node
-      `#@native.parentNode.replaceChild(
-        #@native.ownerDocument.createTextNode(node), #@native)`
-    else
-      `#@native.parentNode.replaceChild(#{Native.convert(node)}, #@native)`
+    unless native?(node)
+      if String === node
+        node = `#@native.ownerDocument.createTextNode(node)`
+      else
+        node = Native.convert(node)
+      end
     end
+
+    `#@native.parentNode.replaceChild(node, #@native)`
 
     node
   end
