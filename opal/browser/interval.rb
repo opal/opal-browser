@@ -19,14 +19,11 @@ class Interval
     @block  = block
 
     @aborted = false
-    @stopped = true
-
-    start
   end
 
   # Check if the interval has been stopped.
   def stopped?
-    @stopped
+    @id.nil?
   end
 
   # Check if the interval has been aborted.
@@ -44,6 +41,8 @@ class Interval
 
   # Stop the interval, it will be possible to start it again.
   def stop
+    return if stopped?
+
     `#@window.clearInterval(#@id)`
 
     @stopped = true
@@ -53,10 +52,9 @@ class Interval
   # Start the interval if it has been stopped.
   def start
     raise "the interval has been aborted" if aborted?
-
     return unless stopped?
 
-    @id = `#@window.setInterval(#{@block.to_n}, #@every * 1000)`
+    @id = `#@window.setInterval(#@block, #@every * 1000)`
   end
 
   # Call the [Interval] block.
@@ -72,6 +70,16 @@ class Window
   #
   # @return [Interval] the object representing the interval
   def every(time, &block)
+    Interval.new(@native, time, &block).tap(&:start)
+  end
+
+  # Execute the block every given seconds, you have to call [#start] on it
+  # yourself.
+  #
+  # @param time [Float] the seconds between every call
+  #
+  # @return [Interval] the object representing the interval
+  def every!(time, &block)
     Interval.new(@native, time, &block)
   end
 end
@@ -83,11 +91,21 @@ module Kernel
   def every(time, &block)
     $window.every(time, &block)
   end
+
+  # (see Browser::Window#every!)
+  def every!(time, &block)
+    $window.every!(time, &block)
+  end
 end
 
 class Proc
   # (see Browser::Window#every)
   def every(time)
     $window.every(time, &self)
+  end
+
+  # (see Browser::Window#every!)
+  def every!(time)
+    $window.every!(time, &self)
   end
 end
