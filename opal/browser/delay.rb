@@ -17,8 +17,6 @@ class Delay
     @window = Native.convert(window)
     @after  = time
     @block  = block
-
-    start
   end
 
   # Abort the timeout.
@@ -39,6 +37,16 @@ class Window
   #
   # @return [Delay] the object representing the timeout
   def after(time, &block)
+    Delay.new(@native, time, &block).tap(&:start)
+  end
+
+  # Execute a block after the given seconds, you have to call [#start] on it
+  # yourself.
+  #
+  # @param time [Float] the seconds after it gets called
+  #
+  # @return [Delay] the object representing the timeout
+  def after!(time, &block)
     Delay.new(@native, time, &block)
   end
 end
@@ -50,11 +58,21 @@ module Kernel
   def after(time, &block)
     $window.after(time, &block)
   end
+
+  # (see Browser::Window#after!)
+  def after!(time, &block)
+    $window.after!(time, &block)
+  end
 end
 
 class Proc
   # (see Browser::Window#after)
   def after(time)
     $window.after(time, &self)
+  end
+
+  # (see Browser::Window#after!)
+  def after!(time)
+    $window.after!(time, &self)
   end
 end
