@@ -62,6 +62,27 @@ class Navigator
     alias_native :version
   end
 
+  # Representation for the arary of plugins.
+  #
+  # @see https://developer.mozilla.org/en-US/docs/Web/API/NavigatorPlugins
+  class Plugins < Native::Array
+    def initialize(plugins)
+      super plugins do |p|
+        Plugin.new(p)
+      end
+    end
+
+    # Reload all browser plugins.
+    def refresh
+      `#@native.refresh(false)`
+    end
+
+    # Reload all browser plugins reloading pages that contain `<embed>`s.
+    def refresh!
+      `#@native.refresh(true)`
+    end
+  end
+
   # @!attribute [r] code
   # @return [String] the browser code name
   alias_native :code, :appCodeName
@@ -112,11 +133,9 @@ class Navigator
   alias_native :platform
 
   # @!attribute [r] plugins
-  # @return [Native::Array<Plugin>] the enabled plugins
+  # @return [Plugins] the enabled plugins
   def plugins
-    Native::Array.new `#@native.plugins` do |p|
-      Plugin.new(p)
-    end
+    Plugins.new(`#@native.plugins`)
   end
 
   # @!attribute [r] product
