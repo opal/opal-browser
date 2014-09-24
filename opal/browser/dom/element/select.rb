@@ -11,6 +11,26 @@ class Select < Element
       }
     }
   end
+
+  def labels
+    NodeSet[Native::Array.new(`#@native.labels`)]
+  end
+
+  def options
+    NodeSet[Native::Array.new(`#@native.options`)]
+  end
+
+  def option
+    DOM(`#@native.options[#@native.selectedIndex]`)
+  end
+
+  def index
+    `#@native.selectedIndex`
+  end
+
+  alias_native :multiple?, :multiple
+  alias_native :required?, :required
+  alias_native :length
 end
 
 end; end; end
