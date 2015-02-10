@@ -106,6 +106,8 @@ class Socket
   def write(data)
     `#@native.send(#{data.to_n})`
   end
+  alias << write
+  alias send write
 
   # Close the socket.
   #
