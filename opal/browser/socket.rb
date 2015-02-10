@@ -107,6 +107,10 @@ class Socket
     `#@native.send(#{data.to_n})`
   end
 
+  alias << write
+
+  alias send write
+
   # Close the socket.
   #
   # @param code [Integer, nil] the error code
