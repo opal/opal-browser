@@ -9,6 +9,26 @@ Browser support for Opal
 This library aims to be a full-blown wrapper for all the browser API including
 HTML5.
 
+Usage
+=====
+
+_Server side (config.ru, Rakefile, Rails, Sinatra, etc.)_
+
+```ruby
+require 'opal-browser'
+# Your server code here
+```
+
+_Browser side_
+
+```ruby
+require 'opal'
+require 'browser'
+# Your Opal code here
+```
+
+
+
 Features
 ========
 This is a list of the currently wrapped features and some details on them.
