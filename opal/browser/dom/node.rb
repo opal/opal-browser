@@ -97,14 +97,24 @@ class Node
     self
   end
 
-  alias add_child <<
+  def add_child(node = nil, &block)
+    unless node
+      node = DOM(&block)
+    end
+
+    self << node
+  end
 
   # Add the passed node after this one.
   #
   # When passing a {String} a text node will be created.
   #
   # @param node [String, Node, #to_n] the node to add
-  def add_next_sibling(node)
+  def add_next_sibling(node = nil, &block)
+    unless node
+      node = DOM(&block)
+    end
+
     unless native?(node)
       if String === node
         node = `#@native.ownerDocument.createTextNode(node)`
@@ -121,7 +131,11 @@ class Node
   # When passing a {String} a text node will be created.
   #
   # @param node [String, Node, #to_n] the node to add
-  def add_previous_sibling(node)
+  def add_previous_sibling(node = nil, &block)
+    unless node
+      node = DOM(&block)
+    end
+
     unless native?(node)
       if String === node
         node = `#@native.ownerDocument.createTextNode(node)`
