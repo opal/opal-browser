@@ -16,6 +16,10 @@ class Input < Element
     `#@native.value = #{value}`
   end
 
+  def checked?
+    `#@native.checked`
+  end
+
   def clear
     `#@native.value = ''`
   end
