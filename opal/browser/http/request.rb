@@ -2,6 +2,7 @@ module Browser; module HTTP
 
 class Request
   include Native
+  include Event::Target
 
   # Default headers.
   HEADERS = {
@@ -9,6 +10,8 @@ class Request
     'X-Opal-Version'   => RUBY_ENGINE_VERSION,
     'Accept'           => 'text/javascript, text/html, application/xml, text/xml, */*'
   }
+
+  STATES = %w[uninitialized loading loaded interactive complete]
 
   # @!attribute [r] headers
   # @return [Headers] the request headers
@@ -191,8 +194,12 @@ class Request
   # @param what [Symbol, String] the event name
   #
   # @yieldparam response [Response] the response for the event
-  def on(what, &block)
-    @callbacks[what] << block
+  def on(what, *, &block)
+    if STATES.include?(what) || %w[success failure].include?(what) || Integer === what
+      @callbacks[what] << block
+    else
+      super
+    end
   end
 
   # Open the request.
@@ -314,7 +321,7 @@ class Request
 private
   def callback
     -> event {
-      state = %w[uninitialized loading loaded interactive complete][`#@native.readyState`]
+      state = STATES[`#@native.readyState`]
       res   = response
 
       @callbacks[state].each { |b| b.(res) }

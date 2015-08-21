@@ -79,7 +79,7 @@ class Event
       when 'hashchange'
         HashChange
 
-      when 'load', 'loadend', 'loadstart'
+      when 'progress', 'load', 'loadend', 'loadstart'
         Progress
 
       when 'pagehide', 'pageshow'
