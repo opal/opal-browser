@@ -195,7 +195,7 @@ class Request
   #
   # @yieldparam response [Response] the response for the event
   def on(what, *, &block)
-    if STATES.include?(what)
+    if STATES.include?(what) || %w[success failure].include?(what) || Integer === what
       @callbacks[what] << block
     else
       super
