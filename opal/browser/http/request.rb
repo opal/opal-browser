@@ -195,10 +195,10 @@ class Request
   #
   # @yieldparam response [Response] the response for the event
   def on(what, *, &block)
-    if %w[progress load loadend loadstart].include?(what)
-      super
-    else
+    if STATES.include?(what) || %w[success failure].include?(what) || Integer === what
       @callbacks[what] << block
+    else
+      super
     end
   end
 
