@@ -35,6 +35,10 @@ class NodeSet
     end
   end
 
+  def respond_to_missing?(name, *)
+    @literal.respond_to?(name)
+  end
+
   # Get the first node matching the given CSS selectors.
   #
   # @param rules [Array<String>] the CSS selectors to match with
