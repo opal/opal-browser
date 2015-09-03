@@ -27,7 +27,10 @@ require 'browser'
 # Your Opal code here
 ```
 
-
+_Static Compile JS_
+```bash
+opal -I ./opal --gem paggio --compile opal/browser.rb > browser.js
+```
 
 Features
 ========
