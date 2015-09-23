@@ -24,8 +24,8 @@ class Context
     Node::Oscillator.new(self)
   end
 
-  def delay
-    Node::Delay.new(self)
+  def delay(max_time)
+    Node::Delay.new(self, max_time)
   end
 
   def dynamics_compressor

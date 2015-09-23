@@ -77,8 +77,8 @@ class Delay
   include Native
   include Pluggable
 
-  def initialize(audio_context, max_time)
-    super `#{audio_context.to_n}.createDelay(max_time || 1)`
+  def initialize(audio_context, max_time = 1)
+    super `#{audio_context.to_n}.createDelay(max_time)`
   end
 
   def time=(time)
@@ -95,6 +95,10 @@ class DynamicsCompressor
   include Pluggable
 
   alias_native :reduction
+
+  def initialize(audio_context)
+    super `#{audio_context.to_n}.createDynamicsCompressor()`
+  end
 
   def treshold=(treshold)
     `#@native.treshold.value = treshold`
@@ -138,11 +142,25 @@ class DynamicsCompressor
 end
 
 class BiquadFilter
+  TYPES = %i(lowpass highpass bandpass lowshelf highshelf peaking notch allpass)
+
   include Native
   include Pluggable
 
   def initialize(audio_context)
     super `#{audio_context.to_n}.createBiquadFilter()`
+  end
+
+  def type=(type)
+    unless TYPES.include?(type)
+      raise ArgumentError, "type #{type} doesn't exists"
+    end
+
+    `#@native.type =  type`
+  end
+
+  def type
+    `#@native.type`
   end
 
   def detune=(detune)
@@ -169,6 +187,8 @@ end
 class StereoPanner
   include Native
   include Pluggable
+
+  alias_native :normalize
 
   def initialize(audio_context)
     super `#{audio_context.to_n}.createStereoPanner()`
