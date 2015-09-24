@@ -1,5 +1,5 @@
 require 'browser'
-require 'browser/console'
+require 'console'
 
 module HtmlHelper
   # Add some html code to the body tag ready for testing. This will
