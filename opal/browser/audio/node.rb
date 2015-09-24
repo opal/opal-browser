@@ -1,41 +1,55 @@
-module Browser; module Audio; module Node;
+module Browser; module Audio; module Node
 
-module Pluggable
-  def connect(other_node)
-    `#@native.connect(#{Native.convert(other_node)})`
+class Base
+  include Native
+
+  def initialize(native)
+    @native = native
   end
 
-  def disconnect(other_node, options = {})
-    other_node = Native.try_convert(other_node)
-    output     = options[:output] || 0
-    input      = options[:input]  || 0
+  def method_missing(name, value = nil)
+    if name.end_with? '='
+      `#@native[#{name.delete '='}].value = value`
+    elsif value.nil? || value == true
+      `#@native[#{name}].value`
+    elsif value == false
+      `#@native[#{name}]`
+    else
+      super
+    end
+  end
+
+  def respond_to_missing?(method, include_all = false)
+    `#@native[#{method.delete('=')}] != null`
+  end
+
+  def connect(destination)
+    `#@native.connect(#{Native.convert(destination)})`
+  end
+
+  def disconnect(destination, options = {})
+    destination = Native.try_convert(destination)
+    output      = options[:output] || 0
+    input       = options[:input]  || 0
 
     if options
-      `#@native.disconnect(#{other_node}, #{output}, #{input}) || nil`
-    elsif other_node
-      `#@native.disconnect(#{other_node})`
+      `#@native.disconnect(#{destination}, #{output}, #{input}) || nil`
+    elsif destination
+      `#@native.disconnect(#{destination})`
     else
       `#@native.disconnect()`
     end
   end
 end
 
-class Gain
-  include Native
-  include Pluggable
-
-  alias_native :value, :gain
-
+class Gain < Base
   def initialize(audio_context)
     super `#{audio_context.to_n}.createGain()`
   end
 end
 
-class Oscillator
+class Oscillator < Base
   TYPES = %i(sine square sawtooth triangle custom)
-
-  include Native
-  include Pluggable
 
   alias_native :start
   alias_native :stop
@@ -55,97 +69,26 @@ class Oscillator
   def type
     `#@native.type`
   end
-
-  def frequency=(frequency)
-    `#@native.frequency.value = frequency`
-  end
-
-  def frequency
-    `#@native.frequency.value`
-  end
-
-  def detune=(detune)
-    `#@native.detune.value = detune`
-  end
-
-  def detune
-    `#@native.detune.value`
-  end
 end
 
-class Delay
-  include Native
-  include Pluggable
-
+class Delay < Base
   def initialize(audio_context, max_time = 1)
     super `#{audio_context.to_n}.createDelay(max_time)`
   end
-
-  def time=(time)
-    `#@native.time.value = time`
-  end
-
-  def time
-    `#@native.time.value`
-  end
 end
 
-class DynamicsCompressor
-  include Native
-  include Pluggable
+class DynamicsCompressor < Base
 
   alias_native :reduction
 
   def initialize(audio_context)
     super `#{audio_context.to_n}.createDynamicsCompressor()`
   end
-
-  def treshold=(treshold)
-    `#@native.treshold.value = treshold`
-  end
-
-  def treshold
-    `#@native.treshold.value`
-  end
-
-  def knee=(knee)
-    `#@native.knee.value = knee`
-  end
-
-  def knee
-    `#@native.knee.value`
-  end
-
-  def ratio=(ratio)
-    `#@native.ratio.value = ratio`
-  end
-
-  def ratio
-    `#@native.ratio.value`
-  end
-
-  def attack=(attack)
-    `#@native.attack.value = attack`
-  end
-
-  def attack
-    `#@native.attack.value`
-  end
-
-  def release=(release)
-    `#@native.release.value = release`
-  end
-
-  def release
-    `#@native.release.value`
-  end
 end
 
-class BiquadFilter
-  TYPES = %i(lowpass highpass bandpass lowshelf highshelf peaking notch allpass)
+class BiquadFilter < Base
 
-  include Native
-  include Pluggable
+  TYPES = %i(lowpass highpass bandpass lowshelf highshelf peaking notch allpass)
 
   def initialize(audio_context)
     super `#{audio_context.to_n}.createBiquadFilter()`
@@ -162,44 +105,14 @@ class BiquadFilter
   def type
     `#@native.type`
   end
-
-  def detune=(detune)
-    `#@native.detune.value = #{@detune = detune}`
-  end
-
-  def q=(q)
-    `#@native.q.value = q`
-  end
-
-  def q
-    `#@native.q.value`
-  end
-
-  def gain=(gain)
-    `#@native.gain.value = gain`
-  end
-
-  def gain
-    `#@native.gain.value`
-  end
 end
 
-class StereoPanner
-  include Native
-  include Pluggable
+class StereoPanner < Base
 
   alias_native :normalize
 
   def initialize(audio_context)
     super `#{audio_context.to_n}.createStereoPanner()`
-  end
-
-  def pan=(pan)
-    `#@native.pan.value = pan`
-  end
-
-  def pan
-    `#@native.pan.value`
   end
 end
 
