@@ -14,6 +14,8 @@ require 'browser/dom/element/textarea'
 module Browser; module DOM
 
 class Element < Node
+  include ParentNode
+
   def self.create(*args)
     $document.create_element(*args)
   end

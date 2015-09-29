@@ -190,11 +190,6 @@ class Node
     parent.remove_child(self) if parent
   end
 
-  # Remove all the children of the node.
-  def clear
-    children.remove
-  end
-
   # @!attribute content
   # @return [String] the inner text content of the node
   if Browser.supports? 'Element.textContent'
@@ -235,17 +230,19 @@ class Node
   # @!attribute [r] child
   # @return [Node?] the first child of the node
   def child
-    children.first
+    first_child
   end
 
-  # @!attribute children
-  # @return [NodeSet] the children of the node
-  def children
-    NodeSet[Native::Array.new(`#@native.childNodes`)]
+  # @!attribute [r] first_child
+  # @return [Node?] the first child of the node
+  def first_child
+    DOM(`#@native.firstChild`)
   end
 
-  def children=(node)
-    raise NotImplementedError
+  # @!attribute [r] last_child
+  # @return [Node?] the last child of the node
+  def last_child
+    DOM(`#@native.lastChild`)
   end
 
   # Return true if the node is a comment.
@@ -271,20 +268,6 @@ class Node
 
   alias element? elem?
 
-  # @!attribute [r] element_children
-  # @return [NodeSet] all the children which are elements
-  def element_children
-    children.select(&:element?)
-  end
-
-  alias elements element_children
-
-  # @!attribute [r] first_element_child
-  # @return [Element?] the first element child
-  def first_element_child
-    element_children.first
-  end
-
   # Return true if the node is a document fragment.
   def fragment?
     node_type == DOCUMENT_FRAGMENT_NODE
@@ -302,12 +285,6 @@ class Node
 
   alias inner_text content
   alias inner_text= content=
-
-  # @!attribute [r] last_element_child
-  # @return [Element?] the last element child
-  def last_element_child
-    element_children.last
-  end
 
   # @!attribute name
   # @return [String] the name of the node
