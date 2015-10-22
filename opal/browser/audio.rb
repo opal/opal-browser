@@ -40,6 +40,10 @@ class Context
     Node::StereoPanner.new(self)
   end
 
+  def periodic_wave(real, imaginary)
+    `#{@native}.createPeriodicWave(new Float32Array(#{real}), new Float32Array(#{imaginary}));`
+  end
+
   alias_native :suspend
   alias_native :resume
   alias_native :close

@@ -54,6 +54,8 @@ class Oscillator < Base
   alias_native :start
   alias_native :stop
 
+  alias_native :periodic_wave=, :setPeriodicWave
+
   def initialize(audio_context)
     super `#{audio_context.to_n}.createOscillator()`
   end
