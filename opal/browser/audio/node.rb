@@ -27,12 +27,12 @@ class Base
     `#@native.connect(#{Native.convert(destination)})`
   end
 
-  def disconnect(destination, options = {})
+  def disconnect(destination = nil, options = {})
     destination = Native.try_convert(destination)
     output      = options[:output] || 0
     input       = options[:input]  || 0
 
-    if options
+    if options.any?
       `#@native.disconnect(#{destination}, #{output}, #{input}) || nil`
     elsif destination
       `#@native.disconnect(#{destination})`
