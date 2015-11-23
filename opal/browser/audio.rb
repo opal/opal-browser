@@ -12,8 +12,25 @@ class Context
   alias_native :sample_rate, :sampleRate
   alias_native :current_time, :currentTime
 
-  def initialize
-    super `new AudioContext()`
+  def self.supported?
+    ['AudioContext',
+     'AudioContext (Safari)'].any? {|feature|
+       Browser.supports? feature
+     }
+  end
+
+  if Browser.supports? 'AudioContext'
+    def initialize
+      super `new AudioContext()`
+    end
+  elsif Browser.supports? 'AudioContext (Safari)'
+    def initialize
+      super `new webkitAudioContext()`
+    end
+  else
+    def initialize
+      raise NotImplementedError, 'AudioContext unsupported'
+    end
   end
 
   def gain
