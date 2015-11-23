@@ -269,6 +269,12 @@ module Browser
 
       when 'Animation.cancelRequest (Chrome)', 'Animation.cancelRequest (Safari)'
         defined?(`window.webkitCancelRequestAnimationFrame`)
+
+      when 'Audio'
+        defined?(`window.AudioContext`)
+
+      when 'Audio (Safari)', 'Audio (Chrome)'
+        defined?(`window.webkitAudioContext`)
     end
 
     `#@support[#{feature}] = #{support}`
