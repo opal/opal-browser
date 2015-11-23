@@ -201,7 +201,7 @@ class Storage
     io << JSON.create_id.to_json << ":" << self.class.name.to_json << ","
 
     @data.each {|key, value|
-      io << key.to_json.to_json << ":" << value.to_json << ","
+      io << key.to_json.to_s << ":" << value.to_json << ","
     }
 
     io.seek(-1, IO::SEEK_CUR)
