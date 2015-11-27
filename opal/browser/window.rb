@@ -90,11 +90,7 @@ class Window
   end
 
   def close
-    %x{
-      return (window.open('', '_self', '') && window.close()) ||
-             (window.opener = null && window.close()) ||
-             (window.opener = '' && window.close());
-    }
+    `#{@native}.close()`
   end
 end
 
