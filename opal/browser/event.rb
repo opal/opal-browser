@@ -114,7 +114,7 @@ class Event
       when 'blur', 'focus', 'focusin', 'focusout'
         Focus
 
-      when 'wheel'
+      when 'wheel', 'mousewheel'
         Wheel
 
       when 'abort', 'afterprint', 'beforeprint', 'cached', 'canplay',
