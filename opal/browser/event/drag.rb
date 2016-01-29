@@ -60,7 +60,7 @@ class Drag < Event
     end
 
     def transfer=(value)
-      `#@native.dataTransfer = #{Native.convert(elem)}`
+      `#@native.dataTransfer = #{Native.convert(value)}`
     end
   end
 
