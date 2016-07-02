@@ -114,6 +114,8 @@ EventSource
 Event sources have been implemented and are easily configurable with blocks.
 
 ```ruby
+require 'browser/event_source'
+
 Browser::EventSource.new '/events' do |es|
   es.on :message do |e|
     alert e.data
