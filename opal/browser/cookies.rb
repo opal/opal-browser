@@ -5,10 +5,17 @@ module Browser
 # Allows manipulation of browser cookies.
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
+#
+# Usage:
+#
+#   cookies = Browser::Cookies.new(`document`)
+#   cookies["my-cookie"] = "monster"
+#   cookies.delete("my-cookie")
+#
 class Cookies
   # Default cookie options.
   DEFAULT = {
-    expires: Time.now + 1.day,
+    expires: Time.now + 60 * 60 * 24,
     secure:  false
   }
 
@@ -53,7 +60,9 @@ class Cookies
   # @option options [String]  :domain  the domain the cookie is valid on
   # @option options [Boolean] :secure  whether the cookie is secure or not
   def []=(name, value, options = {})
-    `#@document.cookie = #{encode name, value.is_a?(String) ? value : JSON.dump(value), @options.merge(options)}`
+    string = value.is_a?(String) ? value : JSON.dump(value)
+    encoded_value = encode(name, string, @options.merge(options))
+    `#@document.cookie = #{encoded_value}`
   end
 
   # Delete a cookie.
@@ -113,7 +122,7 @@ protected
     io << key.encode_uri_component << ?= << value.encode_uri_component << '; '
 
     io << 'max-age=' << options[:max_age] << '; '        if options[:max_age]
-    io << 'expires=' << options[:expires].to_utc << '; ' if options[:expires]
+    io << 'expires=' << options[:expires].utc << '; '    if options[:expires]
     io << 'path='    << options[:path] << '; '           if options[:path]
     io << 'domain='  << options[:domain] << '; '         if options[:domain]
     io << 'secure'                                       if options[:secure]
