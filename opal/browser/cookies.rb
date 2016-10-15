@@ -41,8 +41,8 @@ class Cookies
 
     return if matches.empty?
 
-    result = matches.map {|cookie|
-      JSON.parse(cookie.match(/^.*?=(.*)$/)[1].decode_uri_component)
+    result = matches.flatten.map {|value|
+      JSON.parse(value.decode_uri_component)
     }
 
     result.length == 1 ? result.first : result
