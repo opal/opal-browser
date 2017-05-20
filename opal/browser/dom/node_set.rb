@@ -87,7 +87,7 @@ class NodeSet
   #
   # @return [NodeSet] the new {NodeSet} with the matching nodes
   def filter(expression)
-    @literal.select { |node| node =~ expression }
+    NodeSet[@literal.select { |node| node =~ expression }]
   end
 
   # Search for multiple selectors
