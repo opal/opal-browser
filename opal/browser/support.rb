@@ -150,6 +150,9 @@ module Browser
       when 'Element.scroll'
         defined?(`document.documentElement.scrollLeft`)
 
+      when 'Element.scrollIntoViewIfNeeded'
+        defined?(`document.documentElement.scrollIntoViewIfNeeded`)
+
       when 'Element.textContent'
         defined?(`document.documentElement.textContent`)
 
