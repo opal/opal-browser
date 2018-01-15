@@ -73,7 +73,7 @@ class SQL
     return `#@native.version` unless block
 
     `#@native.changeVersion(#{from}, #{to},
-      #{-> t { block.call(Transaction.new(self, t)) }})`
+      #{->(t) { block.call(Transaction.new(self, t)) }})`
   end
 
   # Start a transaction on the database.
@@ -82,7 +82,7 @@ class SQL
   def transaction(&block)
     raise ArgumentError, 'no block given' unless block
 
-    `#@native.transaction(#{-> t { block.call(Transaction.new(self, t)) }})`
+    `#@native.transaction(#{->(t) { block.call(Transaction.new(self, t)) }})`
   end
 
   # Allows you to make changes to the database or read data from it.
@@ -109,8 +109,8 @@ class SQL
       promise = Promise.new
 
       `#@native.executeSql(#{query}, #{parameters},
-        #{-> _, r { promise.resolve(Result.new(self, r)) }},
-        #{-> _, e { promise.reject(Error.new(e)) }})`
+        #{->(_, r) { promise.resolve(Result.new(self, r)) }},
+        #{->(_, e) { promise.reject(Error.new(e)) }})`
 
       promise
     end
