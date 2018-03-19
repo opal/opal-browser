@@ -11,6 +11,8 @@ require 'browser/dom/document_fragment'
 require 'browser/dom/builder'
 require 'browser/dom/mutation_observer'
 
+require 'browser/effects'
+
 module Kernel
   # Parse an XML string into a DOM usable {Browser::DOM::Document}
   #
