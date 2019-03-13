@@ -45,6 +45,11 @@ class Element
   def focused?
     `#@native.hasFocus`
   end
+
+  # Click the element. it fires the element's click event.
+  def click
+    `#@native.click()`
+  end
 end
 
 end; end
