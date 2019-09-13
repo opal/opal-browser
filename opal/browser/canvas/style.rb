@@ -1,7 +1,7 @@
 module Browser; class Canvas
 
 class StyleObject
-  include Native
+  include Native::Wrapper
 
   attr_reader :context
 

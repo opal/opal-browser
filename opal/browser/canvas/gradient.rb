@@ -1,7 +1,7 @@
 module Browser; class Canvas
 
 class Gradient
-  include Native
+  include Native::Wrapper
 
   attr_reader :context
 

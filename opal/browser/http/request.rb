@@ -1,7 +1,7 @@
 module Browser; module HTTP
 
 class Request
-  include Native
+  include Native::Wrapper
   include Event::Target
 
   # Default headers.

@@ -1,7 +1,7 @@
 module Browser; module CSS
 
 class Rule
-  include Native
+  include Native::Wrapper
 
   STYLE_RULE               = 1
   CHARSET_RULE             = 2

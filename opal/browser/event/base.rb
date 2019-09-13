@@ -1,11 +1,11 @@
 module Browser
 
 class Event
-  include Native
+  include Native::Wrapper
 
   # @see https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events
   class Definition
-    include Native
+    include Native::Wrapper
 
     # @private
     def self.new(&block)

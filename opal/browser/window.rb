@@ -30,7 +30,7 @@ class Window
     }
   end
 
-  include Native
+  include Native::Wrapper
   include Event::Target
 
   target {|value|
