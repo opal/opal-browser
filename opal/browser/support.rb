@@ -178,7 +178,13 @@ module Browser
         `"onreadystatechange" in window.document.createElement("script")`
 
       when 'Event.constructor'
-        `try{new MouseEvent("click");return true;} catch (e){return false;}`
+        begin
+          `new MouseEvent("click")`
+
+          true
+        rescue
+          false
+        end
 
       when 'Event.create'
         defined?(`document.createEvent`)
