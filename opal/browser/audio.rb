@@ -3,7 +3,7 @@ require 'browser/audio/node'
 module Browser; module Audio
 
 class Context
-  include Native
+  include Native::Wrapper
 
   alias_native :destination
   alias_native :listener

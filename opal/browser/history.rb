@@ -11,7 +11,7 @@ class History
     Browser.supports? 'History'
   end
 
-  include Native
+  include Native::Wrapper
 
   # @!attribute [r] length
   # @return [Integer] how many items are in the history

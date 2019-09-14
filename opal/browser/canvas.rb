@@ -8,7 +8,7 @@ require 'browser/canvas/gradient'
 module Browser
 
 class Canvas
-  include Native
+  include Native::Wrapper
 
   attr_reader :element, :style, :text
 

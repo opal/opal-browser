@@ -17,7 +17,7 @@ class Data
     data
   end
 
-  include Native
+  include Native::Wrapper
 
   attr_reader :x, :y, :width, :height
 

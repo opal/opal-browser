@@ -1,7 +1,7 @@
 module Browser; module Audio
 
   class ParamSchedule
-    include Native
+    include Native::Wrapper
 
     alias_native :cancel, :cancelScheduledValues
 

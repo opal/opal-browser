@@ -4,7 +4,7 @@ module Browser; module HTTP
 
 # Represents an HTTP response.
 class Response
-  include Native
+  include Native::Wrapper
 
   Status = Struct.new(:code, :text)
 

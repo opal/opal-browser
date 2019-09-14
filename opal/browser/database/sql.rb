@@ -27,7 +27,7 @@ class SQL
     Timeout    = Class.new(self)
   end
 
-  include Native
+  include Native::Wrapper
 
   # @return [String] the name of the database
   attr_reader :name
@@ -87,7 +87,7 @@ class SQL
 
   # Allows you to make changes to the database or read data from it.
   class Transaction
-    include Native
+    include Native::Wrapper
 
     # @return [Database] the database the transaction has been created from
     attr_reader :database
@@ -129,7 +129,7 @@ class SQL
   end
 
   class Result
-    include Native
+    include Native::Wrapper
 
     # @return [Transaction] the transaction the result came from
     attr_reader :transaction

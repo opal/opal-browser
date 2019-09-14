@@ -9,11 +9,11 @@ class MutationObserver
     Browser.supports? :MutationObserver
   end
 
-  include Native
+  include Native::Wrapper
 
   # Encapsulates a recorded change.
   class Record
-    include Native
+    include Native::Wrapper
 
     # @!attribute [r] type
     # @return [:attributes, :tree, :cdata] the type of the recorded change

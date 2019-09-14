@@ -4,7 +4,7 @@ module Browser
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/API/Location
 class Location
-  include Native
+  include Native::Wrapper
 
   # Change the location.
   #

@@ -21,11 +21,11 @@ class Input < Element
   end
 
   def check!
-    `#@native.checked = 'checked';`
+    `#@native.checked = 'checked'`
   end
 
   def uncheck!
-    `#@native.checked = '';`
+    `#@native.checked = ''`
   end
 
   def clear

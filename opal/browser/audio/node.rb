@@ -1,7 +1,7 @@
 module Browser; module Audio; module Node
 
 class Base
-  include Native
+  include Native::Wrapper
 
   def initialize(native)
     @native = native

@@ -9,7 +9,7 @@ class EventSource
     Browser.supports? :EventSource
   end
 
-  include Native
+  include Native::Wrapper
   include Event::Target
 
   target {|value|

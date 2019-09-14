@@ -9,7 +9,7 @@ class Socket
     Browser.supports? :WebSocket
   end
 
-  include Native
+  include Native::Wrapper
   include IO::Writable
   include Event::Target
 
