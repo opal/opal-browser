@@ -36,7 +36,11 @@ class Element < Node
   include Event::Target
 
   target {|value|
-    DOM(value) rescue nil
+    begin
+      DOM(value)
+    rescue Exception
+      nil
+    end
   }
 
   if Browser.supports? 'Element.matches'
