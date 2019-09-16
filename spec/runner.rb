@@ -23,7 +23,7 @@ rescue => e
   retries -= 1
   retry if retries > 0
   puts "No retries left"
-  exit
+  exit 1
 end
 
 # configure based on environment variables
