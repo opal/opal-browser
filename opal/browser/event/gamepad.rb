@@ -29,7 +29,7 @@ class Gamepad < Event
 
   if Browser.supports? 'Event.constructor'
     def self.construct(name, desc)
-      `new GamepadEvent(#{name}, {
+      `return new GamepadEvent(#{name}, {
         bubbles:    desc.bubbles,
         cancelable: desc.cancelable,
         gamepad:    desc })`
