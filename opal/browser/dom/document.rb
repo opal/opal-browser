@@ -15,7 +15,15 @@ class Document < Element
       }
     }
 
-    css(what).first || xpath(what).first
+    begin
+      css(what).first
+    rescue Exception
+      nil
+    end || begin
+      xpath(what).first
+    rescue Exception
+      nil
+    end
   end
 
   alias at []

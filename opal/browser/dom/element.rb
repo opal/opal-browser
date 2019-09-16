@@ -125,7 +125,15 @@ class Element < Node
   #
   # @return [Node?]
   def at(path_or_selector)
-    xpath(path_or_selector).first || css(path_or_selector).first
+    begin
+      css(path_or_selector).first
+    rescue Exception
+      nil
+    end || begin
+      xpath(path_or_selector).first
+    rescue Exception
+      nil
+    end
   end
 
   # Get the first node matching the given CSS selectors.
