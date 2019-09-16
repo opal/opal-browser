@@ -106,7 +106,7 @@ class Document < Element
 
   # Check if the document is ready.
   def ready?
-    `#@native.readyState === "complete"`
+    `#@native.readyState === "complete" || #@native.readyState === "interactive"`
   end
 
   # @!attribute root
