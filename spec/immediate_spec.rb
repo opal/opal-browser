@@ -3,12 +3,13 @@ require 'browser/immediate'
 
 describe Proc do
   describe '#defer' do
-    async 'defers the parameters' do
+    it 'defers the parameters' do
+      promise = Promise.new
       proc {|a|
-        async {
-          expect(a).to eq(42)
-        }
+        expect(a).to eq(42)
+        promise.resolve
       }.defer(42)
+      promise
     end
   end
 end
