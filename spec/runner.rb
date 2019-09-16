@@ -5,11 +5,11 @@ require 'json'
 
 # setup tunnel
 begin
-  File.open('BrowserStackTunnel.jar', 'w') {|f|
-    f.write RestClient.get('http://www.browserstack.com/BrowserStackTunnel.jar').to_str
-  }
+  `curl https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip > BrowserStackLocal.zip`
+  `unzip BrowserStackLocal.zip`
+  `chmod a+x BrowserStackLocal`
 
-  tunnel = IO.popen 'java -jar BrowserStackTunnel.jar $BS_AUTHKEY localhost,9292,0 -tunnelIdentifier $TRAVIS_JOB_ID'
+  tunnel = IO.popen './BrowserStackTunnel --key $BS_AUTHKEY --local-proxy-port 9292 --local-identifier $TRAVIS_JOB_ID'
 
   loop do
     break if tunnel.gets.start_with? 'You can now access'
