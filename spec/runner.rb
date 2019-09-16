@@ -14,7 +14,8 @@ begin
   loop do
     break if tunnel.gets.start_with? 'You can now access'
   end
-rescue
+rescue => e
+  puts "Error while using a BrowserStackTunnel: #{e.inspect}"
   retry
 end
 
@@ -69,7 +70,7 @@ Selenium::WebDriver::Wait.new(timeout: 30, interval: 5).until {
   not browser.title.strip.empty?
 }
 
-unless browser.title =~ /Opal Browser/
+unless browser.title =~ /Opal Browser|RSpec results/
   puts "\rThe page failed loading."
   exit 1
 end
