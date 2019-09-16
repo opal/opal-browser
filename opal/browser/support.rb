@@ -182,7 +182,7 @@ module Browser
           `new MouseEvent("click")`
 
           true
-        rescue
+        rescue Exception
           false
         end
 
