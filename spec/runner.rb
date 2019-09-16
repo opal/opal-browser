@@ -12,9 +12,10 @@ begin
   `chmod a+x BrowserStackLocal`
 
   tunnel = IO.popen './BrowserStackLocal --key $BS_AUTHKEY --only localhost,9292,0 --local-identifier $TRAVIS_JOB_ID'
-
   loop do
-    break if tunnel.gets.start_with? 'You can now access'
+    line = tunnel.gets
+    puts "*** [BrowserStackLocal] #{line.chomp}"
+    break if line.start_with? 'You can now access'
   end
 rescue => e
   puts "Error while using a BrowserStackLocal: #{e.inspect}"
