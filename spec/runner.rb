@@ -11,7 +11,7 @@ begin
   `unzip BrowserStackLocal.zip`
   `chmod a+x BrowserStackLocal`
 
-  tunnel = IO.popen './BrowserStackLocal --key $BS_AUTHKEY --only localhost,9292,0 --local-identifier $TRAVIS_JOB_ID'
+  tunnel = IO.popen './BrowserStackLocal --key "$BS_AUTHKEY" --only localhost,9292,0 --local-identifier "$TRAVIS_JOB_ID"'
   loop do
     line = tunnel.gets
     puts "*** [BrowserStackLocal] #{line.chomp}"

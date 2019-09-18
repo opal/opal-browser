@@ -351,7 +351,17 @@ class Element < Node
   # @return [NodeSet]
   def search(*selectors)
     NodeSet.new selectors.map {|selector|
-      xpath(selector).to_a.concat(css(selector).to_a)
+      begin
+        xpath(selector)
+      rescue Exception
+        []
+      end.to_a.concat(
+        begin
+          css(selector)
+        rescue Exception
+          []
+        end.to_a
+      )
     }.flatten.uniq
   end
 
