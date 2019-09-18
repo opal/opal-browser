@@ -93,6 +93,25 @@ describe Browser::Event do
     end
   end
 
+  describe "#one" do
+    it "fires once, passes arguments, works with custom events" do
+      count = 0
+      elem  = $document["event-spec"]
+
+      elem.one :testone do |event, a, b, c|
+        count += a + b*c
+      end
+
+      expect(count).to eq(0)
+      elem.trigger :testone, 1, 2, 3
+      expect(count).to eq(7)
+      elem.trigger :testone, 2, 3, 4
+      expect(count).to eq(7)
+      elem.trigger :testone, 3, 4, 5
+      expect(count).to eq(7)
+    end
+  end
+
   describe "#off" do
     it "removes all the handlers that were added" do
       count = 0
