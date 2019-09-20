@@ -129,7 +129,7 @@ class Element < Node
   #
   # @return [Node?]
   def at(path_or_selector)
-    css(path_or_selector).first || xpath(path_or_selector).first
+    xpath(path_or_selector).first || css(path_or_selector).first 
   end
 
   # Get the first node matching the given CSS selectors.
@@ -343,7 +343,7 @@ class Element < Node
   # @return [NodeSet]
   def search(*selectors)
     NodeSet.new selectors.map {|selector|
-      xpath(selector).to_a.concat(css(selector))
+      xpath(selector).to_a.concat(css(selector).to_a)
     }.flatten.uniq
   end
 
