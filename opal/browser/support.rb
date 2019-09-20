@@ -182,7 +182,7 @@ module Browser
           `new MouseEvent("click")`
 
           true
-        rescue Exception
+        rescue StandardError, JS::Error
           false
         end
 

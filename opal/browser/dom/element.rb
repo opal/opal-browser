@@ -38,7 +38,7 @@ class Element < Node
   target {|value|
     begin
       DOM(value)
-    rescue Exception
+    rescue StandardError, JS::Error
       nil
     end
   }
@@ -129,15 +129,7 @@ class Element < Node
   #
   # @return [Node?]
   def at(path_or_selector)
-    begin
-      css(path_or_selector).first
-    rescue Exception
-      nil
-    end || begin
-      xpath(path_or_selector).first
-    rescue Exception
-      nil
-    end
+    css(path_or_selector).first || xpath(path_or_selector).first
   end
 
   # Get the first node matching the given CSS selectors.
@@ -203,13 +195,13 @@ class Element < Node
   if Browser.supports? 'Query.css'
     def css(path)
       NodeSet[Native::Array.new(`#@native.querySelectorAll(path)`)]
-    rescue
+    rescue StandardError, JS::Error
       NodeSet[]
     end
   elsif Browser.loaded? 'Sizzle'
     def css(path)
       NodeSet[`Sizzle(path, #@native)`]
-    rescue
+    rescue StandardError, JS::Error
       NodeSet[]
     end
   else
@@ -351,17 +343,7 @@ class Element < Node
   # @return [NodeSet]
   def search(*selectors)
     NodeSet.new selectors.map {|selector|
-      begin
-        xpath(selector)
-      rescue Exception
-        []
-      end.to_a.concat(
-        begin
-          css(selector)
-        rescue Exception
-          []
-        end.to_a
-      )
+      xpath(selector).to_a.concat(css(selector))
     }.flatten.uniq
   end
 
@@ -479,7 +461,7 @@ class Element < Node
            #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)`,
         get:    :snapshotItem,
         length: :snapshotLength)]
-    rescue
+    rescue StandardError, JS::Error
       NodeSet[]
     end
   else
