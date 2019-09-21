@@ -70,17 +70,25 @@ class Element
     self
   end
 
+  # Those aliases don't refer to native variables. We want to use them for storage.
+  # Why do we want to store them in a DOM tree and not in a container? Simple. DOM
+  # is persistent, containers aren't.
+  private def animation_promise   ;     @native.JS[:animation_promise]         end
+  private def animation_promise= e;     @native.JS[:animation_promise] = e     end
+  private def virtually_visible   ;     @native.JS[:virtually_visible]         end
+  private def virtually_visible= e;     @native.JS[:virtually_visible] = e     end
+
   # Queue the block to happen when currently queued animations finish or during
   # the next animation frame.
   def animation_queue &block
     promise = Promise.new
 
     promise_resolve = proc do
-      @animation_promise = nil if @animation_promise == promise
+      self.animation_promise = nil if self.animation_promise == promise
       promise.resolve
     end
 
-    @animation_promise = (@animation_promise || Promise.value(true)).then do
+    self.animation_promise = (self.animation_promise || Promise.value(true)).then do
       animation_frame do
         yield promise_resolve
       end
@@ -123,12 +131,12 @@ class Element
   def fade_in(**kwargs, &block)
     animation_queue do |resolve|
       if !visible?
-        @virtually_visible = true
+        self.virtually_visible = true
         show
           
         style[:opacity] = 0.0
         animate opacity: 1.0, **kwargs do |*args|
-          @virtually_visible = nil
+          self.virtually_visible = nil
           style[:opacity] = nil
           yield(*args) if block_given?
         end
@@ -142,11 +150,11 @@ class Element
   def fade_out(**kwargs, &block)
     animation_queue do |resolve|
       if visible?
-        @virtually_visible = false
+        self.virtually_visible = false
 
         style[:opacity] = 1.0
         animate opacity: 0.0, **kwargs do |*args|
-          @virtually_visible = nil
+          self.virtually_visible = nil
           style[:opacity] = nil
           hide
           yield(*args) if block_given?
@@ -172,14 +180,14 @@ class Element
   def slide_down(**kwargs, &block)
     animation_queue do |resolve|
       if !visible?
-        @virtually_visible = true
+        self.virtually_visible = true
         show
         height = size.height
         orig_height = style[:height]
         style[:height] = 0.px
         
         animate height: height.px, **kwargs do |*args|
-          @virtually_visible = nil
+          self.virtually_visible = nil
           style[:height] = orig_height
           yield(*args) if block_given?
         end
@@ -193,11 +201,11 @@ class Element
   def slide_up(**kwargs, &block)
     animation_queue do |resolve|
       if visible?
-        @virtually_visible = false
+        self.virtually_visible = false
         orig_height = style[:height]
         
         animate height: 0.px, **kwargs do |*args|
-          @virtually_visible = nil
+          self.virtually_visible = nil
           style[:height] = orig_height
           hide
           yield(*args) if block_given?
