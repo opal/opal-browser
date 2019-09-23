@@ -1,6 +1,7 @@
 require 'spec_helper'
+require 'browser/event'
 
-describe Browser::DOM::Event do
+describe Browser::Event do
   html <<-HTML
     <div id="event-spec">
       u wot m8
@@ -40,39 +41,46 @@ describe Browser::DOM::Event do
       expect(count).to eq(2)
     end
 
-    async "passes an event to the handler" do
+    it "passes an event to the handler" do
       elem = $document["event-spec"]
 
+      promise = Promise.new
+
       elem.on :click do |event|
-        async {
-          expect(event).to be_a(Browser::DOM::Event)
-        }
+        expect(event).to be_a(Browser::Event)
+        promise.resolve
       end
 
       elem.trigger :click
+
+      promise
     end
 
-    async "passes additional arguments to the handler" do
+    it "passes additional arguments to the handler" do
       elem = $document["event-spec"]
 
+      promise = Promise.new
+
       elem.on :bazinga do |event, foo, bar, baz|
-        async {
-          expect(foo).to eq(1)
-          expect(bar).to eq(2)
-          expect(baz).to eq(3)
-        }
+        expect(foo).to eq(1)
+        expect(bar).to eq(2)
+        expect(baz).to eq(3)
+        promise.resolve
       end
 
       elem.trigger :bazinga, 1, 2, 3
+
+      promise
     end
 
-    async "works with delegated events" do
+    it "works with delegated events" do
       elem = $document["event-spec"]
 
+      promise = Promise.new
+
       elem.on :bazinga, 'span.nami' do
-        async {
-          expect(true).to be_truthy
-        }
+        expect(true).to be_truthy
+        promise.resolve
       end
 
       elem.add_child DOM { span.nami }
@@ -80,6 +88,27 @@ describe Browser::DOM::Event do
       after 0.01 do
         elem.first_element_child.trigger :bazinga
       end
+
+      promise
+    end
+  end
+
+  describe "#one" do
+    it "fires once, passes arguments, works with custom events" do
+      count = 0
+      elem  = $document["event-spec"]
+
+      elem.one :testone do |event, a, b, c|
+        count += a + b*c
+      end
+
+      expect(count).to eq(0)
+      elem.trigger :testone, 1, 2, 3
+      expect(count).to eq(7)
+      elem.trigger :testone, 2, 3, 4
+      expect(count).to eq(7)
+      elem.trigger :testone, 3, 4, 5
+      expect(count).to eq(7)
     end
   end
 

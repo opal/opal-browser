@@ -4,18 +4,26 @@ require 'rest_client'
 require 'json'
 
 # setup tunnel
+retries = 30
 begin
-  File.open('BrowserStackTunnel.jar', 'w') {|f|
-    f.write RestClient.get('http://www.browserstack.com/BrowserStackTunnel.jar').to_str
-  }
+  `rm -f BrowserStackLocal.zip BrowserStackLocal`
+  `curl https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip > BrowserStackLocal.zip`
+  `unzip BrowserStackLocal.zip`
+  `chmod a+x BrowserStackLocal`
 
-  tunnel = IO.popen 'java -jar BrowserStackTunnel.jar $BS_AUTHKEY localhost,9292,0 -tunnelIdentifier $TRAVIS_JOB_ID'
-
+  tunnel = IO.popen './BrowserStackLocal --key "$BS_AUTHKEY" --only localhost,9292,0 --local-identifier "$TRAVIS_JOB_ID"'
   loop do
-    break if tunnel.gets.start_with? 'You can now access'
+    line = tunnel.gets
+    puts "*** [BrowserStackLocal] #{line.chomp}"
+    break if line.start_with? 'You can now access'
   end
-rescue
-  retry
+rescue => e
+  puts "Error while using a BrowserStackLocal: #{e.inspect}"
+  sleep 5
+  retries -= 1
+  retry if retries > 0
+  puts "No retries left"
+  exit 1
 end
 
 # configure based on environment variables
@@ -69,7 +77,7 @@ Selenium::WebDriver::Wait.new(timeout: 30, interval: 5).until {
   not browser.title.strip.empty?
 }
 
-unless browser.title =~ /Opal Browser/
+unless browser.title =~ /Opal Browser|RSpec results/
   puts "\rThe page failed loading."
   exit 1
 end

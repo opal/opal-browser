@@ -270,6 +270,37 @@ class Event
       end
     end
 
+    # @overload one(name, &block)
+    #
+    #   Start listening for an event on the target. Remove the event after firing
+    #   so that it is fired at most once.
+    #
+    #   @param name [String] the event name
+    #
+    #   @yieldparam event [Event] the event
+    #
+    #   @return [Callback]
+    #
+    # @overload one(name, selector, &block)
+    #
+    #   Start listening for an event on the target children. Remove the event after
+    #   firing so that it is fired at most once.
+    #
+    #   @param name [String] the event name
+    #   @param selector [String] the CSS selector to trigger the event on
+    #
+    #   @yieldparam event [Event] the event
+    #
+    #   @return [Delegate]
+    def one (name, selector = nil, &block)
+      raise ArgumentError, 'no block has been given' unless block
+
+      cb = on name, selector do |*args|
+        out = block.call(*args)
+        cb.off
+        out
+      end
+    end
     # @overload off()
     #   Stop listening for any event.
     #

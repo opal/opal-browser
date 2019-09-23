@@ -2,41 +2,44 @@ require 'spec_helper'
 require 'browser/event_source'
 
 describe Browser::EventSource do
-  async 'creates it' do
+  it 'creates it' do
+    promise = Promise.new
     Browser::EventSource.new '/events' do |es|
       es.on :open do |e|
         es.close
 
-        async {
-          expect(e.target).to be_a(Browser::EventSource)
-        }
+        expect(e.target).to be_a(Browser::EventSource)
+        promise.resolve
       end
     end
+    promise
   end
 
-  async 'receives an unnamed event' do
+  it 'receives an unnamed event' do
+    promise = Promise.new
     Browser::EventSource.new '/events' do |es|
       es.on :message do |e|
         e.off
         es.close
 
-        async {
-          expect(e.data).to eq('lol')
-        }
+        expect(e.data).to eq('lol')
+        promise.resolve
       end
     end
+    promise
   end
 
-  async 'receives a named event' do
+  it 'receives a named event' do
+    promise = Promise.new
     Browser::EventSource.new '/events' do |es|
       es.on :custom do |e|
         e.off
         es.close
 
-        async {
-          expect(e.data).to eq('omg')
-        }
+        expect(e.data).to eq('omg')
+        promise.resolve
       end
     end
+    promise
   end
 end if Browser::EventSource.supported?

@@ -19,39 +19,43 @@ describe Browser::History do
   end
 
   describe '#back' do
-    async 'should go back once' do
+    it 'should go back once' do
       expect($window.history.current).to eq('/')
       $window.history.push('/wut')
       expect($window.history.current).to eq('/wut')
 
+      promise = Promise.new
+
       $window.on 'pop:state' do |e|
         e.off
 
-        async {
-          expect($window.history.current).to eq('/')
-        }
+        expect($window.history.current).to eq('/')
+        promise.resolve
       end
 
       $window.history.back
+      promise
     end
   end
 
   describe '#state' do
-    async 'gets the right state' do
+    it 'gets the right state' do
       $window.history.push('/wut', 42)
       $window.history.state.should eq(42)
       $window.history.push('/omg', 23)
       $window.history.state.should eq(23)
 
+      promise = Promise.new
+
       $window.on 'pop:state' do |e|
         e.off
 
-        async {
-          expect(true).to eq(true)
-        }
+        expect(true).to eq(true)
+        promise.resolve
       end
 
       $window.history.back(2)
+      promise
     end
   end if Browser.supports? 'History.state'
 end if Browser::History.supported?

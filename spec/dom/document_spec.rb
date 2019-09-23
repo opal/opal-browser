@@ -39,22 +39,24 @@ describe Browser::DOM::Document do
   end
 
   describe "#ready" do
-    async "calls the block when the document is ready" do
+    it "calls the block when the document is ready" do
+      promise = Promise.new
       $document.ready do
-        async {
-          expect(true).to be_truthy
-        }
+        expect(true).to be_truthy
+        promise.resolve
       end
+      promise
     end
   end
 
   describe "#ready?" do
-    async "is true inside a #ready block" do
+    it "is true inside a #ready block" do
+      promise = Promise.new
       $document.ready do
-        async {
-          expect($document.ready?).to be_truthy
-        }
+        expect($document.ready?).to be_truthy
+        promise.resolve
       end
+      promise
     end
   end
 end

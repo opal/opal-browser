@@ -36,7 +36,11 @@ class Element < Node
   include Event::Target
 
   target {|value|
-    DOM(value) rescue nil
+    begin
+      DOM(value)
+    rescue StandardError, JS::Error
+      nil
+    end
   }
 
   if Browser.supports? 'Element.matches'
@@ -125,7 +129,7 @@ class Element < Node
   #
   # @return [Node?]
   def at(path_or_selector)
-    xpath(path_or_selector).first || css(path_or_selector).first
+    xpath(path_or_selector).first || css(path_or_selector).first 
   end
 
   # Get the first node matching the given CSS selectors.
@@ -191,13 +195,13 @@ class Element < Node
   if Browser.supports? 'Query.css'
     def css(path)
       NodeSet[Native::Array.new(`#@native.querySelectorAll(path)`)]
-    rescue
+    rescue StandardError, JS::Error
       NodeSet[]
     end
   elsif Browser.loaded? 'Sizzle'
     def css(path)
       NodeSet[`Sizzle(path, #@native)`]
-    rescue
+    rescue StandardError, JS::Error
       NodeSet[]
     end
   else
@@ -457,7 +461,7 @@ class Element < Node
            #@native, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)`,
         get:    :snapshotItem,
         length: :snapshotLength)]
-    rescue
+    rescue StandardError, JS::Error
       NodeSet[]
     end
   else

@@ -24,107 +24,115 @@ describe Browser::Database::SQL do
   end
 
   describe '#transaction' do
-    async 'calls the block with the transaction' do
+    it 'calls the block with the transaction' do
       sql = SQL.new('test', size: SIZE)
 
+      promise = Promise.new
       sql.transaction {|t|
-        async {
-          expect(t).to be_a(SQL::Transaction)
-        }
+        expect(t).to be_a(SQL::Transaction)
+        promise.resolve
       }
+      promise
     end
 
-    async 'the transaction database is the right one' do
+    it 'the transaction database is the right one' do
       sql = SQL.new('test', size: SIZE)
 
+      promise = Promise.new
       sql.transaction {|t|
-        async {
-          expect(t.database).to eq(sql)
-        }
+        expect(t.database).to eq(sql)
+        promise.resolve
       }
+      promise
     end
   end
 
   describe SQL::Transaction do
     describe '#query' do
-      async 'returns a promise' do
+      it 'returns a promise' do
         sql = SQL.new('test', size: SIZE)
 
+        promise = Promise.new
         sql.transaction {|t|
-          async {
-            expect(t.query('hue')).to be_a(Promise)
-          }
+          expect(t.query('hue')).to be_a(Promise)
+          promise.resolve
         }
+        promise
       end
 
-      async 'resolves on success' do
+      it 'resolves on success' do
         sql = SQL.new('test', size: SIZE)
 
+        promise = Promise.new
         sql.transaction {|t|
           t.query('CREATE TABLE IF NOT EXISTS test(ID INTEGER PRIMARY KEY ASC, a TEXT)').then {|r|
-            async {
-              expect(r).to be_a(SQL::Result)
-            }
+            expect(r).to be_a(SQL::Result)
+            promise.resolve
           }
         }
+        promise
       end
 
-      async 'rejects on failure' do
+      it 'rejects on failure' do
         sql = SQL.new('test', size: SIZE)
 
+        promise = Promise.new
         sql.transaction {|t|
           t.query('huehue').rescue {|e|
-            async {
-              expect(e).to be_a(SQL::Error::Syntax)
-            }
+            expect(e).to be_a(SQL::Error::Syntax)
+            promise.resolve
           }
         }
+        promise
       end
     end
   end
 
   describe SQL::Result do
     describe '#length' do
-      async 'has the proper length' do
+      it 'has the proper length' do
         sql = SQL.new('test', size: SIZE)
 
+        promise = Promise.new
         sql.transaction {|t|
           t.query('SELECT 1').then {|r|
-            async {
-              expect(r.length).to eq(1)
-            }
+            expect(r.length).to eq(1)
+            promise.resolve
           }
         }
+        promise
       end
     end
 
     describe '#[]' do
-      async 'returns a row' do
+      it 'returns a row' do
         sql = SQL.new('test', size: SIZE)
 
+        promise = Promise.new
         sql.transaction {|t|
           t.query('SELECT 1, 2, 3').then {|r|
-            async {
-              expect(r[0]).to be_a(SQL::Row)
-              expect(r[-1]).to be_a(SQL::Row)
+            expect(r[0]).to be_a(SQL::Row)
+            expect(r[-1]).to be_a(SQL::Row)
 
-              expect(r[0]).to eq(r[-1])
-            }
+            expect(r[0]).to eq(r[-1])
+            promise.resolve
           }
         }
+        promise
       end
 
-      async 'returns nil on missing row' do
+      it 'returns nil on missing row' do
         sql = SQL.new('test', size: SIZE)
 
+        promise = Promise.new
         sql.transaction {|t|
           t.query('SELECT 1, 2, 3').then {|r|
-            async {
-              expect(r[5]).to be_nil
-              expect(r[-5]).to be_nil
-            }
+            expect(r[5]).to be_nil
+            expect(r[-5]).to be_nil
+            promise.resolve
           }
         }
+        promise
       end
     end
   end

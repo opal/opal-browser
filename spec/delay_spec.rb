@@ -3,36 +3,39 @@ require 'browser/delay'
 
 describe Browser::Window do
   describe '#after' do
-    async 'calls the block after the given time' do
+    it 'calls the block after the given time' do
+      promise = Promise.new
       $window.after 0.3 do
-        async {
-          expect(true).to be_truthy
-        }
+        expect(true).to be_truthy
+        promise.resolve
       end
+      promise
     end
   end
 end
 
 describe Kernel do
   describe '#after' do
-    async 'calls the block after the given time' do
+    it 'calls the block after the given time' do
+      promise = Promise.new
       after 0.3 do
-        async {
-          expect(true).to be_truthy
-        }
+        expect(true).to be_truthy
+        promise.resolve
       end
+      promise
     end
   end
 end
 
 describe Proc do
   describe '#after' do
-    async 'calls the block after the given time' do
+    it 'calls the block after the given time' do
+      promise = Promise.new
       -> {
-        async {
-          expect(true).to be_truthy
-        }
+        expect(true).to be_truthy
+        promise.resolve
       }.after 0.3
+      promise
     end
   end
 end

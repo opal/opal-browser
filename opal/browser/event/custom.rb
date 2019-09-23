@@ -17,7 +17,7 @@ class Custom < Event
 
   if Browser.supports? 'Event.constructor'
     def self.construct(name, desc)
-      `new CustomEvent(name, {
+      `return new CustomEvent(name, {
         bubbles:    desc.bubbles,
         cancelable: desc.cancelable,
         detail:     desc })`

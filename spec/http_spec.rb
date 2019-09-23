@@ -7,15 +7,11 @@ describe Browser::HTTP do
   end
 
   describe '.get' do
-    async 'fetches a path' do
+    it 'fetches a path' do
       Browser::HTTP.get(path).then {|res|
-        async {
-          expect(res.text).to eq('lol')
-        }
+        expect(res.text).to eq('lol')
       }.rescue {
-        async {
-          fail
-        }
+        fail
       }
     end
   end
@@ -27,15 +23,11 @@ describe Browser::HTTP do
   end
 
   describe '.post' do
-    async 'sends parameters properly' do
+    it 'sends parameters properly' do
       Browser::HTTP.post(path, lol: 'wut').then {|res|
-        async {
-          expect(res.text).to eq('ok')
-        }
+        expect(res.text).to eq('ok')
       }.rescue {
-        async {
-          fail
-        }
+        fail
       }
     end
   end
@@ -47,15 +39,11 @@ describe Browser::HTTP do
   end
 
   describe '.put' do
-    async 'sends parameters properly' do
+    it 'sends parameters properly' do
       Browser::HTTP.put(path, lol: 'wut').then {|res|
-        async {
-          expect(res.text).to eq('ok')
-        }
+        expect(res.text).to eq('ok')
       }.rescue {
-        async {
-          fail
-        }
+        fail
       }
     end
   end
@@ -67,15 +55,11 @@ describe Browser::HTTP do
   end
 
   describe '.delete' do
-    async 'fetches a path' do
+    it 'fetches a path' do
       Browser::HTTP.delete(path).then {|res|
-        async {
-          expect(res.text).to eq('lol')
-        }
+        expect(res.text).to eq('lol')
       }.rescue {
-        async {
-          fail
-        }
+        fail
       }
     end
   end

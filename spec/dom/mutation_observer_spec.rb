@@ -7,11 +7,11 @@ describe Browser::DOM::MutationObserver do
     </div>
   HTML
 
-  async 'notifies additions' do
+  it 'notifies additions' do
+    promise = Promise.new
     obs = Browser::DOM::MutationObserver.new {|mutations|
-      async {
-        expect(mutations.first.added.first.name).to eq('DIV')
-      }
+      expect(mutations.first.added.first.name).to eq('DIV')
+      promise.resolve
 
       obs.disconnect
     }
@@ -19,13 +19,15 @@ describe Browser::DOM::MutationObserver do
     obs.observe $document[:mutate]
 
     $document[:mutate].add_child $document.create_element('div')
+
+    promise
   end
 
-  async 'notifies removals' do
+  it 'notifies removals' do
+    promise = Promise.new
     obs = Browser::DOM::MutationObserver.new {|mutations|
-      async {
-        expect(mutations.first.removed.first.name).to eq('SPAN')
-      }
+      expect(mutations.first.removed.first.name).to eq('SPAN')
+      promise.resolve
 
       obs.disconnect
     }
@@ -33,5 +35,7 @@ describe Browser::DOM::MutationObserver do
     obs.observe $document[:mutate]
 
     $document[:mutate].first_element_child.remove
+
+    promise
   end
 end if Browser::DOM::MutationObserver.supported?
