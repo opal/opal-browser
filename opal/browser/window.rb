@@ -54,6 +54,24 @@ class Window
     `#@native.confirm(value) || false`
   end
 
+  # @!attribute [r] parent
+  # @return [Window] parent of the current window or subframe
+  def parent
+    Browser::Window.new(`#@native.parent`)
+  end
+
+  # @!attribute [r] top
+  # @return [Window] reference to the topmost window in the window hierarchy
+  def top
+    Browser::Window.new(`#@native.top`)
+  end
+
+  # @!attribute [r] opener
+  # @return [Window] reference to the window that opened the window using `open`
+  def opener
+    Browser::Window.new(`#@native.opener`)
+  end
+
   # Get the {View} for the window.
   #
   # @return [View]

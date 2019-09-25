@@ -11,6 +11,7 @@ require 'browser/dom/element/input'
 require 'browser/dom/element/select'
 require 'browser/dom/element/template'
 require 'browser/dom/element/textarea'
+require 'browser/dom/element/iframe'
 
 module Browser; module DOM
 
