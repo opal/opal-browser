@@ -5,7 +5,7 @@ require 'browser/css/rule/style'
 
 module Kernel
   # Create a <style> element from a string or a block using the
-  # {Browser::CSS::Builder} DSL.
+  # {Paggio::CSS} DSL.
   #
   # @param text [String] the CSS text
   # @return [Browser::DOM::Element] the create <style> element

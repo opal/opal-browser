@@ -375,7 +375,7 @@ class Event
 
     # Trigger an event on the target.
     #
-    # @param name [String] the event name
+    # @param event [String] the event name
     # @param args [Array] optional arguments to the event callback
     #
     # @yieldparam definition [Definition] definition to customize the event
@@ -389,7 +389,7 @@ class Event
 
     # Trigger an event on the target without bubbling.
     #
-    # @param name [String] the event name
+    # @param event [String] the event name
     # @param args [Array] optional arguments to the event callback
     #
     # @yieldparam definition [Definition] definition to customize the event
