@@ -83,6 +83,8 @@ supports binary results as typed-arrays.
 It easily allows for synchronous and asynchronous requests.
 
 ```ruby
+require 'browser/http'
+
 Browser::HTTP.get "/something.json" do
   on :success do |res|
     alert res.json.inspect
@@ -96,6 +98,8 @@ Websockets have been fully wrapped and they are easily configurable with
 blocks.
 
 ```ruby
+require 'browser/socket'
+
 Browser::Socket.new 'ws://echo.websocket.org' do
   on :open do
     every 1 do
@@ -141,6 +145,8 @@ Database SQL
 WebSQL has been fully wrapped.
 
 ```ruby
+require 'browser/database/sql'
+
 db = Browser::Database::SQL.new 'test'
 db.transaction {|t|
   t.query('CREATE TABLE test(ID INTEGER PRIMARY KEY ASC, text TEXT)').then {
