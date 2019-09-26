@@ -2,7 +2,7 @@ module Browser; module DOM
 
 # Encapsulates an {Element} attribute.
 class Attribute
-  include Native::Wrapper
+  include Native::Wrapper::Singleton
 
   # @!attribute [r] name
   # @return [String] the name of the attribute

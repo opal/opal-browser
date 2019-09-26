@@ -3,6 +3,41 @@ module Browser
   Position = Struct.new(:x, :y)
 end
 
+module Native
+  module Wrapper
+    # {Native::Wrapper::Singleton} is a special case of {Native::Wrapper}.
+    #
+    # What this module does is it makes sure that your Ruby objects
+    # are mapped 1:1 to your Javascript objects. So that for instance
+    # your `$document.at_css('body')` is always the same Ruby object.
+    #
+    # You can only use it if your final `.new` is of the signature
+    # `.new(native)` and your native (probably DOM) object persists and
+    # doesn't mind arbitrary properties.
+    #
+    # The rule of thumb is: if it does overload `#initialize`'s signature
+    # and not `.new`'s - it won't work. Use Native::Wrapper in this case.
+    module Singleton
+      module ClassMethods
+        def new(native)
+          raise ArgumentError if !native?(native)
+
+          if defined? `#{native}.__opal_singleton__`
+            `#{native}.__opal_singleton__`
+          else
+            `#{native}.__opal_singleton__ = #{super(native)}`
+          end
+        end
+      end
+
+      def self.included(klass)
+        klass.include Native::Wrapper
+        klass.extend ClassMethods
+      end
+    end
+  end
+end
+
 class Object
   # Encode as URI.
   #

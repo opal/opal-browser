@@ -4,7 +4,7 @@ module Browser
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/API/Window.screen
 class Screen
-  include Native::Wrapper
+  include Native::Wrapper::Singleton
   include Event::Target
 
   target {|value|
