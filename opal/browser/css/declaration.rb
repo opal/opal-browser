@@ -1,7 +1,7 @@
 module Browser; module CSS
 
 class Declaration
-  include Native::Wrapper::Singleton
+  include Browser::NativeCachedWrapper
   include Enumerable
 
   def rule

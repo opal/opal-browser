@@ -4,7 +4,7 @@ module Browser
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/API/Location
 class Location
-  include Native::Wrapper::Singleton
+  include Browser::NativeCachedWrapper
 
   # Change the location.
   #

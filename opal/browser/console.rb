@@ -6,7 +6,7 @@ module Browser
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/API/console
 class Console
-  include Native::Wrapper::Singleton
+  include Browser::NativeCachedWrapper
 
   # Clear the console.
   def clear

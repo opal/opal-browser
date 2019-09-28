@@ -29,7 +29,7 @@ class Window
     }
   end
 
-  include Native::Wrapper::Singleton
+  include Browser::NativeCachedWrapper
   include Event::Target
 
   target {|value|

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Native::Wrapper::Singleton do
+describe Browser::NativeCachedWrapper do
   it 'deduplicates DOM objects' do
     expect($document.at_css("body").hash).to eq($document.body.hash)
     expect($document.body.hash).not_to eq($document.body.dup.hash) # Should dup/clone have different semantics?
@@ -9,7 +9,7 @@ describe Native::Wrapper::Singleton do
 
   it 'accurately intercepts the last new call' do
     class Demo
-      include Native::Wrapper::Singleton
+      include Browser::NativeCachedWrapper
 
       def self.new(arg1, arg2)
         super(`{arg1: #{arg1}, arg2: #{arg2}}`)
