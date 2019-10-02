@@ -11,6 +11,7 @@ require 'browser/dom/element/input'
 require 'browser/dom/element/select'
 require 'browser/dom/element/template'
 require 'browser/dom/element/textarea'
+require 'browser/dom/element/iframe'
 
 module Browser; module DOM
 
@@ -327,13 +328,13 @@ class Element < Node
   # @!attribute [r] position
   # @return [Position] the position of the element
   def position
-    Position.new(self)
+    @position ||= Position.new(self)
   end
 
   # @!attribute [r] scroll
   # @return [Scroll] the scrolling for the element
   def scroll
-    Scroll.new(self)
+    @scroll ||= Scroll.new(self)
   end
 
   # Search for all the children matching the given XPaths or CSS selectors.

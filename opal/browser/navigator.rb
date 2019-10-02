@@ -4,7 +4,7 @@ module Browser
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/API/Navigator
 class Navigator
-  include Native::Wrapper
+  include Browser::NativeCachedWrapper
 
   Version = Struct.new(:major, :minor, :build)
   Product = Struct.new(:name, :version)
@@ -12,7 +12,7 @@ class Navigator
 
   # Representation of a MIME type.
   class MimeType
-    include Native::Wrapper
+    include Browser::NativeCachedWrapper
 
     # @!attribute [r] plugin
     # @return [Plugin] the plugin for the MIME type

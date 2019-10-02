@@ -13,7 +13,7 @@ class MutationObserver
 
   # Encapsulates a recorded change.
   class Record
-    include Native::Wrapper
+    include Browser::NativeCachedWrapper
 
     # @!attribute [r] type
     # @return [:attributes, :tree, :cdata] the type of the recorded change

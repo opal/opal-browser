@@ -98,6 +98,9 @@ module Browser
       when 'Window.scroll'
         defined?(`document.documentElement.scrollLeft`)
 
+      when 'Window.scrollBy'
+        defined?(`document.documentElement.scrollBy`)
+
       when 'Window.pageOffset'
         defined?(`window.pageXOffset`)
 

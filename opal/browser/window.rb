@@ -1,6 +1,5 @@
 require 'browser/window/view'
 require 'browser/window/size'
-require 'browser/window/scroll'
 
 module Browser
 
@@ -30,7 +29,7 @@ class Window
     }
   end
 
-  include Native::Wrapper
+  include Browser::NativeCachedWrapper
   include Event::Target
 
   target {|value|
@@ -54,25 +53,43 @@ class Window
     `#@native.confirm(value) || false`
   end
 
+  # @!attribute [r] parent
+  # @return [Window] parent of the current window or subframe
+  def parent
+    @parent ||= Browser::Window.new(`#@native.parent`)
+  end
+
+  # @!attribute [r] top
+  # @return [Window] reference to the topmost window in the window hierarchy
+  def top
+    @top ||= Browser::Window.new(`#@native.top`)
+  end
+
+  # @!attribute [r] opener
+  # @return [Window] reference to the window that opened the window using `open`
+  def opener
+    @opener ||= Browser::Window.new(`#@native.opener`)
+  end
+
   # Get the {View} for the window.
   #
   # @return [View]
   def view
-    View.new(self)
+    @view ||= View.new(self)
   end
 
   # Get the {Size} for this window.
   #
   # @return [Size]
   def size
-    Size.new(self)
+    @size ||= Size.new(self)
   end
 
-  # Get the {Scroll} for this window.
+  # Get the {DOM::Element::Scroll} for this window.
   #
-  # @return [Scroll]
+  # @return [DOM::Element::Scroll]
   def scroll
-    Scroll.new(self)
+    @scroll ||= DOM::Element::Scroll.new(self)
   end
 
   if Browser.supports? 'Window.send'

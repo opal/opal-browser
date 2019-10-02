@@ -71,7 +71,7 @@ class NodeSet
 
   # Query for children matching the given CSS selector.
   #
-  # @param selector [String] the CSS selector
+  # @param path [String] the CSS selector
   #
   # @return [NodeSet]
   def css(path)

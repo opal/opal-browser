@@ -5,8 +5,8 @@ module Browser; module DOM
 # @see https://developer.mozilla.org/en-US/docs/Web/API/Text
 class Text < CharacterData
   # (see Document#create_text)
-  def self.create(*args)
-    $document.create_text(*args)
+  def self.create(content)
+    $document.create_text(content)
   end
 
   # @!attribute [r] whole

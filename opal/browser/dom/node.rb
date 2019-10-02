@@ -4,7 +4,7 @@ module Browser; module DOM
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/API/Node
 class Node
-  include Native::Wrapper
+  include Browser::NativeCachedWrapper
 
   ELEMENT_NODE                = 1
   ATTRIBUTE_NODE              = 2
