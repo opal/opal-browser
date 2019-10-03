@@ -33,9 +33,33 @@ module Kernel
     DOM(`doc`)
   end
 
-  # Wrap a native element or create a DOM tree using the {Paggio::HTML} DSL.
+  # @overload DOM(document = $document, &block)
   #
-  # @return [Browser::DOM::Node]
+  #   Create a DOM tree using the {Paggio::HTML} DSL.
+  #
+  #   @param document [Browser::DOM::Document] the document instance
+  #     we intend to use
+  #
+  #   @return [Browser::DOM::Node, Browser::DOM::NodeSet]
+  #
+  # @overload DOM(string, document = $document)
+  #
+  #   Create a DOM tree from a HTML string.
+  #
+  #   @param string [String] the HTML string
+  #   @param document [Browser::DOM::Document] the document instance
+  #     we intend to use
+  #
+  #   @return [Browser::DOM::Node]
+  #
+  # @overload DOM(native)
+  #
+  #   Wrap a native element to create a DOM tree.
+  #
+  #   @param native [Native] the Native node
+  #
+  #   @return [Browser::DOM::Node]
+  #
   def DOM(*args, &block)
     if block
       document = args.shift || $document
