@@ -15,7 +15,7 @@ class Iframe < Element
   # @!attribute [r] content_document
   # @return [Document] document of content of this iframe 
   def content_document
-    DOM(`#@native.contentDocument`)
+    DOM(`#@native.contentDocument || #@native.contentWindow.document`)
   end
 
   # Send a message to the iframe content's window.
