@@ -49,6 +49,17 @@ class Window
   def after!(time, &block)
     Delay.new(@native, time, &block)
   end
+
+  # Returns a promise that will resolve after the given seconds.
+  #
+  # @param time [Float] the seconds after it gets called
+  #
+  # @return [Promise] the promise that will resolve after timeout happens
+  def resolve_after(time)
+    promise = Promise.new
+    Delay.new(@native, time) { promise.resolve }.start
+    promise
+  end
 end
 
 end
@@ -62,6 +73,11 @@ module Kernel
   # (see Browser::Window#after!)
   def after!(time, &block)
     $window.after!(time, &block)
+  end
+
+  # (see Browser::Window#resolve_after)
+  def resolve_after(time)
+    $window.resolve_after(time)
   end
 end
 
