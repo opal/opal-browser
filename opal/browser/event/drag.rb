@@ -1,6 +1,5 @@
 module Browser; class Event
 
-# TODO: handle transfers
 class Drag < Event
   def self.supported?
     Browser.supports? 'Event.Drag'
@@ -110,9 +109,11 @@ class Drag < Event
     DOM(`#@native.relatedTarget`)
   end
 
+  # Returns a {DataTransfer} related to this event
+  #
   # @see https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer
   def transfer
-    raise NotImplementedError
+    DataTransfer.new(`#@native.dataTransfer`)
   end
 end
 

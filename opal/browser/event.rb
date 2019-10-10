@@ -4,6 +4,7 @@ require 'browser/event/mouse'
 require 'browser/event/keyboard'
 require 'browser/event/focus'
 require 'browser/event/wheel'
+require 'browser/event/data_transfer'
 require 'browser/event/composition'
 require 'browser/event/animation'
 require 'browser/event/audio_processing'
@@ -55,7 +56,7 @@ class Event
       when 'compositionend', 'compositionstart', 'compositionupdate'
         Composition
 
-      when 'copy', 'cut'
+      when 'copy', 'cut', 'paste'
         Clipboard
 
       when 'devicelight'
@@ -70,7 +71,7 @@ class Event
       when 'deviceproximity'
         DeviceProximity
 
-      when 'drag', 'dragend', 'dragleave', 'dragover', 'dragstart', 'drop'
+      when 'drag', 'dragend', 'dragenter', 'dragexit', 'dragleave', 'dragover', 'dragstart', 'drop'
         Drag
 
       when 'gamepadconnected', 'gamepaddisconnected'
