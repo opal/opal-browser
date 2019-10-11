@@ -20,9 +20,19 @@ class Blob
     `#@native.type`
   end
 
-  # Blob converted to an UTF-8 encoded string
-  def text
-    `#@native.text()`
+  # Convert a blob to a UTF-8 encoded string.
+  #
+  # If block is given it will be called with a parameter once we receive
+  # the text. Otherwise return a {Promise} which will resolve once we
+  # receive it.
+  def text(&block)
+    promise = nil
+    if ! block
+      promise = Promise.new
+      block = proc { |i| promise.resolve(i) }
+    end
+    `#@native.text().then(#{block.to_n})`
+    promise
   end
 
   # {Buffer} view into the blob
@@ -39,6 +49,15 @@ class Blob
   # eg. display some multimedia
   def to_url(window=$window)
     `#{window.to_n}.URL.createObjectURL(#@native)`
+  end
+
+  # Rename a blob and return a {File} with a new name.
+  #
+  # @return [File] a renamed blob
+  def rename(new_filename)
+    File.create([self], new_filename, type: type, 
+                                      lastModified: respond_to?(:last_modified) ? 
+                                                      last_modified : Time.now)
   end
 end
 
