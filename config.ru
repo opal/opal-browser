@@ -40,6 +40,17 @@ apps << Class.new(Sinatra::Base) {
     "lol"
   end
 
+  post '/http-file' do
+    if params['lol'] == 'wut' && 
+       params['file'][:filename] == 'yay.txt' && 
+       params['file'][:tempfile].read == 'content'
+
+      "ok"
+    else
+      "fail"
+    end
+  end
+
   get '/events' do
     headers 'Content-Type' => 'text/event-stream'
 
