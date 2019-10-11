@@ -3,7 +3,7 @@ require 'browser/blob'
 module Browser; class Event
 
 # {DataTransfer} is an object which manages included data to
-# an event of type {DOM::Event::Drag} or {DOM::Event::Clipboard}.
+# an event of type {Event::Drag} or {Event::Clipboard}.
 class DataTransfer
   include NativeCachedWrapper
 
