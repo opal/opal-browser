@@ -236,7 +236,7 @@ class Request
         url += ??
       end
 
-      url += @query.encode_uri
+      url += FormData.build_query(@query)
     end
 
     `#@native.open(#{@method.to_s.upcase}, #{url.to_s}, #{@asynchronous}, #{@user.to_n}, #{@password.to_n})`
@@ -296,14 +296,29 @@ class Request
 
     if String === parameters
       data = parameters
-    elsif Hash === parameters && !parameters.empty?
-      data = parameters.map {|vals|
-        vals.map(&:encode_uri_component).join(?=)
-      }.join(?&)
+    elsif (Hash === parameters && !parameters.empty?) || FormData === parameters
+      data = if Hash === parameters
+        if FormData.contain_files?(parameters)
+          FormData.build_form_data(parameters)
+        else
+          FormData.build_query(parameters)
+        end
+      else #if FormData === parameters
+        parameters
+      end
 
       unless @content_type
-        `#@native.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')`
+        if FormData === data
+          # I thought it's done this way, but it isn't. It actually is
+          # "multipart/form-data; boundary=-----------.......". Let's miss it
+          # purposefully, because it's filled in automatically in this example.
+          # `#@native.setRequestHeader('Content-Type', 'multipart/form-data')`
+        else
+          `#@native.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')`
+        end
       end
+
+      data = data.to_n
     else
       data = `null`
     end

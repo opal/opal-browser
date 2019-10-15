@@ -64,12 +64,6 @@ class Element
     `#@native.hasFocus`
   end
 
-  # Click the element. it fires the element's click event.
-  def click
-    `#@native.click()`
-    self
-  end
-
   # Queue the block to happen when currently queued animations finish or during
   # the next animation frame.
   def animation_queue &block

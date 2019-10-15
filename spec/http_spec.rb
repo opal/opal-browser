@@ -2,9 +2,8 @@ require 'spec_helper'
 require 'browser/http'
 
 describe Browser::HTTP do
-  let :path do
-    '/http'
-  end
+  let(:path) { '/http' }
+  let(:path_file) { '/http-file' }
 
   describe '.get' do
     it 'fetches a path' do
@@ -35,6 +34,11 @@ describe Browser::HTTP do
   describe '.post!' do
     it 'sends parameters properly' do
       expect(Browser::HTTP.post!(path, lol: 'wut').text).to eq('ok')
+    end
+
+    it 'sends files properly' do
+      file = Browser::File.create(["content"], "yay.txt", type: "text/plain")
+      expect(Browser::HTTP.post!(path_file, lol: 'wut', file: file).text).to eq('ok')
     end
   end
 

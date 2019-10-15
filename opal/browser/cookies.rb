@@ -37,12 +37,12 @@ class Cookies
   #
   # @return [Object]
   def [](name)
-    matches = `#@document.cookie`.scan(/#{Regexp.escape(name.encode_uri_component)}=([^;]*)/)
+    matches = `#@document.cookie`.scan(/#{Regexp.escape(FormData.encode(name))}=([^;]*)/)
 
     return if matches.empty?
 
     result = matches.flatten.map {|value|
-      JSON.parse(value.decode_uri_component)
+      JSON.parse(FormData.decode(value))
     }
 
     result.length == 1 ? result.first : result
@@ -119,7 +119,7 @@ protected
   def encode(key, value, options = {})
     io = StringIO.new
 
-    io << key.encode_uri_component << ?= << value.encode_uri_component << '; '
+    io << FormData.encode(key) << ?= << FormData.encode(value) << '; '
 
     io << 'max-age=' << options[:max_age] << '; '        if options[:max_age]
     io << 'expires=' << options[:expires].utc << '; '    if options[:expires]

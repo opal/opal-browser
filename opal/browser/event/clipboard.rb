@@ -23,6 +23,13 @@ class Clipboard < Event
 
   alias_native :data
   alias_native :type, :dataType
+
+  # Returns a {DataTransfer} related to this event
+  #
+  # @see https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer
+  def transfer
+    DataTransfer.new(`#@native.clipboardData`)
+  end
 end
 
 end; end

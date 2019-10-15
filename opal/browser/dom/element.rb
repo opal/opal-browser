@@ -7,6 +7,7 @@ require 'browser/dom/element/size'
 
 require 'browser/dom/element/button'
 require 'browser/dom/element/image'
+require 'browser/dom/element/form'
 require 'browser/dom/element/input'
 require 'browser/dom/element/select'
 require 'browser/dom/element/template'
@@ -214,6 +215,12 @@ class Element < Node
     def css(selector)
       raise NotImplementedError, 'query by CSS selector unsupported'
     end
+  end
+
+  # Click the element. it fires the element's click event.
+  def click
+    `#@native.click()`
+    self
   end
 
   # @overload data()

@@ -4,19 +4,35 @@ require 'browser/css/rule'
 require 'browser/css/rule/style'
 
 module Kernel
-  # Create a <style> element from a string or a block using the
-  # {Paggio::CSS} DSL.
+  # @overload CSS(document = $document, &block)
   #
-  # @param text [String] the CSS text
-  # @return [Browser::DOM::Element] the create <style> element
-  def CSS(text = nil, &block)
-    style = $document.create_element(:style)
+  #   Create a `<style>` element from a {Paggio::CSS} DSL.
+  #
+  #   @param document [Browser::DOM::Document] the document instance
+  #     we intend to use
+  #
+  #   @return [Browser::DOM::Element] the created `<style>` element
+  #
+  # @overload CSS(string, document = $document)
+  #
+  #   Create a `<style>` element from a string.
+  #
+  #   @param document [Browser::DOM::Document] the document instance
+  #     we intend to use
+  #
+  #   @return [Browser::DOM::Element] the created `<style>` element
+  def CSS(*args, &block)
+    document = if args.length > 1 || block_given?
+      args.pop
+    end || $document
+
+    style = document.create_element(:style)
     style[:type] = 'text/css'
 
     if block
       style.inner_text = Paggio.css(&block)
     else
-      style.inner_text = text
+      style.inner_text = args.join("")
     end
 
     style
