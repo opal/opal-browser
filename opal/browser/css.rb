@@ -22,7 +22,9 @@ module Kernel
   #
   #   @return [Browser::DOM::Element] the created `<style>` element
   def CSS(*args, &block)
-    document = args.pop || $document
+    document = if args.length > 1 || block_given?
+      args.pop
+    end || $document
 
     style = document.create_element(:style)
     style[:type] = 'text/css'
