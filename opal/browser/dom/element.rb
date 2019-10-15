@@ -217,6 +217,12 @@ class Element < Node
     end
   end
 
+  # Click the element. it fires the element's click event.
+  def click
+    `#@native.click()`
+    self
+  end
+
   # @overload data()
   #
   #   Return the data for the element.
