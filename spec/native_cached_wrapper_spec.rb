@@ -29,5 +29,18 @@ describe Browser::NativeCachedWrapper do
     expect(Demo.new("a", "b").data).to eq([:data, "a", "b"])
     expect(SuperDemo.new("1", "2", "3").data).to eq([:data, "superdemo", "1 - 2 - 3"])
   end
+
+  html <<-HTML
+    <iframe id='ifr' src='about:blank' sandbox=''></iframe>
+  HTML
+
+  it 'supports restricted objects' do
+    # Window won't be restricted
+    expect($window.restricted?).to eq(false)
+    # Iframe itself won't be restricted
+    expect($document['ifr'].restricted?).to eq(false)
+    # But its content_window will be (due to CORS)
+    expect($document['ifr'].content_window.restricted?).to eq(true)
+  end
 end
 

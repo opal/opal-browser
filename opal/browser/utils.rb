@@ -2,17 +2,6 @@ module Browser
   Size     = Struct.new(:width, :height)
   Position = Struct.new(:x, :y)
 
-  # Check if we don't have access to arbitrary properties of a (presumably)
-  # native object.
-  def self.restricted?(native)
-    begin
-      `typeof(#{native}.$$try_restricted_access)`
-      false
-    rescue JS::Error # JS::Error of a particular type SecurityError
-      true
-    end
-  end
-
   # {Browser::NativeCachedWrapper} is a special case of {Native::Wrapper}.
   #
   # What this module does is it makes sure that your Ruby objects
@@ -30,17 +19,35 @@ module Browser
       klass.include Native::Wrapper
       klass.extend NativeCachedWrapperClassMethods
     end
+
+    def restricted?
+      !!@restricted
+    end
   end
 
   module NativeCachedWrapperClassMethods
+    # Check if we don't have access to arbitrary properties of a (presumably)
+    # native object.
+    private def restricted?(native)
+      %x{
+        try {
+          typeof(#{native}.$$try_restricted_access);
+        } catch (e) {
+          if (e.name == 'SecurityError') return true;
+        }
+        return false;
+      }
+    end
+
     def new(native)
       # We can't access arbitrary properties if an element is restricted
       # i.e. the DOM element is an item we can't fully access due to CORS.
-      if Browser::restricted?(native)
+      if restricted?(native)
         # Let's try to bypass any further initializers... may be ugly, but
         # works.
         obj = allocate
         obj.instance_variable_set :@native, native
+        obj.instance_variable_set :@restricted, true
         return obj
       end
 
