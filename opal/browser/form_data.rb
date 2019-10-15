@@ -146,7 +146,7 @@ class FormData
   def <<(tuple)
     key, value, filename = tuple
 
-    if ! filename
+    unless filename
       `#@native.append(#{key}, #{Native.convert(value)})`
     else
       `#@native.append(#{key}, #{Native.convert(value)}, #{filename})`
@@ -160,7 +160,7 @@ class FormData
 
   # Set a field in this FormData instance with a given name
   def set(key, value, filename = nil)
-    if ! filename
+    unless filename
       `#@native.set(#{key}, #{Native.convert(value)})`
     else
       `#@native.set(#{key}, #{Native.convert(value)}, #{filename})`

@@ -27,7 +27,7 @@ class Blob
   # receive it.
   def text(&block)
     promise = nil
-    if ! block
+    unless block_given?
       promise = Promise.new
       block = proc { |i| promise.resolve(i) }
     end
