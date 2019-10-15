@@ -23,6 +23,14 @@ module Browser
     def restricted?
       !!@restricted
     end
+
+    # Change a native reference and make sure the change is reflected on JS
+    # side as well. This method is used by Node#initialize_copy. Please don't
+    # use this method outside of the cloning semantic.
+    def set_native_reference(native)
+      `#{native}.$$opal_native_cached = #{self}`
+      @native = native
+    end
   end
 
   module NativeCachedWrapperClassMethods

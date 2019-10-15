@@ -45,6 +45,17 @@ class Node
     `#@native === #{Native.convert(other)}`
   end
 
+  # Initialize a new node after `#dup` or `#clone`.
+  #
+  # This method is not to be called directly. Use `Node#dup` or
+  # `Node#clone`.
+  #
+  # This method creates a deep detached clone of a DOM subtree to be used
+  # in the same document. The new node will have all events detached.
+  def initialize_copy(old)
+    set_native_reference `#{old.to_n}.cloneNode(true)`
+  end
+
   # Append a child to the node.
   #
   # When passing a {String} a text node will be created.
@@ -253,10 +264,15 @@ class Node
     node_type == COMMENT_NODE
   end
 
-  # @!attribute [r] document
+  # @!attribute [rw] document
   # @return [Document?] the document the node is attached to
   def document
     DOM(`#@native.ownerDocument`) if defined?(`#@native.ownerDocument`)
+  end
+
+  # Detach a node and transfer it to another document.
+  def document=(new_document)
+    `#{Native.try_convert(new_document, new_document)}.adoptNode(#@native)`
   end
 
   # Return true if the node is a document.
