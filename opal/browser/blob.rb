@@ -36,8 +36,19 @@ class Blob
   end
 
   # {Buffer} view into the blob
+  #
+  # If block is given it will be called with a parameter once we receive
+  # the buffer. Otherwise return a {Promise} which will resolve once we
+  # receive it.
   def buffer
-    Buffer.new(`#@native.arrayBuffer()`)
+    promise = nil
+    unless block_given?
+      promise = Promise.new
+      block = proc { |i| promise.resolve(i) }
+    end
+    resblock = proc { |i| block.call(Buffer.new(i)) }
+    `#@native.arrayBuffer().then(#{resblock.to_n})`
+    promise
   end
 
   # Create a new blob by slicing this blob
