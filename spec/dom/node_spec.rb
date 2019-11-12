@@ -18,6 +18,54 @@ describe Browser::DOM::Node do
     end
   end
 
+  describe "#clone" do
+    html '<div class="waht"><ul><li>1</li></ul></div>'
+
+    it 'should clone a DOM node with an object' do
+      obj = $document['.waht']
+      new_obj = obj.clone
+
+      expect(obj).not_to eq(new_obj) # Equality is defined as equality of DOM nodes
+      expect(obj.at_css('li')).not_to eq(new_obj.at_css('li'))
+    end
+
+    it 'should dup a DOM node with an object' do
+      obj = $document['.waht']
+      new_obj = obj.dup
+
+      expect(obj).not_to eq(new_obj) # Equality is defined as equality of DOM nodes
+      expect(obj.at_css('li')).not_to eq(new_obj.at_css('li'))
+    end
+
+    it 'should produce an object which adheres to DOM semantics' do
+      obj = $document['.waht'].clone
+      xobj = obj.clone
+      5.times do
+        obj << xobj.clone
+      end
+      expect(obj.css('li').count).to eq(6)
+    end
+
+    it 'should integrate well with NativeCachedWrapper' do
+      obj = $document['.waht'].clone
+      native = obj.to_n
+      expect(DOM(native).hash).to eq(obj.hash)
+    end
+  end
+
+  describe "#document=" do
+    html '<iframe id="diframe" src="about:blank"></iframe><div id="ddiv">hah</div>'
+
+    it 'should detach a DOM node and attach it to a new document' do
+      obj = $document['ddiv']
+      ifr = $document['diframe']
+
+      obj.document = ifr.content_document
+      expect($document['ddiv']).to eq(nil)
+      expect(obj.document).to eq(ifr.content_document)
+    end
+  end
+
   describe "#document?" do
     it "should be true for document" do
       expect($document.document?).to be_truthy
