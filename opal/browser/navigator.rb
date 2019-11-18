@@ -62,7 +62,7 @@ class Navigator
     alias_native :version
   end
 
-  # Representation for the arary of plugins.
+  # Representation for the array of plugins.
   #
   # @see https://developer.mozilla.org/en-US/docs/Web/API/NavigatorPlugins
   class Plugins < Native::Array
@@ -160,13 +160,81 @@ class Navigator
   rescue
     false
   end
+
+  # Representation of user location based on Geolocation API
+  #
+  # Example usage:
+  # ```
+  # $window.navigator.geolocate.then do |pos|
+  #   puts "#{pos.coords.latitude}, #{pos.coords.longitude}, #{pos.coords.accuracy}"
+  # end
+  # ```
+  #
+  # @see https://developer.mozilla.org/en-US/docs/Web/API/Position
+  class Position
+    include Browser::NativeCachedWrapper
+
+    class Coords
+      include Native::Wrapper
+
+      # @!attribute [r] latitude
+      alias_native :latitude
+      # @!attribute [r] longitude
+      alias_native :longitude
+      # @!attribute [r] altitude
+      alias_native :altitude
+      # @!attribute [r] accuracy
+      alias_native :accuracy
+      # @!attribute [r] altitude_accuracy
+      alias_native :altitude_accuracy, :altitudeAccuracy
+      # @!attribute [r] heading
+      alias_native :heading
+      # @!attribute [r] speed
+      alias_native :speed
+    end
+
+    # @!attribute [r] timestamp
+    alias_native :timestamp
+
+    def coords
+      @coords ||= Coords.new(`#@native.coords`)
+    end
+  end
+
+  # Geolocates the user once
+  #
+  # @return [Promise] promise that resolves to the {Position} object
+  def geolocate(max_age: 0, timeout: Float::INFINITY, high_accuracy: false)
+    promise = Promise.new
+    succ = proc { |i| promise.resolve(Position.new(i)) }
+    fail = proc { |i| promise.reject(Native(i)) }
+    opts = {maxAge: max_age, timeout: timeout, enableHighAccuracy: high_accuracy}
+    `#@native.geolocation.getCurrentPosition(#{succ.to_n}, #{fail.to_n}, #{opts.to_n})`
+    promise
+  end
+
+  # Geolocates the user multiple times and calls a block with his location
+  # until #stop_tracking is called with a returned id. Calls a proc named error
+  # if error happens.
+  #
+  # @return [Integer] an ID that can be used as an argument to #stop_tracking
+  def track(max_age: 0, timeout: Float::INFINITY, high_accuracy: false, error: proc{|i|}, &block)
+    opts = {maxAge: max_age, timeout: timeout, enableHighAccuracy: high_accuracy}
+    succ = proc { |i| block.call(Position.new(i)) }
+    fail = proc { |i| error.call(Native(i)) }
+    `#@native.geolocation.watchPosition(#{succ.to_n}, #{fail.to_n}, #{opts.to_n})`
+  end
+
+  def stop_tracking(id)
+    `#@native.geolocation.clearWatch(#{id})`
+  end
 end
 
 class Window
   # @!attribute [r] navigator
   # @return [Navigator] the navigator
   def navigator
-    Navigator.new(`#@native.navigator`) if `#@native.navigator`
+    @navigator ||= Navigator.new(`#@native.navigator`) if `#@native.navigator`
   end
 end
 
