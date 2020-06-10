@@ -18,6 +18,10 @@ class Input < Element
     `#@native.value = #{value}`
   end
 
+  def name_
+    `#@native.name`
+  end
+
   def checked?
     `#@native.checked`
   end
@@ -28,6 +32,18 @@ class Input < Element
 
   def uncheck!
     `#@native.checked = ''`
+  end
+
+  def enabled?
+    `#@native.enabled`
+  end
+
+  def disable!
+    `#@native.disabled = 'disabled'`
+  end
+
+  def enable!
+    `#@native.disabled = ''`
   end
 
   def clear
