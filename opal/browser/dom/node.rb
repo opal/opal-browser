@@ -442,7 +442,7 @@ class Node
 
     `#@native.parentNode.replaceChild(node, #@native)`
 
-    node
+    DOM(node)
   end
 
   alias replace_with replace
