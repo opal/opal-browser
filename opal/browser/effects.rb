@@ -40,9 +40,9 @@ class Element
   # it's hidden.
   def toggle
     if visible?
-      show
-    else
       hide
+    else
+      show
     end
     self
   end
