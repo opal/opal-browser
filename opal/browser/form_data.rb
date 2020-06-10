@@ -125,7 +125,9 @@ class FormData
       unflatten(string.split(sep).map { |s| s.split(?=).map(&method(:decode)) })
     end
   end
+
   extend Converter
+  include Enumerable
 
   # Create a new FormData instance
   def self.create(hash=nil)
@@ -167,6 +169,12 @@ class FormData
     end
   end
   alias []= set
+
+  # Iterate over all elements of this FormData
+  def each(&block)
+    Native(`#@native.getAll()`).each(&block)
+    self
+  end
 
   # Checks if a field of this name exists in this FormData instance
   def include?(key)
