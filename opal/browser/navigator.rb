@@ -228,6 +228,39 @@ class Navigator
   def stop_tracking(id)
     `#@native.geolocation.clearWatch(#{id})`
   end
+
+  # Triggers a vibration on a device. A pattern can be either a number of
+  # miliseconds for a vibration length, or an array of lengths (in
+  # miliseconds) which describes a vibration pattern - first element of said
+  # array describes how long the device should vibrate, second - how long to
+  # stop for and so on.
+  def vibrate(pattern)
+    `#@native.vibrate(#{pattern.to_n})`
+  end
+
+  # Check a battery status of user device. This API is deprecated in the browser
+  # context and usable mainly in privileged contexts.
+  #
+  # @return [Promise] a promise that resolves with a battery status
+  #
+  # @see https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getBattery
+  def get_battery
+    promise = Promise.new
+    yes = proc { |r| promise.resolve(Native(r)) }
+    no = proc { |r| promise.reject(Native(r)) }
+    `#@native.getBattery().then(#{yes.to_n}).catch(#{no.to_n})`
+    promise
+  end
+
+  # Queue to send a small amount of data to a server.
+  #
+  # @param url [String] url to trigger
+  # @param payload [String, Blob, FormData, Hash] data to send
+  #
+  # @see https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
+  def send_beacon(url, payload=nil)
+    `#@native.sendBeacon(#{url}, #{payload.to_n})`
+  end
 end
 
 class Window
