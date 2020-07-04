@@ -165,6 +165,7 @@ class Node
   # @param node [Node] the node to append to
   def append_to(node)
     node << self
+    self
   end
 
   # Get an array of ancestors.
@@ -396,6 +397,7 @@ class Node
   # @param node [Node] the node to prepend to
   def prepend_to(node)
     node >> self
+    self
   end
 
   # @!attribute previous
