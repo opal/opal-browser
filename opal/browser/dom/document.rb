@@ -129,6 +129,18 @@ class Document < Element
     `#@native.title = value`
   end
 
+  # @!attribute [r] hidden?
+  # @return [Boolean] is the page considered hidden?
+  def hidden?
+    `#@native.hidden`
+  end
+
+  # @!attribute [r] visibility
+  # @return [String] the visibility state of the document - prerender, hidden or visible
+  def visibility
+    `#@native.visibilityState`
+  end
+
   if Browser.supports? 'Document.view'
     def window
       Window.new(`#@native.defaultView`)
