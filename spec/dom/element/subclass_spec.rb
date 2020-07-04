@@ -88,7 +88,7 @@ describe "Browser::DOM::Element subclassing" do
     expect(elem.hello).to eq('')
   end
 
-  it 'works with Paggio' do # Sadly it doesn't :(
+  it 'works with Paggio' do
     elem = DOM { div.class1 }
     expect(elem.class).to eq(class1)
     expect(elem.hello).to eq('world')
