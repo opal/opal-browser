@@ -1,32 +1,67 @@
-require 'browser/dom/element/attributes'
-require 'browser/dom/element/data'
-require 'browser/dom/element/position'
-require 'browser/dom/element/offset'
-require 'browser/dom/element/scroll'
-require 'browser/dom/element/size'
-
-require 'browser/dom/element/button'
-require 'browser/dom/element/image'
-require 'browser/dom/element/form'
-require 'browser/dom/element/input'
-require 'browser/dom/element/select'
-require 'browser/dom/element/template'
-require 'browser/dom/element/textarea'
-require 'browser/dom/element/iframe'
+# Requires are moved to the bottom of this file.
 
 module Browser; module DOM
 
 class Element < Node
   def self.create(*args)
-    $document.create_element(*args)
+    if self == Element
+      $document.create_element(*args)
+    elsif @tag_name
+      $document.create_element(@tag_name)
+    elsif @selector
+      # That's crude, but should cover the most basic cases.
+      # Just in case, you can override it safely.
+      tag_name = (@selector.scan(/^[A-Za-z0-9_-]+/).first || "div").upcase
+      classes = @selector.scan(/\.([A-Za-z0-9_-]+)/).flatten
+      id = @selector.scan(/#([A-Za-z0-9_-]+)/).flatten.first
+      attrs = @selector.scan(/\[([A-Za-z0-9_-]+)=((["'])(.*?)\3|[A-Za-z0-9_-]*)\]/).map { |a,b,_,d| [a,d||b] }.to_h
+      $document.create_element(tag_name, classes: classes, id: id, attrs: attrs)
+    else
+      raise NotImplementedError
+    end
+  end
+
+  def self.subclasses
+    @subclasses ||= []
+  end
+
+  # Define a selector for subclass dispatch
+  #
+  # Example:
+  # ```
+  # class CustomElement < Browser::DOM::Element
+  #   def_selector "div.hello-world"
+  # end
+  # ```
+  def self.def_selector(selector)
+    Element.subclasses << self
+
+    @selector = selector
+
+    # A special case to speedup dispatch
+    @tag_name = selector.upcase unless selector =~ /[^A-Za-z0-9_-]/
+  end
+
+  def self.selector
+    @selector
+  end
+
+  def self.tag_name
+    @tag_name
   end
 
   def self.new(node)
     if self == Element
-      name = `node.nodeName`.capitalize
+      subclass = Element.subclasses.select do |subclass|
+        if subclass.tag_name 
+          subclass.tag_name == `node.nodeName`
+        else
+          Element.native_matches?(node, subclass.selector)
+        end
+      end.last
 
-      if Element.constants.include?(name)
-        Element.const_get(name).new(node)
+      if subclass
+        subclass.new(node)
       else
         super
       end
@@ -46,36 +81,40 @@ class Element < Node
   }
 
   if Browser.supports? 'Element.matches'
-    def =~(selector)
-      `#@native.matches(#{selector})`
+    def self.native_matches? (native, selector)
+      `#{native}.matches(#{selector})`
     end
   elsif Browser.supports? 'Element.matches (Opera)'
-    def =~(selector)
-      `#@native.oMatchesSelector(#{selector})`
+    def self.native_matches? (native, selector)
+      `#{native}.oMatchesSelector(#{selector})`
     end
   elsif Browser.supports? 'Element.matches (Internet Explorer)'
-    def =~(selector)
-      `#@native.msMatchesSelector(#{selector})`
+    def self.native_matches? (native, selector)
+      `#{native}.msMatchesSelector(#{selector})`
     end
   elsif Browser.supports? 'Element.matches (Firefox)'
-    def =~(selector)
-      `#@native.mozMatchesSelector(#{selector})`
+    def self.native_matches? (native, selector)
+      `#{native}.mozMatchesSelector(#{selector})`
     end
   elsif Browser.supports? 'Element.matches (Chrome)'
-    def =~(selector)
-      `#@native.webkitMatchesSelector(#{selector})`
+    def self.native_matches? (native, selector)
+      `#{native}.webkitMatchesSelector(#{selector})`
     end
   elsif Browser.loaded? 'Sizzle'
-    def =~(selector)
-      `Sizzle.matchesSelector(#@native, #{selector})`
+    def self.native_matches? (native, selector)
+      `Sizzle.matchesSelector(#{native}, #{selector})`
     end
   else
-    # Check whether the element matches the given selector.
-    #
-    # @param selector [String] the CSS selector
-    def =~(selector)
+    def self.native_matches? (native, selector)
       raise NotImplementedError, 'selector matching unsupported'
     end
+  end
+
+  # Check whether the element matches the given selector.
+  #
+  # @param selector [String] the CSS selector
+  def =~(selector)
+    Element.native_matches?(@native, selector)
   end
 
   # Query for children with the given XPpaths.
@@ -485,3 +524,19 @@ class Element < Node
 end
 
 end; end
+
+require 'browser/dom/element/attributes'
+require 'browser/dom/element/data'
+require 'browser/dom/element/position'
+require 'browser/dom/element/offset'
+require 'browser/dom/element/scroll'
+require 'browser/dom/element/size'
+
+require 'browser/dom/element/button'
+require 'browser/dom/element/image'
+require 'browser/dom/element/form'
+require 'browser/dom/element/input'
+require 'browser/dom/element/select'
+require 'browser/dom/element/template'
+require 'browser/dom/element/textarea'
+require 'browser/dom/element/iframe'

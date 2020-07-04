@@ -1,6 +1,8 @@
 module Browser; module DOM; class Element < Node
 
 class Input < Element
+  def_selector "input"
+
   def value
     %x{
       if (#@native.value == "") {
@@ -18,6 +20,10 @@ class Input < Element
 
   def name_
     `#@native.name`
+  end
+
+  def type
+    `#@native.type`
   end
 
   def checked?

@@ -1,6 +1,8 @@
 module Browser; module DOM; class Element < Node
 
 class Iframe < Element
+  def_selector "iframe"
+
   # @!attribute src
   # @return [String] the URL of the page to embed
   alias_native :src

@@ -32,12 +32,32 @@ class Document < Element
   # @param options [Hash] optional `:namespace` name
   #
   # @return [Element]
-  def create_element(name, options = {})
+  def create_element(name, **options)
     if ns = options[:namespace]
-      DOM(`#@native.createElementNS(#{ns}, #{name})`)
+      elem = `#@native.createElementNS(#{ns}, #{name})`
     else
-      DOM(`#@native.createElement(name)`)
+      elem = `#@native.createElement(name)`
     end
+    
+    if options[:classes]
+      `#{elem}.className = #{Array(options[:classes]).join(" ")}`
+    end
+
+    if options[:id]
+      `#{elem}.id = #{options[:id]}`
+    end
+
+    if options[:attrs]
+      options[:attrs].each do |k,v|
+        %x`
+          var attr = #@native.createAttribute(#{k});
+          attr.value = #{v};
+          #{elem}.setAttributeNode(attr);
+        `
+      end
+    end
+
+    DOM(elem)
   end
 
   # Create a new text node for the document.

@@ -1,6 +1,8 @@
 module Browser; module DOM; class Element < Node
 
 class Select < Element
+  def_selector "select"
+
   def value
     %x{
       if (#@native.value == "") {
