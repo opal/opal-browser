@@ -1,5 +1,3 @@
-require 'browser/blob'
-
 module Browser; module DOM; class Element < Node
 
 class Form < Element
@@ -26,8 +24,6 @@ class Form < Element
   alias_native :method=
   alias_native :target
   alias_native :target=
-  alias_native :name
-  alias_native :name= 
   alias_native :encoding
   alias_native :encoding=
 
