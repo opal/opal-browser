@@ -1,5 +1,3 @@
-require 'browser/blob'
-
 module Browser; module DOM; class Element < Node
 
 class Input < Element
