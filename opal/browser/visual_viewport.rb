@@ -12,7 +12,7 @@ module Browser
   # https://github.com/WICG/visual-viewport
   # https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport
   class VisualViewport
-    include Browser::NativeCachedWrapper
+    include Native::Wrapper
     include Event::Target
 
     alias_native :offset_left, :offsetLeft
@@ -22,11 +22,18 @@ module Browser
     alias_native :width, :width
     alias_native :height, :height
     alias_native :scale, :scale
+
+    attr_accessor :native
   end
 
   class Window
     def visual_viewport
       @visual_viewport ||= VisualViewport.new(`#@native.visualViewport`)
+
+      # Polyfill can take some time to load
+      @visual_viewport.native ||= `#@native.visualViewport`
+
+      @visual_viewport
     end
   end
 end
