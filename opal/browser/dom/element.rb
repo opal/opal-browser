@@ -398,6 +398,27 @@ class Element < Node
 
   alias set_attribute []=
 
+  # Creates or accesses the shadow root of this element
+  #
+  # @param open [Boolean] set to false if you want to create a closed
+  #                       shadow root
+  #
+  # @return [ShadowRoot]
+  def shadow (open = true)
+    if root = `#@native.shadowRoot`
+      DOM(root)
+    else
+      DOM(`#@native.attachShadow({mode: #{open ? "open" : "closed"}})`)
+    end
+  end
+
+  # Checks for a presence of a shadow root of this element
+  #
+  # @return [Boolean]
+  def shadow?
+    `!!#@native.shadowRoot`
+  end
+
   # @overload style()
   #
   #   Return the style for the element.

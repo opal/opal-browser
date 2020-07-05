@@ -178,4 +178,46 @@ describe Browser::DOM::Element do
       expect($document.at_xpath('//div', '//span', '//[@id="lol"]')).to be_a(DOM::Element)
     end
   end
+
+  describe '#shadow' do
+    html <<-HTML
+      <div id="shadowtest"></div>
+    HTML
+
+    it 'creates a shadow root' do
+      expect($document[:shadowtest].shadow?).to be(false)
+      expect($document[:shadowtest].shadow).to be_a(DOM::ShadowRoot)
+      expect($document[:shadowtest].shadow?).to be(true)
+    end
+
+    it 'accesses a shadow root' do
+      $document[:shadowtest].shadow # Create one
+      expect($document[:shadowtest].shadow?).to be(true)
+      expect($document[:shadowtest].shadow).to be_a(DOM::ShadowRoot)
+    end
+
+    it 'works like a typical opal-browser DOM tree' do
+      DOM {
+        div.shadow_item "Hello world!"
+      }.append_to($document[:shadowtest].shadow)
+      
+      expect($document[:shadowtest].at_css(".shadow_item")).to be_nil
+      expect($document[:shadowtest].shadow.at_css(".shadow_item").text).to be("Hello world!")
+    end
+
+    it 'supports stylesheets' do
+      $document[:shadowtest].shadow << CSS {
+        rule("p") {
+          color "rgb(255, 0, 0)"
+        }
+        rule(":host") {
+          color "rgb(0, 0, 255)"
+        }
+      } << DOM { p }
+
+      expect($document[:shadowtest].shadow.at_css("p").style!.color).to be("rgb(255, 0, 0)")
+      expect($document[:shadowtest].style!.color).to be("rgb(0, 0, 255)")
+      expect($document[:shadowtest].shadow.stylesheets.count).to be(1)
+    end
+  end
 end

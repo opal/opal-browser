@@ -1,6 +1,8 @@
 module Browser; module DOM
 
 class Document < Element
+  include DocumentOrShadowRoot
+
   # Get the first element matching the given ID, CSS selector or XPath.
   #
   # @param what [String] ID, CSS selector or XPath
@@ -29,14 +31,24 @@ class Document < Element
   # Create a new element for the document.
   #
   # @param name [String] the node name
-  # @param options [Hash] optional `:namespace` name
+  # @param options [String] :namespace optional namespace name
+  # @param options [String] :is optional WebComponents is parameter
+  # @param options [String] :id optional id to set
+  # @param options [Array<String>] :classes optional classes to set
+  # @param options [Hash] :attrs optional attributes to set
   #
   # @return [Element]
   def create_element(name, **options)
+    opts = {}
+
+    if options[:is] ||= (options.dig(:attrs, :fragment))
+      opts[:is] = options[:is]
+    end
+
     if ns = options[:namespace]
-      elem = `#@native.createElementNS(#{ns}, #{name})`
+      elem = `#@native.createElementNS(#{ns}, #{name}, #{opts.to_n})`
     else
-      elem = `#@native.createElement(name)`
+      elem = `#@native.createElement(name, #{opts.to_n})`
     end
     
     if options[:classes]
@@ -58,6 +70,13 @@ class Document < Element
     end
 
     DOM(elem)
+  end
+
+  # Create a new document fragment.
+  #
+  # @return [DocumentFragment]
+  def create_document_fragment
+    DOM(`#@native.createDocumentFragment()`)
   end
 
   # Create a new text node for the document.
@@ -129,14 +148,6 @@ class Document < Element
 
   def root=(element)
     `#@native.documentElement = #{Native.convert(element)}`
-  end
-
-  # @!attribute [r] style_sheets
-  # @return [Array<CSS::StyleSheet>] the style sheets for the document
-  def style_sheets
-    Native::Array.new(`#@native.styleSheets`) {|e|
-      CSS::StyleSheet.new(e)
-    }
   end
 
   # @!attribute title

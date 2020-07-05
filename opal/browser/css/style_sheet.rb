@@ -4,7 +4,7 @@ class StyleSheet
   include Browser::NativeCachedWrapper
 
   def initialize(what)
-    if what.is_a? DOM::Element
+    if DOM::Element === what
       super(`#{what.to_n}.sheet`)
     else
       super(what)
