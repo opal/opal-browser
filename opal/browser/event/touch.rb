@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Touch < Event
+  handles 'touchcancel', 'touchend', 'touchleave', 'touchmove', 'touchstart'
+
   def self.supported?
     Browser.supports? 'Event.Touch'
   end

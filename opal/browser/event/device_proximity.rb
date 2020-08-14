@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class DeviceProximity < Event
+  handles 'deviceproximity'
+
   def self.supported?
     Browser.supports? 'Event.DeviceProximity'
   end

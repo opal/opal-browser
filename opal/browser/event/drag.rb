@@ -1,6 +1,9 @@
 module Browser; class Event
 
 class Drag < Event
+  handles 'drag', 'dragend', 'dragenter', 'dragexit', 'dragleave', 'dragover',
+          'dragstart', 'drop'
+
   def self.supported?
     Browser.supports? 'Event.Drag'
   end

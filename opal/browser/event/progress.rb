@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Progress < Event
+  handles 'progress', 'load', 'loadend', 'loadstart'
+
   def self.supported?
     Browser.supports? 'Event.Progress'
   end

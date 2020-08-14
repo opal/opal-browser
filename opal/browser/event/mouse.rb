@@ -1,6 +1,10 @@
 module Browser; class Event
 
 class Mouse < UI
+  handles 'click', 'contextmenu', 'dblclick', 'mousedown', 'mouseenter',
+          'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
+          'show'
+
   def self.supported?
     not $$[:MouseEvent].nil?
   end

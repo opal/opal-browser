@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class DeviceOrientation < Event
+  handles 'deviceorientation'
+
   def self.supported?
     Browser.supports? 'Event.DeviceOrientation'
   end

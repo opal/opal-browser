@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Storage < Event
+  handles 'storage'
+
   def self.supported?
     Browser.supports? 'Event.Storage'
   end

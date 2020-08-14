@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class HashChange < Event
+  handles 'hashchange'
+
   def self.supported?
     Browser.supports? 'Event.HashChange'
   end

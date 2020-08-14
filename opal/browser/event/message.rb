@@ -3,6 +3,8 @@ require 'buffer'
 module Browser; class Event
 
 class Message < Event
+  handles 'message'
+
   def self.supported?
     Browser.supports? 'Event.Message'
   end

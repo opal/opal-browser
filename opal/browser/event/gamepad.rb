@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Gamepad < Event
+  handles 'gamepadconnected', 'gamepaddisconnected'
+
   def self.supported?
     Browser.supports? 'Event.Gamepad'
   end

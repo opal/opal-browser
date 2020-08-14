@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class PageTransition < Event
+  handles 'pagehide', 'pageshow'
+
   def self.supported?
     Browser.supports? 'Event.PageTransition'
   end

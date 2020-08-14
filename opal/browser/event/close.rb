@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Close < Event
+  handles 'close'
+
   def self.supported?
     Browser.supports? 'Event.Close'
   end

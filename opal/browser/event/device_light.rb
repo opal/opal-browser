@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class DeviceLight < Event
+  handles 'devicelight'
+
   def self.supported?
     Browser.supports? 'Event.DeviceLight'
   end

@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Composition < UI
+  handles 'compositionend', 'compositionstart', 'compositionupdate'
+
   def self.supported?
     Browser.supports? 'Event.Composition'
   end

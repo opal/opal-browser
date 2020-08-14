@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class DeviceMotion < Event
+  handles 'devicemotion'
+  
   def self.supported?
     Browser.supports? 'Event.DeviceMotion'
   end

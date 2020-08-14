@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class BeforeUnload < Event
+  handles 'beforeunload'
+
   def self.supported?
     Browser.supports? 'Event.BeforeUnload'
   end

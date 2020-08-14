@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Keyboard < UI
+  handles 'keydown', 'keypress', 'keyup'
+
   def self.supported?
     Browser.supports? 'Event.Keyboard'
   end

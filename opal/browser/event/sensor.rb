@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Sensor < Event
+  handles 'compassneedscalibration', 'userproximity'
+
   def self.supported?
     Browser.supports? 'Event.Sensor'
   end

@@ -10,7 +10,6 @@ require 'browser/dom/document_or_shadow_root'
 require 'browser/dom/document'
 require 'browser/dom/document_fragment'
 require 'browser/dom/shadow_root'
-require 'browser/dom/builder'
 require 'browser/dom/mutation_observer'
 
 module Kernel
