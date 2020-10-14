@@ -36,7 +36,7 @@ class Data
 
   def assign(data)
     data.each {|name, value|
-      `#@native.$data[name] = value`
+      self[name] = value
     }
 
     self
@@ -60,7 +60,13 @@ class Data
   end
 
   def []=(name, value)
-    `#@native.$data[name] = value`
+    if value.respond_to? :to_str
+      @element["data-#{name}"] = value.to_str
+    elsif value.respond_to? :to_int
+      @element["data-#{name}"] = value.to_int.to_s
+    else
+      `#@native.$data[name] = value`
+    end
   end
 end
 
