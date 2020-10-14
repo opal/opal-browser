@@ -44,8 +44,8 @@ class Window
   end
 
   # Display a prompt dialog with the passed string as text.
-  def prompt(value)
-    `#@native.prompt(value) || nil`
+  def prompt(value, default=nil)
+    `#@native.prompt(value, #{default || ""}) || nil`
   end
 
   # Display a confirmation dialog with the passed string as text.
@@ -122,8 +122,8 @@ module Kernel
   end
 
   # (see Browser::Window#prompt)
-  def prompt(value)
-    $window.prompt(value)
+  def prompt(value, default=nil)
+    $window.prompt(value, default)
   end
 
   # (see Browser::Window#confirm)
