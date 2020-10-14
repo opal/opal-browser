@@ -25,7 +25,7 @@ class Element
     style[:display] = :none
     self
   end
-  
+
   def visible?
     # Let's check if we want to lie about the real visibility of an element.
     # It could be wise to lie about it when it's in a process of animation...
@@ -38,11 +38,11 @@ class Element
 
   # Toggle the visibility of the element, hide it if it's shown, show it if
   # it's hidden.
-  def toggle
+  def toggle(what = :block)
     if visible?
       hide
     else
-      show
+      show(what)
     end
     self
   end
@@ -81,30 +81,30 @@ class Element
       promise
     end
   end
-  
+
   # Transform an element smoothly using CSS transitions, jQuery style. Yield
   # a block afterwards if it's provided.
   def animate(properties, duration: 0.4.s, easing: :ease, resolve: false, &block)
     animation_queue(resolve) do |res|
       duration = 0.6.s if duration == :slow
       duration = 0.2.s if duration == :fast
-      
+
       original_value = style['transition']
-      
+
       style['transition'] = [original_value,
                             *properties.keys.map do |key|
                               "#{key} #{duration} #{easing}"
                             end].compact.join(", ")
-      
+
       properties.each do |key, value|
         style[key] = value
       end
-      
+
       promise = Promise.new
 
       one :transitionend do |*args|
         style['transition'] = original_value
-                
+
         yield(*args) if block_given?
 
         res.call
@@ -119,7 +119,7 @@ class Element
       if !visible?
         @virtually_visible = true
         show
-          
+
         style[:opacity] = 0.0
         animate opacity: 1.0, **kwargs do |*args|
           @virtually_visible = nil
@@ -131,7 +131,7 @@ class Element
     end
     self
   end
-  
+
   # Hide a visible element with a "fade out" animation. Yield a block afterwards.
   def fade_out(**kwargs, &block)
     animation_queue do |resolve|
@@ -150,7 +150,7 @@ class Element
     end
     self
   end
-  
+
   # Toggle a visibility of an element with a "fade in"/"fade out" animation. Yield
   # a block afterwards.
   def fade_toggle(**kwargs, &block)
@@ -162,7 +162,7 @@ class Element
     self
   end
 
-  # Show a hidden element with a "slide down" animation. Yield a block afterwards.  
+  # Show a hidden element with a "slide down" animation. Yield a block afterwards.
   def slide_down(**kwargs, &block)
     animation_queue do |resolve|
       if !visible?
@@ -171,7 +171,7 @@ class Element
         height = size.height
         orig_height = style[:height]
         style[:height] = 0.px
-        
+
         animate height: height.px, **kwargs do |*args|
           @virtually_visible = nil
           style[:height] = orig_height
@@ -182,14 +182,14 @@ class Element
     end
     self
   end
-  
+
   # Hide a visible element with a "slide up" animation. Yield a block afterwards.
   def slide_up(**kwargs, &block)
     animation_queue do |resolve|
       if visible?
         @virtually_visible = false
         orig_height = style[:height]
-        
+
         animate height: 0.px, **kwargs do |*args|
           @virtually_visible = nil
           style[:height] = orig_height
@@ -201,7 +201,7 @@ class Element
     end
     self
   end
-  
+
   # Toggle a visibility of an element with a "slide up"/"slide down" animation.
   # Yield a block afterwards.
   def slide_toggle(**kwargs, &block)
