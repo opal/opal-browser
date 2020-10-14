@@ -200,6 +200,7 @@ class Node
   # Remove the node from its parent.
   def remove
     parent.remove_child(self) if parent
+    self
   end
 
   # Remove all the children of the node.
@@ -425,6 +426,7 @@ class Node
   # Remove the given node from the children of this node.
   def remove_child(node)
     `#@native.removeChild(#{Native.try_convert(node)})`
+    self
   end
 
   # Replace the node with the given one.
