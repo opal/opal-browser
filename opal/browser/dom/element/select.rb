@@ -14,6 +14,10 @@ class Select < Element
     }
   end
 
+  def value= value
+    `#@native.value = #{value.to_n}`
+  end
+
   def labels
     NodeSet[Native::Array.new(`#@native.labels`)]
   end
