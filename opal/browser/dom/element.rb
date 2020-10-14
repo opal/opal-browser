@@ -53,7 +53,7 @@ class Element < Node
   def self.new(node)
     if self == Element
       subclass = Element.subclasses.select do |subclass|
-        if subclass.tag_name 
+        if subclass.tag_name
           subclass.tag_name == `node.nodeName`
         else
           Element.native_matches?(node, subclass.selector)
@@ -170,7 +170,7 @@ class Element < Node
   #
   # @return [Node?]
   def at(path_or_selector)
-    xpath(path_or_selector).first || css(path_or_selector).first 
+    xpath(path_or_selector).first || css(path_or_selector).first
   end
 
   # Get the first node matching the given CSS selectors.
@@ -561,3 +561,4 @@ require 'browser/dom/element/select'
 require 'browser/dom/element/template'
 require 'browser/dom/element/textarea'
 require 'browser/dom/element/iframe'
+require 'browser/dom/element/media'
