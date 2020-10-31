@@ -1,6 +1,8 @@
 module Browser; module DOM; class Element < Node
 
 class Button < Element
+  def_selector "button"
+
   def disabled?
     `#@native.disabled`
   end

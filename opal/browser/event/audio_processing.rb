@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class AudioProcessing < Event
+  handles 'audioprocess'
+  
   def self.supported?
     Browser.supports? 'Event.AudioProcessing'
   end

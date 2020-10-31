@@ -36,9 +36,7 @@ class History
   # @param item [String] the item to push in the history
   # @param data [Object] additional state to push
   def push(item, data = nil)
-    data = `null` if data.nil?
-
-    `#@native.pushState(data, null, item)`
+    `#@native.pushState(#{data.to_n}, null, item)`
   end
 
   # Replace the current history item with another.
@@ -46,9 +44,7 @@ class History
   # @param item [String] the item to replace with
   # @param data [Object] additional state to replace
   def replace(item, data = nil)
-    data = `null` if data.nil?
-
-    `#@native.replaceState(data, null, item)`
+    `#@native.replaceState(#{data.to_n}, null, item)`
   end
 
   # @!attribute [r] current

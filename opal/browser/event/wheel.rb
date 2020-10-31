@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Wheel < UI
+  handles 'wheel', 'mousewheel'
+
   def self.supported?
     not $$[:WheelEvent].nil?
   end

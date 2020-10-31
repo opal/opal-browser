@@ -1,8 +1,8 @@
-require 'browser/blob'
-
 module Browser; module DOM; class Element < Node
 
 class Form < Element
+  def_selector "form"
+
   # Capture the content of this form to a new {FormData} object,
   #
   # @return [FormData]
@@ -26,8 +26,6 @@ class Form < Element
   alias_native :method=
   alias_native :target
   alias_native :target=
-  alias_native :name
-  alias_native :name= 
   alias_native :encoding
   alias_native :encoding=
 

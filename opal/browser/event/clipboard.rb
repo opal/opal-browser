@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Clipboard < Event
+  handles 'copy', 'cut', 'paste'
+
   def self.supported?
     Browser.supports? 'Event.Clipboard'
   end

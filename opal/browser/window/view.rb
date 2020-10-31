@@ -31,6 +31,21 @@ class View
       raise NotImplementedError, 'window size unsupported'
     end
   end
+
+  # Get a device pixel ratio. Can be used to handle desktop browser
+  # zoom, retina devices and custom screen scale for mobile devices.
+  # Use $window.visual_viewport.scale to handle mobile zoom.
+  def zoom
+    `#@native.devicePixelRatio`
+  end
+
+  # Handle #pixel_ratio changes. This will trigger a block on zoom.
+  def on_zoom &block
+    %x{
+      var mqString = "(resolution: " + #@native.devicePixelRatio + "dppx)";
+      #@native.matchMedia(mqString).addListener(#{block.to_n});
+    }
+  end
 end
 
 end; end

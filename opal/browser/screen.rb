@@ -59,7 +59,7 @@ class Window
   # @!attribute [r] screen
   # @return [Screen] the screen for the window
   def screen
-    Screen.new(`#@native.screen`)
+    @screen ||= Screen.new(`#@native.screen`)
   end
 end
 

@@ -6,9 +6,10 @@ require 'browser/dom/text'
 require 'browser/dom/cdata'
 require 'browser/dom/comment'
 require 'browser/dom/element'
+require 'browser/dom/document_or_shadow_root'
 require 'browser/dom/document'
 require 'browser/dom/document_fragment'
-require 'browser/dom/builder'
+require 'browser/dom/shadow_root'
 require 'browser/dom/mutation_observer'
 
 module Kernel

@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Focus < UI
+  handles 'blur', 'focus', 'focusin', 'focusout'
+
   def self.supported?
     Browser.supports? 'Event.Focus'
   end

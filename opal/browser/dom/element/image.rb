@@ -1,6 +1,8 @@
 module Browser; module DOM; class Element < Node
 
 class Image < Element
+  def_selector "img"
+
   def complete?
     `#@native.complete`
   end

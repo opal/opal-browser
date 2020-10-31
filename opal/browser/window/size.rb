@@ -54,6 +54,20 @@ class Size
   def height=(value)
     set(height: value)
   end
+
+  # @!attribute inner_width
+  # @return [Integer] the inner width of the window
+
+  def inner_width
+    `#@native.innerWidth`
+  end
+
+  # @!attribute inner_height
+  # @return [Integer] the inner height of the window
+
+  def inner_height
+    `#@native.innerHeight`
+  end
 end
 
 end; end

@@ -165,6 +165,7 @@ class Node
   # @param node [Node] the node to append to
   def append_to(node)
     node << self
+    self
   end
 
   # Get an array of ancestors.
@@ -199,6 +200,7 @@ class Node
   # Remove the node from its parent.
   def remove
     parent.remove_child(self) if parent
+    self
   end
 
   # Remove all the children of the node.
@@ -396,6 +398,7 @@ class Node
   # @param node [Node] the node to prepend to
   def prepend_to(node)
     node >> self
+    self
   end
 
   # @!attribute previous
@@ -423,6 +426,7 @@ class Node
   # Remove the given node from the children of this node.
   def remove_child(node)
     `#@native.removeChild(#{Native.try_convert(node)})`
+    self
   end
 
   # Replace the node with the given one.
@@ -442,7 +446,7 @@ class Node
 
     `#@native.parentNode.replaceChild(node, #@native)`
 
-    node
+    DOM(node)
   end
 
   alias replace_with replace

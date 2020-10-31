@@ -1,8 +1,8 @@
-require 'browser/blob'
-
 module Browser; module DOM; class Element < Node
 
 class Input < Element
+  def_selector "input"
+
   def value
     %x{
       if (#@native.value == "") {
@@ -18,6 +18,14 @@ class Input < Element
     `#@native.value = #{value}`
   end
 
+  def name_
+    `#@native.name`
+  end
+
+  def type
+    `#@native.type`
+  end
+
   def checked?
     `#@native.checked`
   end
@@ -28,6 +36,18 @@ class Input < Element
 
   def uncheck!
     `#@native.checked = ''`
+  end
+
+  def enabled?
+    `#@native.enabled`
+  end
+
+  def disable!
+    `#@native.disabled = 'disabled'`
+  end
+
+  def enable!
+    `#@native.disabled = ''`
   end
 
   def clear

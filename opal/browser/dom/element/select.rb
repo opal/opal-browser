@@ -1,6 +1,8 @@
 module Browser; module DOM; class Element < Node
 
 class Select < Element
+  def_selector "select"
+
   def value
     %x{
       if (#@native.value == "") {
@@ -10,6 +12,10 @@ class Select < Element
         return #@native.value;
       }
     }
+  end
+
+  def value= value
+    `#@native.value = #{value.to_n}`
   end
 
   def labels

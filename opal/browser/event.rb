@@ -1,32 +1,4 @@
 require 'browser/event/base'
-require 'browser/event/ui'
-require 'browser/event/mouse'
-require 'browser/event/keyboard'
-require 'browser/event/focus'
-require 'browser/event/wheel'
-require 'browser/event/data_transfer'
-require 'browser/event/composition'
-require 'browser/event/animation'
-require 'browser/event/audio_processing'
-require 'browser/event/before_unload'
-require 'browser/event/composition'
-require 'browser/event/clipboard'
-require 'browser/event/device_light'
-require 'browser/event/device_motion'
-require 'browser/event/device_orientation'
-require 'browser/event/device_proximity'
-require 'browser/event/drag'
-require 'browser/event/gamepad'
-require 'browser/event/hash_change'
-require 'browser/event/progress'
-require 'browser/event/page_transition'
-require 'browser/event/pop_state'
-require 'browser/event/storage'
-require 'browser/event/touch'
-require 'browser/event/sensor'
-require 'browser/event/custom'
-require 'browser/event/message'
-require 'browser/event/close'
 
 module Browser
 
@@ -42,98 +14,30 @@ class Event
     (aliases[name] || name).gsub(?:, '')
   end
 
+  def self.handlers
+    @handlers ||= {}
+  end
+
+  def self.handles(*events)
+    events.each { |event| Event.handlers[event] = self }
+  end
+
+  # Those events don't have interesting properties to warrant a custom class
+  # or are not currently implemented.
+  handles 'abort', 'afterprint', 'beforeprint', 'cached', 'canplay',
+          'canplaythrough', 'change', 'chargingchange', 'chargingtimechange',
+          'checking', 'close', 'dischargingtimechange', 'DOMContentLoaded',
+          'downloading', 'durationchange', 'emptied', 'ended', 'error',
+          'fullscreenchange', 'fullscreenerror', 'input', 'invalid',
+          'levelchange', 'loadeddata', 'loadedmetadata', 'noupdate', 'obsolete',
+          'offline', 'online', 'open', 'orientationchange', 'pause',
+          'pointerlockchange', 'pointerlockerror', 'play', 'playing',
+          'ratechange', 'readystatechange', 'reset', 'seeked', 'seeking',
+          'stalled', 'submit', 'success', 'suspend', 'timeupdate', 'updateready',
+          'visibilitychange', 'volumechange', 'waiting'
+
   def self.class_for(name)
-    case name_for(name)
-      when 'animationend', 'animationiteration', 'animationstart'
-        Animation
-
-      when 'audioprocess'
-        AudioProcessing
-
-      when 'beforeunload'
-        BeforeUnload
-
-      when 'compositionend', 'compositionstart', 'compositionupdate'
-        Composition
-
-      when 'copy', 'cut', 'paste'
-        Clipboard
-
-      when 'devicelight'
-        DeviceLight
-
-      when 'devicemotion'
-        DeviceMotion
-
-      when 'deviceorientation'
-        DeviceOrientation
-
-      when 'deviceproximity'
-        DeviceProximity
-
-      when 'drag', 'dragend', 'dragenter', 'dragexit', 'dragleave', 'dragover', 'dragstart', 'drop'
-        Drag
-
-      when 'gamepadconnected', 'gamepaddisconnected'
-        Gamepad
-
-      when 'hashchange'
-        HashChange
-
-      when 'progress', 'load', 'loadend', 'loadstart'
-        Progress
-
-      when 'pagehide', 'pageshow'
-        PageTransition
-
-      when 'popstate'
-        PopState
-
-      when 'storage'
-        Storage
-
-      when 'touchcancel', 'touchend', 'touchleave', 'touchmove', 'touchstart'
-        Touch
-
-      when 'compassneedscalibration', 'userproximity'
-        Sensor
-
-      when 'message'
-        Message
-
-      when 'close'
-        Close
-
-      when 'click', 'contextmenu', 'dblclick', 'mousedown', 'mouseenter',
-           'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
-           'show'
-        Mouse
-
-      when 'keydown', 'keypress', 'keyup'
-        Keyboard
-
-      when 'blur', 'focus', 'focusin', 'focusout'
-        Focus
-
-      when 'wheel', 'mousewheel'
-        Wheel
-
-      when 'abort', 'afterprint', 'beforeprint', 'cached', 'canplay',
-           'canplaythrough', 'change', 'chargingchange', 'chargingtimechange',
-           'checking', 'close', 'dischargingtimechange', 'DOMContentLoaded',
-           'downloading', 'durationchange', 'emptied', 'ended', 'error',
-           'fullscreenchange', 'fullscreenerror', 'input', 'invalid',
-           'levelchange', 'loadeddata', 'loadedmetadata', 'noupdate', 'obsolete',
-           'offline', 'online', 'open', 'orientationchange', 'pause',
-           'pointerlockchange', 'pointerlockerror', 'play', 'playing',
-           'ratechange', 'readystatechange', 'reset', 'seeked', 'seeking',
-           'stalled', 'submit', 'success', 'suspend', 'timeupdate', 'updateready',
-           'visibilitychange', 'volumechange', 'waiting'
-        Event
-
-      else
-        Custom
-    end
+    @handlers[name_for(name)] || Custom
   end
 
   def self.supported?
@@ -252,3 +156,8 @@ class Event
 end
 
 end
+
+require 'browser/event/ui'
+require 'browser/event/mouse'
+require 'browser/event/keyboard'
+require 'browser/event/custom'

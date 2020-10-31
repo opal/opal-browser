@@ -54,15 +54,12 @@ Builder.for String do |b, item|
 end
 
 Builder.for Paggio::HTML::Element do |b, item|
-  dom = b.document.create_element(`item.name`)
+  options = {}
 
-  if Hash === `item.attributes`
-    dom.attributes.merge!(`item.attributes`)
-  end
+  options[:attrs] = `item.attributes` if Hash === `item.attributes`
+  options[:classes] = `item.class_names`
 
-  `item.class_names`.each {|value|
-    dom.add_class value
-  }
+  dom = b.document.create_element(`item.name`, **options)
 
   if on = `item.on || nil`
     on.each {|args, block|

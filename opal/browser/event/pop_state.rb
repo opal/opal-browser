@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class PopState < Event
+  handles 'popstate'
+
   def self.supported?
     Browser.supports? 'Event.PopState'
   end

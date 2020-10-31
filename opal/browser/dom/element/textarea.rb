@@ -1,6 +1,8 @@
 module Browser; module DOM; class Element < Node
 
 class Textarea < Element
+  def_selector "textarea"
+
   def value
     %x{
       if (#@native.value == "") {

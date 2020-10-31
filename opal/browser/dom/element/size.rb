@@ -29,6 +29,18 @@ class Size
   def height=(value)
     @element.style[:height] = value
   end
+
+  # @!attribute client_width
+  # @return [Integer] the content-box width of an element
+  def client_width
+    `#@native.clientWidth`
+  end
+
+  # @!attribute client_height
+  # @return [Integer] the content-box height of an element
+  def client_height
+    `#@native.clientHeight`
+  end
 end
 
 end; end; end

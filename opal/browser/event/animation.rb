@@ -1,6 +1,8 @@
 module Browser; class Event
 
 class Animation < Event
+  handles 'animationend', 'animationiteration', 'animationstart'
+
   def self.supported?
     Browser.supports? 'Event.Animation'
   end
