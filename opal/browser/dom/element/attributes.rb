@@ -32,9 +32,17 @@ class Attributes
       end
 
       if namespace = options[:namespace] || @namespace
-        `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
+        if value
+          `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
+        else
+          `#@native.removeAttributeNS(#{namespace.to_s}, #{name.to_s})`
+        end
       else
-        `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+        if value
+          `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+        else
+          `#@native.removeAttribute(#{name.to_s})`
+        end
       end
     end
   else
@@ -48,9 +56,17 @@ class Attributes
 
     def []=(name, value, options = {})
       if namespace = options[:namespace] || @namespace
-        `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
+        if value
+          `#@native.setAttributeNS(#{namespace.to_s}, #{name.to_s}, #{value})`
+        else
+          `#@native.removeAttributeNS(#{namespace.to_s}, #{name.to_s})`
+        end
       else
-        `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+        if value
+          `#@native.setAttribute(#{name.to_s}, #{value.to_s})`
+        else
+          `#@native.removeAttribute(#{name.to_s})`
+        end
       end
     end
   end
