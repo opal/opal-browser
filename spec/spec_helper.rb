@@ -31,4 +31,5 @@ end
 
 RSpec.configure do |config|
   config.extend HtmlHelper
+  #config.formatter = :doc
 end
