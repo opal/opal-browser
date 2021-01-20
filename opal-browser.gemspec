@@ -18,4 +18,11 @@ Gem::Specification.new {|s|
 
   s.add_dependency 'opal', ['>= 1.0', '< 2.0']
   s.add_dependency 'paggio'
+
+  s.add_development_dependency 'hyper-spec'
+  s.add_development_dependency 'pry'
+  s.add_development_dependency 'rails', '~> 6.0'
+  s.add_development_dependency 'opal-rails'
+  s.add_development_dependency 'hyper-component'
+  s.add_development_dependency 'puma'
 }

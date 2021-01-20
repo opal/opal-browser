@@ -2,8 +2,10 @@ require 'spec_helper'
 require 'browser/http'
 
 describe Browser::HTTP do
-  let(:path) { '/http' }
-  let(:path_file) { '/http-file' }
+  let!(:path) { '/http' }
+  let!(:path_file) { '/http-file' }
+
+  # Actual requests are routed to test_app/app/test_controller.rb
 
   describe '.get' do
     it 'fetches a path' do
@@ -16,8 +18,8 @@ describe Browser::HTTP do
   end
 
   describe '.get!' do
-    it 'fetches a path', :requires_server do
-      expect(Browser::HTTP.get!(path).text).to eq('lol')
+    it 'fetches a path', :js do
+      expect { Browser::HTTP.get!(path).text }.on_client_to eq('lol')
     end
   end
 
@@ -31,14 +33,16 @@ describe Browser::HTTP do
     end
   end
 
-  describe '.post!', :requires_server do
+  describe '.post!', :js do
     it 'sends parameters properly' do
-      expect(Browser::HTTP.post!(path, lol: 'wut').text).to eq('ok')
+      expect { Browser::HTTP.post!(path, lol: 'wut').text }.on_client_to eq('ok')
     end
 
     it 'sends files properly' do
-      file = Browser::File.create(["content"], "yay.txt", type: "text/plain")
-      expect(Browser::HTTP.post!(path_file, lol: 'wut', file: file).text).to eq('ok')
+      expect do
+        file = Browser::File.create(["content"], "yay.txt", type: "text/plain")
+        Browser::HTTP.post!(path_file, lol: 'wut', file: file).text
+      end.on_client_to eq('ok')
     end
   end
 
@@ -52,9 +56,9 @@ describe Browser::HTTP do
     end
   end
 
-  describe '.put!', :requires_server do
+  describe '.put!', :js do
     it 'sends parameters properly' do
-      expect(Browser::HTTP.put!(path, lol: 'wut').text).to eq('ok')
+      expect { Browser::HTTP.put!(path, lol: 'wut').text }.on_client_to eq('ok')
     end
   end
 
@@ -68,9 +72,9 @@ describe Browser::HTTP do
     end
   end
 
-  describe '.delete!', :requires_server do
+  describe '.delete!', :js do
     it 'fetches a path' do
-      expect(Browser::HTTP.delete!(path).text).to eq('lol')
+      expect { Browser::HTTP.delete!(path).text }.on_client_to eq('lol')
     end
   end
 end if Browser::HTTP.supported?

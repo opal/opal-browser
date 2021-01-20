@@ -3,3 +3,4 @@ vendor
 .bundle
 copycat
 doc
+spec/test_app/tmp/
