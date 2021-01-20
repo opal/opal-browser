@@ -16,7 +16,6 @@ require File.expand_path('../boot', __FILE__)
 Bundler.require(*Rails.groups(assets: %w(development test)))
 
 require 'opal-rails'
-require 'hyper-component'
 
 module TestApp
   class Application < Rails::Application
@@ -31,14 +30,9 @@ module TestApp
     config.opal.dynamic_require_severity = :ignore
     config.opal.enable_specs = true
     config.opal.spec_location = 'spec-opal'
-    config.hyperstack.auto_config = false
 
     config.assets.cache_store = :null_store
 
-    config.react.server_renderer_options = {
-      files: ['server_rendering.js']
-    }
-    config.react.server_renderer_directories = ['/app/assets/javascripts']
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
