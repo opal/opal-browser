@@ -34,13 +34,12 @@ describe Browser::NativeCachedWrapper do
     <iframe id='ifr' src='about:blank' sandbox=''></iframe>
   HTML
 
-  it 'supports restricted objects' do
+  it 'supports restricted objects', :requires_server do
     # Window won't be restricted
     expect($window.restricted?).to eq(false)
     # Iframe itself won't be restricted
     expect($document['ifr'].restricted?).to eq(false)
-    # But its content_window will be (due to CORS)
+    # But its content_window will be (due to CORS)  (this only works on a real browser)
     expect($document['ifr'].content_window.restricted?).to eq(true)
   end
 end
-

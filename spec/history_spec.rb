@@ -2,15 +2,18 @@ require 'spec_helper'
 require 'browser/history'
 
 describe Browser::History do
+
+  let(:root) { `window.location.pathname` }
+
   describe '#current' do
     it 'should return the current location' do
-      expect($window.history.current).to eq('/')
+      expect($window.history.current).to eq(root)
     end
   end
 
   describe '#push' do
     it 'should change location' do
-      expect($window.history.current).to eq('/')
+      expect($window.history.current).to eq(root)
       $window.history.push('/lol')
       expect($window.history.current).to eq('/lol')
       $window.history.push('/')
@@ -20,14 +23,14 @@ describe Browser::History do
 
   describe '#back' do
     it 'should go back once' do
-      expect($window.history.current).to eq('/')
+      expect($window.history.current).to eq(root)
       $window.history.push('/wut')
       expect($window.history.current).to eq('/wut')
 
       promise = Promise.new
 
       $window.one 'pop:state' do |e|
-        expect($window.history.current).to eq('/')
+        expect($window.history.current).to eq(root)
         promise.resolve
       end
 

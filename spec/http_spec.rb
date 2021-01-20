@@ -16,7 +16,7 @@ describe Browser::HTTP do
   end
 
   describe '.get!' do
-    it 'fetches a path' do
+    it 'fetches a path', :requires_server do
       expect(Browser::HTTP.get!(path).text).to eq('lol')
     end
   end
@@ -31,7 +31,7 @@ describe Browser::HTTP do
     end
   end
 
-  describe '.post!' do
+  describe '.post!', :requires_server do
     it 'sends parameters properly' do
       expect(Browser::HTTP.post!(path, lol: 'wut').text).to eq('ok')
     end
@@ -52,7 +52,7 @@ describe Browser::HTTP do
     end
   end
 
-  describe '.put!' do
+  describe '.put!', :requires_server do
     it 'sends parameters properly' do
       expect(Browser::HTTP.put!(path, lol: 'wut').text).to eq('ok')
     end
@@ -68,7 +68,7 @@ describe Browser::HTTP do
     end
   end
 
-  describe '.delete!' do
+  describe '.delete!', :requires_server do
     it 'fetches a path' do
       expect(Browser::HTTP.delete!(path).text).to eq('lol')
     end
