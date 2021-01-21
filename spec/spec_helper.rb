@@ -1,28 +1,51 @@
+# Most specs can run on the client using opal-rspec.
+# A few specs need the server-client communication to be tested
+# so those run on the server using the hyper-spec rspec
+# helpers.
+
+# You can also run the opal-rspec specs in the browser which
+# works fine, since you are in a full browser environment
+# talking to a server.   However in this case we need to
+# add the hyper-spec helpers in as pass throughs so the
+# syntax works.
+
+# See the Rakefile and config.ru for more details.
+
 if RUBY_ENGINE != 'opal'
+  # setup to run the server side specs
   require 'hyper-spec'
   require 'opal-browser'
 
-  ENV["RAILS_ENV"] ||= 'test'
+  ENV['RAILS_ENV'] ||= 'test'
   require File.expand_path('../test_app/config/environment', __FILE__)
 
   require 'rspec/rails'
 
-  module HtmlHelper
-    def html(html_string='')
+  module Helpers
+    def html(html_string = '')
       before do
+        # we can use the insert_html helper already built into
+        # hyper-spec
         insert_html html_string
       end
+    end
+
+    # to make specs more readable rename :js flag to server_side_test
+    # on the server, and on the client (see below) just skip the test
+    def server_side_test
+      :js # run in capybara js mode
     end
   end
 
   RSpec.configure do |config|
-    config.extend HtmlHelper
+    config.extend Helpers
   end
+
 else
   require 'browser'
   require 'console'
 
-  module HtmlHelper
+  module Helpers
     # Add some html code to the body tag ready for testing. This will
     # be added before each test, then removed after each test. It is
     # convenient for adding html setup quickly. The code is wrapped
@@ -48,11 +71,16 @@ else
 
       after { @_spec_html.remove }
     end
+
+    # see comments above on the server side helpers
+    def server_side_test
+      :js # the js tag will be skipped on the client
+    end
   end
 
 
   RSpec.configure do |config|
-    config.extend HtmlHelper
+    config.extend Helpers
   end
 
   module RSpec
@@ -61,6 +89,10 @@ else
       end
 
       module HyperSpecInstanceMethods
+        # stub the main helpers used by hyper-spec
+        # not all of these are used currently, but we
+        # add them all and alias them, so if specs change
+        # in the future they are available,
         def to_on_client(matcher, message = nil, &block)
           evaluate_client('ruby').to(matcher, message, &block)
         end
@@ -93,8 +125,9 @@ else
 
         private
 
-        def evaluate_client(method)
-          # stubs the hyper-spec evaluate_client method (basically does nothing, but execute the block)
+        def evaluate_client(*)
+          # stubs the hyper-spec evaluate_client method (basically does nothing,
+          # but execute the block)
           value = @target.call
           ExpectationTarget.for(value, nil)
         end
@@ -103,7 +136,7 @@ else
       class BlockExpectationTarget < ExpectationTarget
         include HyperSpecInstanceMethods
 
-        def with(args)
+        def with(*)
           self
         end
       end

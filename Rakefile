@@ -15,6 +15,8 @@ require 'rspec/core/rake_task'
 # All the specs will run in the browser using opal-rspec:
 # just run bundle exec rackup, and browse localhost:9292
 
+# See spec/spec_helper and config.ru for more details
+
 RSpec::Core::RakeTask.new(:server_and_client_specs) do |t|
   t.rspec_opts = '--tag js'
   t.pattern = 'spec/http_spec.rb,spec/native_cached_wrapper_spec.rb'

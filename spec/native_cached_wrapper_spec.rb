@@ -35,7 +35,7 @@ describe Browser::NativeCachedWrapper do
     <iframe id='ifr' src='about:blank' sandbox=''></iframe>
   HTML
 
-  it 'supports restricted objects', :js do
+  it 'supports restricted objects', server_side_test do
     # Window won't be restricted
     expect { $window.restricted? }.on_client_to eq(false)
     # Iframe itself won't be restricted
