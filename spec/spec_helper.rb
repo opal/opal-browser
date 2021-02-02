@@ -13,13 +13,20 @@
 
 if RUBY_ENGINE != 'opal'
   # setup to run the server side specs
-  require 'hyper-spec'
+  require 'hyper-spec/rack'
   require 'opal-browser'
 
-  ENV['RAILS_ENV'] ||= 'test'
-  require File.expand_path('../test_app/config/environment', __FILE__)
+  ENV['RACK_ENV'] ||= 'test'
 
-  require 'rspec/rails'
+  require File.join(File.dirname(__FILE__), 'app.rb')
+
+  Capybara.app = HyperSpecTestController.wrap(app: app, append_path: 'spec/app')
+
+  # Setup Test Environment
+  set :environment, :test
+  set :run, false
+  set :raise_errors, true
+  set :logging, false
 
   module Helpers
     def html(html_string = '')
@@ -37,9 +44,17 @@ if RUBY_ENGINE != 'opal'
     end
   end
 
+  # allow use of server_side_test in outer scope as well
+
+  def server_side_test
+    :js # run in capybara js mode
+  end
+
   RSpec.configure do |config|
     config.extend Helpers
   end
+
+  HyperSpec.reset_between_examples = false
 
 else
   require 'browser'

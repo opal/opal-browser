@@ -8,18 +8,18 @@ require 'rspec/core/rake_task'
 
 # a few specs require a "real DOM" and/or a server response, so these
 # specs are run using the hyper-spec gem.  These specs are marked with
-# the :js tag.
+# the server_side_test tag.
 
 # The remaining specs can be run using opal-rspec
 
 # All the specs will run in the browser using opal-rspec:
 # just run bundle exec rackup, and browse localhost:9292
 
-# See spec/spec_helper and config.ru for more details
+# See spec/spec_helper.rb, spec/app.rb, and config.ru for more details
 
 RSpec::Core::RakeTask.new(:server_and_client_specs) do |t|
   t.rspec_opts = '--tag js'
-  t.pattern = 'spec/http_spec.rb,spec/native_cached_wrapper_spec.rb'
+  t.pattern = 'spec/http_spec.rb,spec/native_cached_wrapper_spec.rb,spec/canvas/**/*_spec.rb'
 end
 
 Opal::RSpec::RakeTask.new(:opal_rspec_runner) do |_, task|
