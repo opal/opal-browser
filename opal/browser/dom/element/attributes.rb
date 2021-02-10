@@ -71,6 +71,14 @@ class Attributes
     end
   end
 
+  # Deletes an attribute with a given name
+  # @return [String] an attribute value before deletion
+  def delete(name)
+    attr = self[name]
+    self[name] = nil
+    attr
+  end
+
   include Enumerable
 
   def each(&block)
