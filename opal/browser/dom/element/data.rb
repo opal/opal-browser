@@ -60,13 +60,22 @@ class Data
   end
 
   def []=(name, value)
-    if value.respond_to? :to_str
+    `delete #@native.$data[name]`
+    if [true, false, nil].include?(value)
+      @element["data-#{name}"] = value
+    elsif value.respond_to? :to_str
       @element["data-#{name}"] = value.to_str
     elsif value.respond_to? :to_int
       @element["data-#{name}"] = value.to_int.to_s
     else
       `#@native.$data[name] = value`
     end
+  end
+
+  def delete(name)
+    data = self[name]
+    self[name] = nil
+    data
   end
 end
 
