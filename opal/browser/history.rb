@@ -50,7 +50,7 @@ class History
   # @!attribute [r] current
   # @return [String] the current item
   def current
-    $window.location.path
+    $window.location.full_path
   end
 
   # @!attribute [r] state
