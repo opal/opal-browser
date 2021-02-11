@@ -172,7 +172,13 @@ class FormData
 
   # Iterate over all elements of this FormData
   def each(&block)
-    Native(`#@native.getAll()`).each(&block)
+    hash = {}
+    %x{
+      for (var pair of #@native.entries()) {
+        #{hash[`pair[0]`] = `pair[1]`}
+      }
+    }
+    hash.each(&block)
     self
   end
 
