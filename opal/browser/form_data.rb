@@ -124,6 +124,22 @@ class FormData
     def parse_query(string, sep=?&)
       unflatten(string.split(sep).map { |s| s.split(?=).map(&method(:decode)) })
     end
+
+    # Converts a JS native value to a wrapped one if possible.
+    #
+    # @return [String, File, Blob]
+    def from_native(n)
+      %x{
+        var c = #{n}.constructor;
+        if (c === File) {
+          #{n = File.new(n)}
+        }
+        else if (c === Blob) {
+          #{n = Blob.new(n)}
+        }
+      }
+      n
+    end
   end
 
   extend Converter
@@ -157,7 +173,7 @@ class FormData
 
   # Get a field from this FormData instance with a given name
   def [](key)
-    Native(`#@native.get(#{key})`)
+    FormData.from_native(`#@native.get(#{key})`)
   end
 
   # Set a field in this FormData instance with a given name
@@ -170,16 +186,29 @@ class FormData
   end
   alias []= set
 
-  # Iterate over all elements of this FormData
-  def each(&block)
+  # Convert to hash
+  def to_h
     hash = {}
     %x{
-      for (var pair of #@native.entries()) {
-        #{hash[`pair[0]`] = `pair[1]`}
+      var pair, v, e = #@native.entries();
+      while (true) {
+        v = e.next();
+        if (v.done) break;
+        pair = v.value;
+        #{hash[`pair[0]`] = FormData.from_native(`pair[1]`)}
       }
     }
-    hash.each(&block)
-    self
+    hash
+  end
+
+  # Convert to array
+  def to_a
+    to_h.to_a
+  end
+
+  # Iterate over all elements of this FormData
+  def each(&block)
+    to_h.each(&block)
   end
 
   # Checks if a field of this name exists in this FormData instance
