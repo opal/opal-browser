@@ -22,6 +22,9 @@ RSpec::Core::RakeTask.new(:server_and_client_specs) do |t|
   t.pattern = 'spec/http_spec.rb,spec/native_cached_wrapper_spec.rb,spec/canvas/**/*_spec.rb'
 end
 
+require "webdrivers"
+load 'webdrivers/Rakefile'
+
 Opal::RSpec::RakeTask.new(:opal_rspec_runner) do |_, task|
   task.default_path = 'spec'
   task.pattern = 'spec/**/*_spec.{rb,opal}'
@@ -38,5 +41,5 @@ task :client_only_specs do
      'rake opal_rspec_runner'
 end
 
-task default: %i[server_and_client_specs client_only_specs] do
+task default: %i[client_only_specs server_and_client_specs] do
 end
