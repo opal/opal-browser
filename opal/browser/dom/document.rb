@@ -137,6 +137,12 @@ class Document < Element
     `#@native.readyState === "complete" || #@native.readyState === "interactive"`
   end
 
+  # @!attribute referrer
+  # @return [String] the referring document, or empty string if direct access
+  def referrer
+    `#@native.referrer`
+  end
+
   # @!attribute root
   # @return [Element?] the root element of the document
   def root
