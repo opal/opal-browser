@@ -47,6 +47,10 @@ class Response
     !success?
   end
 
+  # @!attribute [r] url
+  # @return [String] the response URL (after redirects)
+  alias_native :url, :responseURL
+
   # @!attribute [r] text
   # @return [String] the response body as text
   def text

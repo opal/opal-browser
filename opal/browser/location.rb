@@ -66,6 +66,12 @@ class Location
   # @return [String] the query part of the location URI
   alias_native :query, :search
   alias_native :query=, :search=
+
+  # Returns the full path of the location URI, including
+  # the query string and fragment, eg. /site?a=b#c
+  def full_path
+    path + query + fragment
+  end
 end
 
 class Window

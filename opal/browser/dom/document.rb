@@ -50,7 +50,7 @@ class Document < Element
     else
       elem = `#@native.createElement(name, #{opts.to_n})`
     end
-    
+
     if options[:classes]
       `#{elem}.className = #{Array(options[:classes]).join(" ")}`
     end
@@ -61,11 +61,8 @@ class Document < Element
 
     if options[:attrs]
       options[:attrs].each do |k,v|
-        %x`
-          var attr = #@native.createAttribute(#{k});
-          attr.value = #{v};
-          #{elem}.setAttributeNode(attr);
-        `
+        next unless v
+        `#{elem}.setAttribute(#{k}, #{v})`
       end
     end
 
@@ -138,6 +135,12 @@ class Document < Element
   # Check if the document is ready.
   def ready?
     `#@native.readyState === "complete" || #@native.readyState === "interactive"`
+  end
+
+  # @!attribute referrer
+  # @return [String] the referring document, or empty string if direct access
+  def referrer
+    `#@native.referrer`
   end
 
   # @!attribute root

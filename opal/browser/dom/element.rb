@@ -502,6 +502,18 @@ class Element < Node
     Size.new(self, *inc)
   end
 
+  # Toggle class names of the element.
+  #
+  # @param names [Array<String>] class names to toggle
+  #
+  # @return [self]
+  def toggle_class(*names)
+    to_remove, to_add = names.partition { |name| class_names.include? name }
+
+    add_class(*to_add)
+    remove_class(*to_remove)
+  end
+
   # @!attribute width
   # @return [Integer] the width of the element
   def width
