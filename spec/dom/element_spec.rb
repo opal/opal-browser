@@ -200,7 +200,7 @@ describe Browser::DOM::Element do
       DOM {
         div.shadow_item "Hello world!"
       }.append_to($document[:shadowtest].shadow)
-      
+
       expect($document[:shadowtest].at_css(".shadow_item")).to be_nil
       expect($document[:shadowtest].shadow.at_css(".shadow_item").text).to be("Hello world!")
     end

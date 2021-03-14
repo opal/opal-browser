@@ -209,6 +209,47 @@ The suggested polyfill is
 [wgxpath](https://code.google.com/p/wicked-good-xpath/), require it **before**
 opal-browser.
 
+Contributing
+------------
+git clone, then install the required gems:
+```
+$ bundle install
+```
+run the specs:
+```
+$ bundle exec rake
+```
+
+Most of the specs are run using opal-rspec.  The specs that test http
+functions or need a full browser environment use the hyper-spec gem to
+test communication between a test rails server and the client.  These specs
+are marked with the `:js` tag.  
+
+You can also run all the tests in a browser by running:
+```
+$ bundle exec rackup
+```
+and then visiting `localhost:9292`
+
+#### Debugging tips:
+
+For the non-js specs (those that run strictly in the client) you can insert
+a `debugger` breakpoint in the code. Run the browser server (`rackup`) but
+before you load the page, bring up the browser debugger window.  
+
+The specs will stop when they hit your debugging breakpoint and you can poke
+around.
+
+For the js specs add the pry gem to the Gemfile, and then set a `binding.pry`
+breakpoint in the problem spec.  You can run the specific spec in the usual way
+(i.e. `bundle exec spec/some_spec:227`) and you will hit the pry breakpoint.
+
+Now you can check the state of the client code and do some experiments with
+the `c?` method (evaluate on client)
+```ruby
+$ c? { HTTP.get('/http') } # code in the block is run on the client
+```
+
 License
 =======
 

@@ -12,7 +12,7 @@ class Canvas
 
   attr_reader :element, :style, :text
 
-  def initialize(*args)
+  def initialize(*args, &block)
     if DOM::Element === args.first
       element = args.shift
 
@@ -49,6 +49,8 @@ class Canvas
     if @image
       draw_image(@image)
     end
+
+    instance_eval(&block) if block_given?
   end
 
   def width
@@ -91,6 +93,10 @@ class Canvas
 
   def gradient(*args, &block)
     Gradient.new(self, *args, &block)
+  end
+
+  def stroke=(value)
+    Browser::Canvas::Style.new(self).stroke = value
   end
 
   def clear(x = nil, y = nil, width = nil, height = nil)

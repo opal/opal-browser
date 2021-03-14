@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'browser/native_cached_wrapper'
 
 describe Browser::NativeCachedWrapper do
   it 'deduplicates DOM objects' do
@@ -34,13 +35,12 @@ describe Browser::NativeCachedWrapper do
     <iframe id='ifr' src='about:blank' sandbox=''></iframe>
   HTML
 
-  it 'supports restricted objects' do
+  it 'supports restricted objects', server_side_test do
     # Window won't be restricted
-    expect($window.restricted?).to eq(false)
+    expect { $window.restricted? }.on_client_to eq(false)
     # Iframe itself won't be restricted
-    expect($document['ifr'].restricted?).to eq(false)
-    # But its content_window will be (due to CORS)
-    expect($document['ifr'].content_window.restricted?).to eq(true)
+    expect { $document['ifr'].restricted? }.on_client_to eq(false)
+    # But its content_window will be (due to CORS)  (this does not work with opal-rspec RUNNER=chrome)
+    expect { $document['ifr'].content_window.restricted? }.on_client_to eq(true)
   end
 end
-

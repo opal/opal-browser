@@ -329,7 +329,7 @@ class Element < Node
     # FIXME: when block passing is fixed
     doc = document
 
-    self << Builder.new(doc, self, &block).to_a
+    self << Builder.new(doc, &block).to_a
   end
 
   # Set the inner DOM with the given node.

@@ -35,6 +35,10 @@ class Data
     `#@native.data.length`
   end
 
+  def to_a
+    `Array.prototype.slice.call(#@native.data)`
+  end
+
   def [](index)
     `#@native.data[index]`
   end
