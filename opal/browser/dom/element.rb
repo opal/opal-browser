@@ -3,6 +3,8 @@
 module Browser; module DOM
 
 class Element < Node
+  include ParentNode
+
   def self.create(*args)
     if self == Element
       $document.create_element(*args)

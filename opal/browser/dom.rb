@@ -1,5 +1,6 @@
 require 'browser/dom/node_set'
 require 'browser/dom/node'
+require 'browser/dom/parent_node'
 require 'browser/dom/attribute'
 require 'browser/dom/character_data'
 require 'browser/dom/text'
