@@ -38,10 +38,21 @@ class Builder
 
   attr_reader :document, :element
 
-  def initialize(document, &block)
+  def initialize(document, builder=nil, &block)
     @document = document
-    @builder  = Paggio::HTML.new(&block)
-    @roots    = @builder.each.map { |e| Builder.build(self, e) }
+
+    @builder = Paggio::HTML.new(defer: true, &block)
+
+    build = proc do
+      @builder.build!(force_call: !!builder)
+      @roots = @builder.each.map { |e| Builder.build(self, e) }
+    end
+
+    if builder
+      builder.extend!(@builder, &build)
+    else
+      build.()
+    end
   end
 
   def to_a

@@ -31,6 +31,7 @@ class Document < Element
   # Create a new element for the document.
   #
   # @param name [String] the node name
+  # @param builder [Browser::DOM::Builder] optional builder to append element to
   # @param options [String] :namespace optional namespace name
   # @param options [String] :is optional WebComponents is parameter
   # @param options [String] :id optional id to set
@@ -38,7 +39,7 @@ class Document < Element
   # @param options [Hash] :attrs optional attributes to set
   #
   # @return [Element]
-  def create_element(name, **options)
+  def create_element(name, builder=nil, **options, &block)
     opts = {}
 
     if options[:is] ||= (options.dig(:attrs, :fragment))
@@ -66,7 +67,17 @@ class Document < Element
       end
     end
 
-    DOM(elem)
+    dom = DOM(elem)
+
+    if block_given?
+      dom.inner_dom(builder, &block)
+    end
+
+    if builder
+      builder << dom
+    end
+
+    dom
   end
 
   # Create a new document fragment.
