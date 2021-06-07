@@ -96,6 +96,15 @@ class Document < Element
     DOM(`#@native.createTextNode(#{content})`)
   end
 
+  # Create a new comment node for the document.
+  #
+  # @param content [String] the comment content
+  #
+  # @return [Comment]
+  def create_comment(content)
+    DOM(`#@native.createComment(#{content})`)
+  end
+
   def document
     self
   end
