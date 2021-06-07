@@ -4,10 +4,16 @@ module Browser; module DOM
 
 class Element < Node
   def self.create(*args, &block)
+    if Document === args.first
+      document = args.shift
+    else
+      document = $document
+    end
+
     if self == Element
-      $document.create_element(*args, &block)
+      document.create_element(*args, &block)
     elsif @tag_name
-      $document.create_element(@tag_name, *args, &block)
+      document.create_element(@tag_name, *args, &block)
     elsif @selector
       # That's crude, but should cover the most basic cases.
       # Just in case, you can override it safely.
@@ -21,7 +27,7 @@ class Element < Node
       id = custom_id if custom_id = kwargs.delete(:id)
       attrs = @selector.scan(/\[([\w-]+)=((["'])(.*?)\3|[\w_-]*)\]/).map { |a,b,_,d| [a,d||b] }.to_h
       attrs = attrs.merge(custom_attrs) if custom_attrs = kwargs.delete(:attrs)
-      $document.create_element(tag_name, *args, classes: classes, id: id, attrs: attrs, **kwargs, &block)
+      document.create_element(tag_name, *args, classes: classes, id: id, attrs: attrs, **kwargs, &block)
     else
       raise NotImplementedError
     end
@@ -352,6 +358,16 @@ class Element < Node
     self << node
   end
 
+  # @!attribute inner_html
+  # @return [String] the inner HTML of the element
+  def inner_html
+    `#@native.innerHTML`
+  end
+
+  def inner_html=(value)
+    `#@native.innerHTML = #{value}`
+  end
+
   def inspect
     inspect = name.downcase
 
@@ -380,6 +396,12 @@ class Element < Node
 
   def offset=(value)
     offset.set(*value)
+  end
+
+  # @!attribute outer_html
+  # @return [String] the outer HTML of the element
+  def outer_html
+    `#@native.outerHTML`
   end
 
   # @!attribute [r] position

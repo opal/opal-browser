@@ -75,10 +75,16 @@ module Kernel
       what     = args.shift
       document = args.shift || $document
 
+      what = what.to_dom(document) if Opal.respond_to? what, :to_dom
+
       if native?(what)
         Browser::DOM::Node.new(what)
       elsif Browser::DOM::Node === what
         what
+      elsif Browser::DOM::NodeSet === what
+        document.create_element("DIV").tap do |div|
+          div << what
+        end
       elsif String === what
         %x{
           var doc = #{Native.try_convert(document)}.createElement('div');

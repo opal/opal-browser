@@ -70,6 +70,8 @@ class Node
     if Opal.respond_to? node, :each
       node.each { |n| self << n }
       return self
+    elsif Opal.respond_to? node, :to_dom
+      node = node.to_dom(document)
     end
 
     unless native?(node)
@@ -89,6 +91,8 @@ class Node
     if Opal.respond_to? node, :each
       node.each { |n| self >> n }
       return self
+    elsif Opal.respond_to? node, :to_dom
+      node = node.to_dom(document)
     end
 
     unless native?(node)
@@ -125,6 +129,7 @@ class Node
     unless node
       node = DOM(&block)
     end
+    node = node.to_dom(document) if Opal.respond_to? node, :to_dom
 
     unless native?(node)
       if String === node
@@ -146,6 +151,7 @@ class Node
     unless node
       node = DOM(&block)
     end
+    node = node.to_dom(document) if Opal.respond_to? node, :to_dom
 
     unless native?(node)
       if String === node
@@ -308,16 +314,6 @@ class Node
     node_type == DOCUMENT_FRAGMENT_NODE
   end
 
-  # @!attribute inner_html
-  # @return [String] the inner HTML of the node
-  def inner_html
-    `#@native.innerHTML`
-  end
-
-  def inner_html=(value)
-    `#@native.innerHTML = #{value}`
-  end
-
   alias inner_text content
   alias inner_text= content=
 
@@ -373,6 +369,14 @@ class Node
   # @return [Symbol] the type of the node
   def node_type
     `#@native.nodeType`
+  end
+
+  # @!attribute outer_html
+  # @return [String] the simulated outer html of the node
+  def outer_html
+    div = $document.create_element("DIV")
+    div << self.dup
+    div.inner_html
   end
 
   # @!attribute parent
@@ -436,6 +440,8 @@ class Node
   # @param node [Node] the node to replace with
   # @return [Node] the passed node
   def replace(node)
+    node = node.to_dom(document) if Opal.respond_to? node, :to_dom
+
     unless native?(node)
       if String === node
         node = `#@native.ownerDocument.createTextNode(node)`
