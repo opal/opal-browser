@@ -16,7 +16,9 @@ class Element < Node
       document.create_element(@tag_name, *args, &block)
     elsif @selector
       # That's crude, but should cover the most basic cases.
-      # Just in case, you can override it safely.
+      # Just in case, you can override it safely. To reiterate:
+      # .create is not to be used inside libraries, those are
+      # expected to use the Document#create_element API.
       kwargs = {}
       kwargs = args.pop if Hash === args.last
       custom_attrs, custom_id, custom_classes = nil, nil, nil
@@ -51,7 +53,7 @@ class Element < Node
     @selector = selector
 
     # A special case to speedup dispatch
-    @tag_name = selector.upcase unless selector =~ /[^A-Za-z0-9_-]/
+    @tag_name = selector.upcase unless selector =~ /[^\w-]/
   end
 
   def self.selector
@@ -73,11 +75,7 @@ class Element < Node
 
     if self == Element
       subclass = Element.subclasses.select do |subclass|
-        if subclass.tag_name
-          subclass.tag_name == `node.nodeName`
-        else
-          Element.native_matches?(node, subclass.selector)
-        end
+        Element.native_is?(node, subclass)
       end.last
 
       if subclass
@@ -99,6 +97,15 @@ class Element < Node
       nil
     end
   }
+
+  def self.native_is? (native, klass)
+    if tag_name = klass.tag_name
+      is = `(#{native}.getAttribute("is") || "")`
+      `#{tag_name} === #{is}.toUpperCase() || #{tag_name} === #{native}.nodeName`
+    else
+      Element.native_matches?(native, klass.selector)
+    end
+  end
 
   if Browser.supports? 'Element.matches'
     def self.native_matches? (native, selector)

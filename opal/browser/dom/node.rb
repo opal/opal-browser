@@ -272,6 +272,11 @@ class Node
     node_type == COMMENT_NODE
   end
 
+  # Return true if the node is a custom element.
+  def custom?
+    false
+  end
+
   # @!attribute [rw] document
   # @return [Document?] the document the node is attached to
   def document

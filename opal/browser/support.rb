@@ -278,6 +278,9 @@ module Browser
 
       when 'Audio (Safari)', 'Audio (Chrome)'
         defined?(`window.webkitAudioContext`)
+      
+      when 'Custom Elements'
+        defined?(`window.customElements`)
     end
 
     `#@support[#{feature}] = #{support}`
