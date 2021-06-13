@@ -42,7 +42,7 @@ class Document < Element
   def create_element(name, builder=nil, **options, &block)
     opts = {}
 
-    if options[:is] ||= (options.dig(:attrs, :fragment))
+    if options[:is] ||= (options.dig(:attrs, :is))
       opts[:is] = options[:is]
     end
 
