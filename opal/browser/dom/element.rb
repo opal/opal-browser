@@ -614,3 +614,5 @@ require 'browser/dom/element/template'
 require 'browser/dom/element/textarea'
 require 'browser/dom/element/iframe'
 require 'browser/dom/element/media'
+
+require 'browser/dom/element/custom'
