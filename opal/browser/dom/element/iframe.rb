@@ -29,4 +29,9 @@ class Iframe < Element
   end
 end
 
+# Object is not an iframe, but acts the same.
+class Object < Iframe
+  def_selector "object"
+end
+
 end; end; end
