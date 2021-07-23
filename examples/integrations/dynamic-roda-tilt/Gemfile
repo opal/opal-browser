@@ -1,0 +1,9 @@
+source "https://rubygems.org"
+
+gem "opal-sprockets"
+gem "roda-sprockets"
+gem "puma"
+gem "rake"
+gem "paggio", github: "hmdne/paggio"
+gem "opal-browser", path: "../../.."
+gem "sassc"

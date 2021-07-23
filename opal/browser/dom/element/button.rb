@@ -19,11 +19,11 @@ class Button < Element
     `#@native.autofocus = #{value}`
   end
 
-  def name
+  def name_
     `#@native.name`
   end
 
-  def name=(value)
+  def name_=(value)
     `#@native.name = #{value}`
   end
 end

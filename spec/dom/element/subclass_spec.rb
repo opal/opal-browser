@@ -21,7 +21,7 @@ describe "Browser::DOM::Element subclassing" do
     def_selector "input.class2.class3[type='text']"
 
     def self.create(value)
-      super.tap { |elem| elem.value = value }
+      super().tap { |elem| elem.value = value }
     end
   end
 
@@ -92,5 +92,53 @@ describe "Browser::DOM::Element subclassing" do
     elem = DOM { div.class1 }
     expect(elem.class).to eq(class1)
     expect(elem.hello).to eq('world')
+  end
+
+  it 'works with Paggio with a .create/.new intializer' do
+    elems = DOM {
+      class1.create(self)
+      class1.new(self, attrs: { x: :y })
+      class1.new(self)
+    }
+    expect(elems.class).to eq(Browser::DOM::NodeSet)
+    expect(elems.length).to eq(3)
+    expect(elems[1][:x]).to eq(:y)
+    expect(elems.to_ary.map(&:class)).to eq([class1] * 3)
+  end
+
+  it 'works with Paggio, .create/.new and nested blocks' do
+    elem = DOM { |d|
+      class1.new(d) {
+        d.div.noticeme
+        class1.new(d) {
+          d.div.noticeme3
+        }
+        d.div.noticeme2
+      }
+    }
+    expect(elem.class).to eq(class1)
+    expect(elem.children.length).to eq(3)
+    expect(elem.children[1].class).to eq(class1)
+    expect(elem.children[1].children.length).to eq(1)
+    expect(elem.children[0].class).to eq(Browser::DOM::Element)
+    expect(elem.children[2].class).to eq(Browser::DOM::Element)
+    expect(elem.children[1].children[0].class).to eq(Browser::DOM::Element)
+  end
+
+  it 'works with Paggio, .create/.new, nested blocks and without DOM{}' do
+    elem = class1.new {
+      div.noticeme
+      class1.new(self) {
+        div.noticeme3
+      }
+      div.noticeme2
+    }
+    expect(elem.class).to eq(class1)
+    expect(elem.children.length).to eq(3)
+    expect(elem.children[1].class).to eq(class1)
+    expect(elem.children[1].children.length).to eq(1)
+    expect(elem.children[0].class).to eq(Browser::DOM::Element)
+    expect(elem.children[2].class).to eq(Browser::DOM::Element)
+    expect(elem.children[1].children[0].class).to eq(Browser::DOM::Element)
   end
 end

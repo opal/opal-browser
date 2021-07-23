@@ -31,6 +31,7 @@ class Document < Element
   # Create a new element for the document.
   #
   # @param name [String] the node name
+  # @param builder [Browser::DOM::Builder] optional builder to append element to
   # @param options [String] :namespace optional namespace name
   # @param options [String] :is optional WebComponents is parameter
   # @param options [String] :id optional id to set
@@ -38,10 +39,10 @@ class Document < Element
   # @param options [Hash] :attrs optional attributes to set
   #
   # @return [Element]
-  def create_element(name, **options)
+  def create_element(name, builder=nil, **options, &block)
     opts = {}
 
-    if options[:is] ||= (options.dig(:attrs, :fragment))
+    if options[:is] ||= (options.dig(:attrs, :is))
       opts[:is] = options[:is]
     end
 
@@ -66,7 +67,17 @@ class Document < Element
       end
     end
 
-    DOM(elem)
+    dom = DOM(elem)
+
+    if block_given?
+      dom.inner_dom(builder, &block)
+    end
+
+    if builder
+      builder << dom
+    end
+
+    dom
   end
 
   # Create a new document fragment.
@@ -83,6 +94,15 @@ class Document < Element
   # @return [Text]
   def create_text(content)
     DOM(`#@native.createTextNode(#{content})`)
+  end
+
+  # Create a new comment node for the document.
+  #
+  # @param content [String] the comment content
+  #
+  # @return [Comment]
+  def create_comment(content)
+    DOM(`#@native.createComment(#{content})`)
   end
 
   def document

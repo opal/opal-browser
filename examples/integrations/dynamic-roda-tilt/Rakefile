@@ -1,0 +1,6 @@
+desc "Recompile assets"
+task "assets" do
+  ENV['RACK_ENV'] = 'production'
+  require_relative 'app'
+  App.compile_assets
+end

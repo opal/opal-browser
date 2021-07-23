@@ -38,10 +38,32 @@ class Builder
 
   attr_reader :document, :element
 
-  def initialize(document, &block)
+  NEW_PAGGIO = (Paggio::HTML.instance_method(:build!) rescue false)
+
+  def initialize(document, builder=nil, &block)
     @document = document
-    @builder  = Paggio::HTML.new(&block)
-    @roots    = @builder.each.map { |e| Builder.build(self, e) }
+
+    # Compatibility issue due to an unreleased Paggio gem.
+    # Let's try to support both versions. When Paggio is released,
+    # we may remove it.
+
+    if NEW_PAGGIO
+      @builder = Paggio::HTML.new(defer: true, &block)
+
+      build = proc do
+        @builder.build!(force_call: !!builder)
+        @roots = @builder.each.map { |e| Builder.build(self, e) }
+      end
+
+      if builder
+        builder.extend!(@builder, &build)
+      else
+        build.()
+      end
+    else
+      @builder = Paggio::HTML.new(&block)
+      @roots = @builder.each.map { |e| Builder.build(self, e) }
+    end
   end
 
   def to_a

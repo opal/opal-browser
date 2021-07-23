@@ -1,5 +1,3 @@
-# Requires are moved to the bottom of this file.
-
 module Browser; module DOM
 
 class Element < Node

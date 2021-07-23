@@ -95,6 +95,11 @@ class NodeSet
     NodeSet[@literal.map { |node| node.search(*what) }]
   end
 
+  # Outer HTML of the entire nodeset
+  def outer_html
+    @literal.map(&:outer_html).join
+  end
+
   # Query for children matching the given XPath.
   #
   # @param path [String] the XPath

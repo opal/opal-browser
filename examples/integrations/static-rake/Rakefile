@@ -1,0 +1,10 @@
+task :build do
+  require 'opal'
+  require 'opal-browser'
+
+  Opal.append_path "app"
+
+  File.binwrite "application.js", Opal::Builder.build("application").to_s
+end
+
+task :default => :build

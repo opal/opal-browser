@@ -3,19 +3,33 @@
 module Browser; module DOM
 
 class Element < Node
-  def self.create(*args)
+  def self.create(*args, &block)
+    if Document === args.first
+      document = args.shift
+    else
+      document = $document
+    end
+
     if self == Element
-      $document.create_element(*args)
+      document.create_element(*args, &block)
     elsif @tag_name
-      $document.create_element(@tag_name)
+      document.create_element(@tag_name, *args, &block)
     elsif @selector
       # That's crude, but should cover the most basic cases.
-      # Just in case, you can override it safely.
-      tag_name = (@selector.scan(/^[A-Za-z0-9_-]+/).first || "div").upcase
-      classes = @selector.scan(/\.([A-Za-z0-9_-]+)/).flatten
-      id = @selector.scan(/#([A-Za-z0-9_-]+)/).flatten.first
-      attrs = @selector.scan(/\[([A-Za-z0-9_-]+)=((["'])(.*?)\3|[A-Za-z0-9_-]*)\]/).map { |a,b,_,d| [a,d||b] }.to_h
-      $document.create_element(tag_name, classes: classes, id: id, attrs: attrs)
+      # Just in case, you can override it safely. To reiterate:
+      # .create is not to be used inside libraries, those are
+      # expected to use the Document#create_element API.
+      kwargs = {}
+      kwargs = args.pop if Hash === args.last
+      custom_attrs, custom_id, custom_classes = nil, nil, nil
+      tag_name = (@selector.scan(/^[\w-]+/).first || "div").upcase
+      classes = @selector.scan(/\.([\w-]+)/).flatten
+      classes |= custom_classes if custom_classes = kwargs.delete(:classes)
+      id = @selector.scan(/#([\w-]+)/).flatten.first
+      id = custom_id if custom_id = kwargs.delete(:id)
+      attrs = @selector.scan(/\[([\w-]+)=((["'])(.*?)\3|[\w_-]*)\]/).map { |a,b,_,d| [a,d||b] }.to_h
+      attrs = attrs.merge(custom_attrs) if custom_attrs = kwargs.delete(:attrs)
+      document.create_element(tag_name, *args, classes: classes, id: id, attrs: attrs, **kwargs, &block)
     else
       raise NotImplementedError
     end
@@ -39,7 +53,7 @@ class Element < Node
     @selector = selector
 
     # A special case to speedup dispatch
-    @tag_name = selector.upcase unless selector =~ /[^A-Za-z0-9_-]/
+    @tag_name = selector.upcase unless selector =~ /[^\w-]/
   end
 
   def self.selector
@@ -50,23 +64,27 @@ class Element < Node
     @tag_name
   end
 
-  def self.new(node)
+  def self.new(*args, &block)
+    if args.length == 1 && !block_given? && Opal.native?(args[0])
+      # Use `.new` as a wrapping method.
+      node = args[0]
+    else
+      # Use `.new` as an alias for `.create`.
+      return create(*args, &block)
+    end
+
     if self == Element
       subclass = Element.subclasses.select do |subclass|
-        if subclass.tag_name
-          subclass.tag_name == `node.nodeName`
-        else
-          Element.native_matches?(node, subclass.selector)
-        end
+        Element.native_is?(node, subclass)
       end.last
 
       if subclass
         subclass.new(node)
       else
-        super
+        super(node)
       end
     else
-      super
+      super(node)
     end
   end
 
@@ -79,6 +97,15 @@ class Element < Node
       nil
     end
   }
+
+  def self.native_is? (native, klass)
+    if tag_name = klass.tag_name
+      is = `(#{native}.getAttribute("is") || "")`
+      `#{tag_name} === #{is}.toUpperCase() || #{tag_name} === #{native}.nodeName`
+    else
+      Element.native_matches?(native, klass.selector)
+    end
+  end
 
   if Browser.supports? 'Element.matches'
     def self.native_matches? (native, selector)
@@ -323,13 +350,10 @@ class Element < Node
   end
 
   # Set the inner DOM of the element using the {Builder}.
-  def inner_dom(&block)
+  def inner_dom(builder=nil, &block)
     clear
 
-    # FIXME: when block passing is fixed
-    doc = document
-
-    self << Builder.new(doc, self, &block).to_a
+    self << Builder.new(document, builder, &block).to_a
   end
 
   # Set the inner DOM with the given node.
@@ -339,6 +363,16 @@ class Element < Node
     clear
 
     self << node
+  end
+
+  # @!attribute inner_html
+  # @return [String] the inner HTML of the element
+  def inner_html
+    `#@native.innerHTML`
+  end
+
+  def inner_html=(value)
+    `#@native.innerHTML = #{value}`
   end
 
   def inspect
@@ -352,7 +386,7 @@ class Element < Node
       inspect += '.' + class_names.join('.')
     end
 
-    "#<DOM::Element: #{inspect}>"
+    "#<#{self.class.name.gsub("Browser::","")}: #{inspect}>"
   end
 
   # @!attribute offset
@@ -369,6 +403,12 @@ class Element < Node
 
   def offset=(value)
     offset.set(*value)
+  end
+
+  # @!attribute outer_html
+  # @return [String] the outer HTML of the element
+  def outer_html
+    `#@native.outerHTML`
   end
 
   # @!attribute [r] position

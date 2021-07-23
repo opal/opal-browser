@@ -1,0 +1,88 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+      - "*-stable"
+      - "*/ci-check"
+  pull_request: {}
+
+jobs:
+  rake:
+    name: ${{ matrix.combo.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        combo:
+          - name: Chromium/Linux
+            browser: chrome
+            os: ubuntu-latest
+          - name: Chromium/Linux/Opal-master
+            browser: chrome
+            os: ubuntu-latest
+            opal: master
+          - name: Chromium/Linux/Opal-1.1
+            browser: chrome
+            os: ubuntu-latest
+            opal: 1.1.0
+          - name: Chromium/Linux/Opal-1.0
+            browser: chrome
+            os: ubuntu-latest
+            opal: 1.0.0
+          - name: Chromium/Linux/Ruby-2.7
+            browser: chrome
+            os: ubuntu-latest
+            ruby: 2.7
+          - name: Chromium/Linux/Ruby-2.6
+            browser: chrome
+            os: ubuntu-latest
+            ruby: 2.6
+          - name: Firefox/Linux
+            browser: gecko
+            os: ubuntu-latest
+          - name: Chromium/Windows
+            browser: chrome
+            os: windows-latest
+          - name: Firefox/Windows
+            browser: gecko
+            os: windows-latest
+          - name: Edge/Windows
+            browser: edge
+            os: windows-latest
+          - name: Chromium/macOS
+            browser: chrome
+            os: macos-latest
+          - name: Firefox/macOS
+            browser: gecko
+            os: macos-latest
+          - name: Safari/macOS
+            browser: safari
+            os: macos-latest
+
+    runs-on: ${{ matrix.combo.os }}  
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: set environment variables
+        run: |
+          echo "OPAL_VERSION=${{ matrix.combo.opal || '1.2.0.beta1' }}" >> $GITHUB_ENV
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.combo.ruby || '3.0' }}
+      - run: bundle lock
+      - uses: actions/cache@v2
+        with:
+          path: ./vendor/bundle
+          key: ${{ runner.os }}-${{ matrix.combo.ruby || '3.0' }}-gems-${{ matrix.combo.opal || '1.2.0.beta1' }}-${{ github.ref }}-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.0' }}-gems-${{ matrix.combo.opal || '1.2.0.beta1' }}-${{ github.ref }}
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.0' }}-gems-${{ matrix.combo.opal || '1.2.0.beta1' }}-master
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.0' }}-gems-${{ matrix.combo.opal || '1.2.0.beta1' }}-
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.0' }}-gems-
+      - name: bundle install
+        run: |
+          bundle config path $PWD/vendor/bundle
+          bundle install --jobs 4 --retry 3
+          bundle clean
+      - run: bundle exec rake selenium_${{ matrix.combo.browser }}

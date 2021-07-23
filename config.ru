@@ -12,7 +12,7 @@ apps << Opal::Sprockets::Server.new(sprockets: sprockets_env) { |s|
   s.main = 'opal/rspec/sprockets_runner'
   s.append_path 'spec'
   s.index_path = 'index.html.erb'
-  s.debug = false
+  s.debug = true
 }
 
 apps << Class.new(Sinatra::Base) {

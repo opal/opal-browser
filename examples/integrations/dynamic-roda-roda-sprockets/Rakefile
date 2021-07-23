@@ -1,0 +1,4 @@
+require_relative 'app'
+require 'roda/plugins/sprockets_task'
+
+Roda::RodaPlugins::Sprockets::Task.define!(App)

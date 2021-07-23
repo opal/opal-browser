@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+gem "opal-sprockets"
+gem "puma"
+gem "rack"
+gem "paggio", github: "hmdne/paggio"
+gem "opal-browser", path: "../.."
