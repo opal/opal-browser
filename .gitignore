@@ -3,3 +3,5 @@ vendor
 .bundle
 copycat
 doc
+.yardoc
+screenshot.png

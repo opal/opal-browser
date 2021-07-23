@@ -1,70 +1,30 @@
 #! /usr/bin/env ruby
+require 'webdrivers'
 require 'selenium/webdriver'
 require 'rest_client'
 require 'json'
 
-# setup tunnel
-retries = 30
-begin
-  `rm -f BrowserStackLocal.zip BrowserStackLocal`
-  `curl https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip > BrowserStackLocal.zip`
-  `unzip BrowserStackLocal.zip`
-  `chmod a+x BrowserStackLocal`
-
-  tunnel = IO.popen './BrowserStackLocal --key "$BS_AUTHKEY" --only localhost,9292,0 --local-identifier "$TRAVIS_JOB_ID"'
-  loop do
-    line = tunnel.gets
-    puts "*** [BrowserStackLocal] #{line.chomp}"
-    break if line.start_with? 'You can now access'
-  end
-rescue => e
-  puts "Error while using a BrowserStackLocal: #{e.inspect}"
-  sleep 5
-  retries -= 1
-  retry if retries > 0
-  puts "No retries left"
-  exit 1
-end
-
-# configure based on environment variables
-hub  = "http://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@hub.browserstack.com/wd/hub"
-plan = "https://#{ENV['BS_USERNAME']}:#{ENV['BS_AUTHKEY']}@www.browserstack.com/automate/plan.json"
-cap  = Selenium::WebDriver::Remote::Capabilities.new
-
-cap['platform']        = ENV['SELENIUM_PLATFORM'] || 'ANY'
-cap['browser']         = ENV['SELENIUM_BROWSER'] || 'chrome'
-cap['browser_version'] = ENV['SELENIUM_VERSION'] if ENV['SELENIUM_VERSION']
-cap['device']          = ENV['SELENIUM_DEVICE'] if ENV['SELENIUM_DEVICE']
-
-cap['browserstack.tunnelIdentifier'] = ENV['TRAVIS_JOB_ID']
-cap['browserstack.tunnel']           = true
-cap['browserstack.debug']            = true
-
-cap['databaseEnabled']          = true
-cap['browserConnectionEnabled'] = true
-cap['locationContextEnabled']   = true
-cap['webStorageEnabled']        = true
-
 print 'Loading...'
 
-# wait until there's a spot in the parallel jobs
-begin
-  loop do
-    state = JSON.parse(RestClient.get(plan).to_str)
-
-    if state["parallel_sessions_running"] < state["parallel_sessions_max_allowed"]
-      break
-    end
-
-    print '.'
-    sleep 30
-  end
-
-  browser = Selenium::WebDriver.for(:remote, url: hub, desired_capabilities: cap)
-  browser.navigate.to('http://localhost:9292')
-rescue Selenium::WebDriver::Error::UnknownError
-  retry
+browser, options = case ENV['BROWSER']
+when "chrome"
+  opts = Selenium::WebDriver::Chrome::Options.new(args: ['--no-sandbox', '--headless'])
+  [:chrome, options: opts]
+when "gecko"
+  opts = Selenium::WebDriver::Firefox::Options.new(args: ['--headless'])
+  [:firefox, options: opts]
+when "safari"
+  opts = Selenium::WebDriver::Safari::Options.new(args: ['--headless'])
+  [:safari, {}]
+when "edge"
+  opts = Selenium::WebDriver::Edge::Options.new(args: ['--headless'])
+  [:edge, {}]
+else
+  raise "Wrong web browser provided in BROWSER. Acceptable values: chrome, gecko, safari, edge"
 end
+
+browser = Selenium::WebDriver.for(browser, options, **{})
+browser.navigate.to('http://localhost:9292')
 
 # if we don't quit the browser it will stall
 at_exit {
@@ -100,7 +60,7 @@ print "\rRunning specs..."
 
 begin
   # wait until the specs have finished, thus changing the content of #totals
-  Selenium::WebDriver::Wait.new(timeout: 1200, interval: 30).until {
+  Selenium::WebDriver::Wait.new(timeout: 3000, interval: 30).until {
     print '.'
 
     not browser['totals'].text.strip.empty?
@@ -115,7 +75,7 @@ begin
   if totals =~ / 0 failures/
     exit 0
   end
-rescue Selenium::WebDriver::Error::TimeOutError
+rescue Selenium::WebDriver::Error::TimeoutError
   if element = browser['rspec-error'] rescue nil
     print "\r#{element.text}"
   else

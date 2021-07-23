@@ -3,7 +3,7 @@ Opal-Browser - Client side web development in pure Ruby, using Opal
 
 [![Gem Version](https://badge.fury.io/rb/opal-browser.svg)](http://badge.fury.io/rb/opal-browser)
 [![Code Climate](http://img.shields.io/codeclimate/github/opal/opal-browser.svg)](https://codeclimate.com/github/opal/opal-browser)
-
+[![Build Status](https://github.com/opal/opal-browser/actions?query=workflow%3Abuild)](https://github.com/opal/opal-browser/workflows/build/badge.svg)
 
 This library aims to be a full-blown wrapper for all the browser API as defined by
 HTML5.

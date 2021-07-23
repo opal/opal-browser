@@ -6,21 +6,27 @@ gem 'rake'
 gem 'rack'
 gem 'sinatra'
 gem 'sinatra-websocket'
-gem 'opal-rspec', '>= 0.8.0.alpha1'
-if File.exist? "../opal-sprockets"
-  gem 'opal-sprockets', path: "../opal-sprockets"
-else
-  gem 'opal-sprockets'
-end
+# For opal-rspec, a release is needed
+gem 'opal-rspec', github: 'opal/opal-rspec', submodules: true # '>= 0.8.0.alpha1'
+gem 'opal-sprockets'
+# Force build of eventmachine on Windows
+gem 'eventmachine', github: 'eventmachine/eventmachine' if RUBY_PLATFORM =~ /mingw/
+
 
 # runner
 gem 'selenium-webdriver', require: false
 gem 'rest-client', require: false
+gem 'webdrivers', github: 'hmdne/webdrivers', require: false
+gem 'rexml', require: false
 
 # browser
-gem 'opal', ['>= 1.0', '< 2.0']
-if File.exist? "../paggio"
-  gem 'paggio', path: '../paggio'
+case ENV['OPAL_VERSION']
+when nil
+when 'master'
+  gem 'opal', github: 'opal/opal'
 else
-  gem 'paggio', github: 'hmdne/paggio'
+  gem 'opal', "~> #{ENV['OPAL_VERSION']}"
 end
+# At this time, we need to use a branch. Please see:
+# https://github.com/meh/paggio/issues/7
+gem 'paggio', github: 'hmdne/paggio'
