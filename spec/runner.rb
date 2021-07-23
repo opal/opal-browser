@@ -8,28 +8,30 @@ print 'Loading...'
 
 browser, options = case ENV['BROWSER']
 when "chrome"
-  opts = Selenium::WebDriver::Chrome::Options.new(args: ['--no-sandbox', '--headless'])
-  [:chrome, options: opts]
+  opts = Selenium::WebDriver::Chrome::Options.new(args: ['--headless', '--no-sandbox'])
+  [:chrome, opts]
 when "gecko"
   opts = Selenium::WebDriver::Firefox::Options.new(args: ['--headless'])
-  [:firefox, options: opts]
+  [:firefox, opts]
 when "safari"
-  opts = Selenium::WebDriver::Safari::Options.new(args: ['--headless'])
-  [:safari, {}]
+  opts = Selenium::WebDriver::Safari::Options.new()
+  [:safari, opts]
 when "edge"
   opts = Selenium::WebDriver::Edge::Options.new(args: ['--headless'])
-  [:edge, {}]
+  [:edge, opts]
 else
   raise "Wrong web browser provided in BROWSER. Acceptable values: chrome, gecko, safari, edge"
 end
 
-browser = Selenium::WebDriver.for(browser, options, **{})
+browser = Selenium::WebDriver.for(browser, capabilities: options)
 browser.navigate.to('http://localhost:9292')
 
 # if we don't quit the browser it will stall
 at_exit {
   browser.quit
 }
+
+puts "Browser: " + browser.execute_script("return window.navigator.userAgent")
 
 # the title is a good way to know if anything went wrong while fetching the
 # page
@@ -54,7 +56,7 @@ begin
     puts "\r#{element.text}"
     exit 1
   end
-rescue Selenium::WebDriver::Error::TimeOutError; end
+rescue Selenium::WebDriver::Error::TimeoutError; end
 
 print "\rRunning specs..."
 
@@ -84,14 +86,19 @@ rescue Selenium::WebDriver::Error::TimeoutError
 ensure
   # take a screenshot and upload it to imgur
   begin
-    browser.save_screenshot('screenshot.png')
-    response = RestClient.post('https://api.imgur.com/3/upload',
-      { image: File.open('screenshot.png') },
-      { 'Authorization' => 'Client-ID 1979876fe2a097e' })
+    upload = lambda do |filepath|
+      response = RestClient.post('https://api.imgur.com/3/upload',
+        { image: File.open(filepath) },
+        { 'Authorization' => 'Client-ID 1979876fe2a097e' })
 
-    print " ("
-    print JSON.parse(response.to_str)['data']['link']
-    puts  ")"
+      JSON.parse(response.to_str)['data']['link']
+    end
+
+    w, h = browser.execute_script("return [document.body.clientWidth, document.body.clientHeight];")
+    browser.manage.window.resize_to(w, h)
+    browser.save_screenshot('screenshot.png')
+    screenshot_url = upload.('screenshot.png')
+    puts " (#{screenshot_url})"
   rescue Exception
     puts
   end
