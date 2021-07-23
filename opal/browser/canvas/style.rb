@@ -56,10 +56,12 @@ class Style < StyleObject
 
     def smooth!
       `#@native.mozImageSmoothingEnabled = #{@smooth = true}`
+      `#@native.imageSmoothingEnabled = #{@smooth = true}`
     end
 
     def no_smooth!
       `#@native.mozImageSmoothingEnabled = #{@smooth = false}`
+      `#@native.imageSmoothingEnabled = #{@smooth = false}`
     end
   end
 
