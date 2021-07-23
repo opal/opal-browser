@@ -50,11 +50,12 @@ class Custom < Element
 
   module ClassMethods
     if Browser.supports? 'Custom Elements'
-      # Defines a new custom element
+      # Defines a new custom element. This should come as the last call
+      # in the class definition, because at this point the methods may
+      # be called!
       #
       # @opalopt uses:_dispatch_constructor,attached,detached,adopted,attribute_changed,observed_attributes
       def def_custom(tag_name, base_class: nil, extends: nil)
-        $console.log(tag_name, base_class)
         if `base_class !== nil`
         elsif self.superclass == Custom
           base_class = `HTMLElement`
@@ -74,19 +75,9 @@ class Custom < Element
           else customElements.define(#{tag_name}, #{@custom_class});
         }
       end
-
-      private def _dispatch_constructor(obj)
-        new(obj) if Element.native_is?(obj, self)
-      end
     elsif Browser.supports? 'MutationObserver'
       # Can we polyfill it?
-      def def_custom(tag_name, base_class: nil, extends: nil)
-        def_selector tag_name
-
-        $document.body.css(tag_name).each(&:attached)
-      end
-
-      MutationObserver.new do |obs|
+      Browser::DOM::MutationObserver.new do |obs|
         obs.each do |e|
           target = e.target
 
@@ -101,13 +92,28 @@ class Custom < Element
           end
         end
       end.observe($document.body, tree: true, children: true, attributes: :old)
-    else
-      # Well, we can't. Let's do what we can.
+    end
+
+    unless Browser.supports? 'Custom Elements'
+      # The polyfilled implementation. Define the selector and then
+      # try to upgrade the elements that are already in the document.
       def def_custom(tag_name, base_class: nil, extends: nil)
         def_selector tag_name
 
-        $document.body.css(tag_name).each(&:attached)
+        $document.body.css(tag_name).each do |elem|
+          elem = _dispatch_constructor(elem.to_n)
+          elem.attached
+        end
       end
+    end
+
+    private def _dispatch_constructor(obj)
+      %x{
+        if (typeof obj.$$opal_native_cached !== 'undefined') {
+          delete obj.$$opal_native_cached;
+        }
+      }
+      new(obj)
     end
 
     # This must be defined before def_custom is called!
@@ -121,16 +127,22 @@ class Custom < Element
       klass.extend ClassMethods
     end
 
+    # @abstract
     def attached
     end
 
+    # @abstract
     def detached
     end
 
+    # @abstract
     def adopted
     end
 
-    # Note: for this method to fire, you will need to 
+    # Note: for this method to fire, you will need to define
+    # the observed attributes.
+    #
+    # @abstract
     def attribute_changed(attr, from, to)
     end
 

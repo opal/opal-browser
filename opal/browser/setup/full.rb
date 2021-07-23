@@ -5,6 +5,9 @@ require 'paggio'
 require 'browser/setup/large'
 
 require 'browser/event/all'
+
 require 'browser/dom/builder'
+require 'browser/dom/mutation_observer'
+require 'browser/dom/element/custom'
 
 require 'browser/canvas'

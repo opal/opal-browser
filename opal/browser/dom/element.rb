@@ -386,7 +386,7 @@ class Element < Node
       inspect += '.' + class_names.join('.')
     end
 
-    "#<DOM::Element: #{inspect}>"
+    "#<#{self.class.name.gsub("Browser::","")}: #{inspect}>"
   end
 
   # @!attribute offset
@@ -614,5 +614,3 @@ require 'browser/dom/element/template'
 require 'browser/dom/element/textarea'
 require 'browser/dom/element/iframe'
 require 'browser/dom/element/media'
-
-require 'browser/dom/element/custom'

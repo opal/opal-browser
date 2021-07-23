@@ -201,6 +201,10 @@ class Node
     NodeSet.new(parents)
   end
 
+  def attached?
+    `#@native.isConnected`
+  end
+
   alias before add_previous_sibling
 
   # Remove the node from its parent.
