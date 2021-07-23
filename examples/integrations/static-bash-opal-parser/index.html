@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Application</title>
+
+  <script src='opal-browser.js'></script>
+  <script src='opal-parser.js' onload='Opal.require("opal-parser")'></script>
+</head>
+<body>
+  <script type='text/ruby'>
+    require 'native'
+    require 'promise'
+    require 'browser/setup/full'
+
+    # Your Opal code here
+    $document.body << "Hello world!"
+  </script>
+</body>
+</html>

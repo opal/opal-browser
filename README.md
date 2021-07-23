@@ -1,18 +1,31 @@
-Browser support for Opal
-========================
+Opal-Browser - Client side web development in pure Ruby, using Opal
+===================================================================
 
-[![Build Status](https://secure.travis-ci.org/opal/opal-browser.svg?branch=master)](http://travis-ci.org/opal/opal-browser)
 [![Gem Version](https://badge.fury.io/rb/opal-browser.svg)](http://badge.fury.io/rb/opal-browser)
 [![Code Climate](http://img.shields.io/codeclimate/github/opal/opal-browser.svg)](https://codeclimate.com/github/opal/opal-browser)
 
 
-This library aims to be a full-blown wrapper for all the browser API including
+This library aims to be a full-blown wrapper for all the browser API as defined by
 HTML5.
+
+It provides a very JQuery-like interface to DOM, but itself it doesn't use nor
+require JQuery nor opal-jquery (which is an alternative library for interfacing
+the web browser). The main difference though is that Opal-Browser goes far beyond
+what JQuery does.
 
 Usage
 =====
 
-_Server side (config.ru, Rakefile, Rails, Sinatra, etc.)_
+_Gemfile_
+
+```ruby
+source 'https://rubygems.org/'
+
+gem 'paggio', github: 'hmdne/paggio'
+gem 'opal-browser'
+```
+
+_Server side (config.ru, Rakefile, Rails, Sinatra, Roda, etc. - not needed for static compilation)_
 
 ```ruby
 require 'opal-browser'
@@ -23,18 +36,47 @@ _Browser side_
 
 ```ruby
 require 'opal'
-require 'browser'
+require 'native'
+require 'promise'
+require 'browser/setup/full'
+
 # Your Opal code here
+$document.body << "Hello world!"
 ```
 
-_Static Compile JS_
+_Static Compile Opal + Opal-Browser library_
+
 ```bash
-opal -I ./opal --gem paggio --compile opal/browser.rb > browser.js
+bundle exec opal -c -q opal-browser -p native -p promise -p browser/setup/full -e '#' -E > opal-browser.js
 ```
+
+_Static Compile your application_
+
+```bash
+bundle exec opal -Oc -s opal -s native -s promise -s browser/setup/full app/application.rb > application.js
+```
+
+_And load it in HTML!_
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Application</title>
+</head>
+<body>
+  <script src='opal-browser.js' onload='Opal.require("native"); Opal.require("promise"); Opal.require("browser/setup/full");'></script>
+  <script src='application.js'></script>
+</body>
+</html>
+```
+
+See the examples/integrations/ directory for various ideas on how to quickly start
+development using opal-browser.
 
 Features
 ========
-This is a list of the currently wrapped features and some details on them.
+This is a list of many currently wrapped features and some details on them.
 
 DOM
 ---
@@ -47,8 +89,8 @@ $document.ready do
 end
 ```
 
-It also supports a markaby inspired builder DSL which generates DOM nodes
-directly instead of creating a string.
+It also supports a markaby inspired builder DSL (using Paggio) which generates
+DOM nodes directly instead of creating a string.
 
 ```ruby
 $document.ready do
@@ -60,12 +102,37 @@ $document.ready do
 end
 ```
 
+Events
+------
+
+Add an event to a given element:
+
+```ruby
+$document.at_css("button").on(:click) do |e|
+  e.prevent # Prevent the default action (eg. form submission)
+  alert "Button clicked!"
+end
+```
+
+Or add it to a parent element and use a delegator, so that an event gets fired
+when any button children of `$document` is clicked:
+
+```ruby
+$document.on(:click, "button") do |e|
+  e.prevent
+  # e.on is a button that has been clicked
+  e.on.inner_text = "Clicked!"
+end
+```
+
+Run an event once with `#one` instead of `#on`, or disable an event with `#off`.
+
 CSSOM
 -----
-CSSOM support is still incomplete but the useful parts are implemented, this
-includes a DSL for generating a CSS style and the same DSL is also used to
-change style declarations (which can either belong to a `DOM::Element` or a
-`CSS::Rule::Style`).
+CSSOM support (using Paggio) is still incomplete but the useful parts are
+implemented, this includes a DSL for generating a CSS style and the same DSL
+is also used to change style declarations (which can either belong to a
+`DOM::Element` or a `CSS::Rule::Style`).
 
 ```ruby
 $document.body.style.apply {
@@ -140,9 +207,16 @@ Storage
 The HTML5 Storage API has been wrapped and it exports a single Storage class
 that uses the most appropriate and available API to store data locally.
 
+```ruby
+require 'browser/storage'
+
+$storage = $window.storage
+$storage[:hello] = "world"
+```
+
 Database SQL
 ------------
-WebSQL has been fully wrapped.
+WebSQL has been fully wrapped (Chromium-only)
 
 ```ruby
 require 'browser/database/sql'
@@ -166,55 +240,33 @@ db.transaction {|t|
 Browser support
 ===============
 
-* Internet Explorer 6+
-* Firefox (Current - 1) or Current
-* Chrome (Current - 1) or Current
-* Safari 5.1+
-* Opera 12.1x or (Current - 1) or Current
+* Edge (Current - 3) to Current
+* Firefox (Current - 3) to Current
+* Chrome (Current - 3) to Current
+* Safari (Current - 3) to Current
+* Opera (Current - 3) to Current
 
 Any problem above browsers should be considered and reported as a bug.
 
-(Current - 1) or Current denotes that we support the current stable version of
-the browser and the version that preceded it. For example, if the current
-version of a browser is 24.x, we support the 24.x and 23.x versions.
+(Current - 3) to Current denotes that we support the current major stable version
+of the browser and 3 versions preceding it. For example, if the current version
+of a browser is 24.x, we support all versions between 21.x to 24.x.
 
-12.1x or (Current - 1) or Current denotes that we support Opera 12.1x as well
-as last 2 versions of Opera. For example, if the current Opera version is 20.x,
-we support Opera 12.1x, 19.x and 20.x but not Opera 15.x through 18.x.
+We will accept compatibility patches for even earlier browser versions. Opal-Browser
+is written in such a way, that it integrates a robust compatibility check system,
+similar to Modernizr, and the history of this library goes even as far as supporting
+Internet Explorer 6.
 
-Cross-browser testing sponsored by [BrowserStack](http://browserstack.com).
-
-CSS selectors
--------------
-Older browsers do not support CSS selector in queries, this means you'll need
-external polyfills for this.
-
-The suggested polyfill is [Sizzle](http://sizzlejs.com/), require it **before**
-opal-browser.
-
-JSON parsing
-------------
-Older browsers don't support JSON parsing natively, this means you'll need
-external polyfills for this.
-
-The suggested polyfill is [json2](https://github.com/douglascrockford/JSON-js),
-require it **before** opal-browser.
-
-XPath support
--------------
-Not all browsers support XPath queries, I'm looking at you Internet Explorer,
-this means you'll need external polyfills for this.
-
-The suggested polyfill is
-[wgxpath](https://code.google.com/p/wicked-good-xpath/), require it **before**
-opal-browser.
+See the [polyfills documentation](docs/polyfills.md) if you wish to polyfill some
+behaviors not supported by the ancient web browsers (like `querySelectorAll`).
 
 License
 =======
 
 (The MIT License)
 
-Copyright (C) 2014 by meh
+Copyright (C) 2013-2018 by meh<br>
+Copyright (C) 2019-2021 hmdne and the Opal-Browser contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

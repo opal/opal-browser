@@ -4,7 +4,7 @@ require 'browser/version'
 Gem::Specification.new {|s|
   s.name     = 'opal-browser'
   s.version  = Browser::VERSION
-  s.author   = 'meh.'
+  s.author   = ['meh.', 'hmdne']
   s.email    = 'meh@schizofreni.co'
   s.homepage = 'http://github.com/opal/opal-browser'
   s.platform = Gem::Platform::RUBY
