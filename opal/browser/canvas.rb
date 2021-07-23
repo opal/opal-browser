@@ -59,6 +59,14 @@ class Canvas
     @element[:height].to_i
   end
 
+  def width=(new_width)
+    @element[:width] = new_width.to_i
+  end
+
+  def height=(new_height)
+    @element[:height] = new_height.to_i
+  end
+
   def append_to(parent)
     @element.append_to(parent)
   end
@@ -312,6 +320,14 @@ class Canvas
   def to_data(type = undefined)
     `#{@element.to_n}.toDataUrl(type)`
   end
+
+  def to_dom(*)
+    @element
+  end
+
+  def on(*args, &block); @element.on(*args, &block); end
+  def one(*args, &block); @element.one(*args, &block); end
+  def off(*args, &block); @element.off(*args, &block); end
 end
 
 Browser::DOM::Builder.for Canvas do |b, item|
