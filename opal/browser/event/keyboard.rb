@@ -87,8 +87,19 @@ class Keyboard < UI
   alias_native :locale
   alias_native :repeat?, :repeat
 
+  # IE 11 at least has different names for those keys.
+  IE_MAP = {
+    'Down' => 'ArrowDown',
+    'Up' => 'ArrowUp',
+    'Left' => 'ArrowLeft',
+    'Right' => 'ArrowRight',
+    'Esc' => 'Escape',
+    'Del' => 'Delete'
+  }
+
   def key
-    `#@native.key || #@native.keyIdentifier || nil`
+    key = `#@native.key || #@native.keyIdentifier || nil`
+    IE_MAP[key] || key
   end
 
   def code

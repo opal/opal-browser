@@ -87,11 +87,11 @@ class Custom < Element
               target.attribute_changed(e.name, e.old, target[e.name])
             end
           when :tree
-            e.added.each { |n| n.attached if Custom::Mixin === n }
-            e.removed.each { |n| n.detached if Custom::Mixin === n }
+            e.added.each { |n| n.attached_once if Custom::Mixin === n }
+            e.removed.each { |n| n.detached_once if Custom::Mixin === n }
           end
         end
-      end.observe($document.body, tree: true, children: true, attributes: :old)
+      end.observe($document, tree: true, children: true, attributes: :old)
     end
 
     unless Browser.supports? 'Custom Elements'
@@ -101,8 +101,7 @@ class Custom < Element
         def_selector tag_name
 
         $document.body.css(tag_name).each do |elem|
-          elem = _dispatch_constructor(elem.to_n)
-          elem.attached
+          _dispatch_constructor(elem.to_n)&.attached_once
         end
       end
     end
@@ -111,9 +110,10 @@ class Custom < Element
       %x{
         if (typeof obj.$$opal_native_cached !== 'undefined') {
           delete obj.$$opal_native_cached;
+          return self.$new(obj);
         }
+        return nil;
       }
-      new(obj)
     end
 
     # This must be defined before def_custom is called!
@@ -149,6 +149,22 @@ class Custom < Element
     # Return true if the node is a custom element.
     def custom?
       true
+    end
+
+    # Those methods keep track of the attachment status of the elements,
+    # so that #attached/#detached isn't called twice.
+    unless Browser.supports? 'Custom Elements'
+      # @private
+      def attached_once
+        attached unless @_polyfill_attached
+        @_polyfill_attached = true
+      end
+
+      # @private
+      def detached_once
+        detached if @_polyfill_attached
+        @_polyfill_attached = false
+      end
     end
   end
 
