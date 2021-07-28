@@ -144,6 +144,9 @@ class Element < Node
     Element.native_matches?(@native, selector)
   end
 
+  # Allow for case expressions
+  alias === =~
+
   # Query for children with the given XPpaths.
   #
   # @param paths [Array<String>] the XPaths to look for
