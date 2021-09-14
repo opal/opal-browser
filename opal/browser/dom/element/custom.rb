@@ -112,7 +112,10 @@ class Custom < Element
           delete obj.$$opal_native_cached;
           return self.$new(obj);
         }
-        return nil;
+        else {
+          self.$new(obj);
+          return nil;
+        }
       }
     end
 
