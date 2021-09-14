@@ -22,10 +22,10 @@ gem 'rexml', require: false
 # browser
 case ENV['OPAL_VERSION']
 when nil
-when 'master'
-  gem 'opal', github: 'opal/opal'
+when /\./
+  gem 'opal', "~> #{ENV['OPAL_VERSION']}.0a"
 else
-  gem 'opal', "~> #{ENV['OPAL_VERSION']}"
+  gem 'opal', github: 'opal/opal', ref: ENV['OPAL_VERSION']
 end
 # At this time, we need to use a branch. Please see:
 # https://github.com/meh/paggio/issues/7

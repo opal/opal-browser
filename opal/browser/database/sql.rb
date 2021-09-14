@@ -1,4 +1,3 @@
-require 'promise'
 require 'ostruct'
 
 module Browser; module Database

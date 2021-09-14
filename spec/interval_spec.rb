@@ -6,7 +6,7 @@ describe Browser::Window do
     it 'calls the block multiple times' do
       x = 0
 
-      promise = Promise.new
+      promise = Browser::Promise.new
       $window.every 0.3 do
         x += 1
 
@@ -15,7 +15,7 @@ describe Browser::Window do
           promise.resolve
         end
       end
-      promise
+      promise.for_rspec
     end
   end
 end
@@ -25,7 +25,7 @@ describe Kernel do
     it 'calls the block multiple times' do
       x = 0
 
-      promise = Promise.new
+      promise = Browser::Promise.new
       every 0.3 do
         x += 1
 
@@ -34,7 +34,7 @@ describe Kernel do
           promise.resolve
         end
       end
-      promise
+      promise.for_rspec
     end
   end
 end
@@ -44,7 +44,7 @@ describe Proc do
     it 'calls the block multiple times' do
       x = 0
 
-      promise = Promise.new
+      promise = Browser::Promise.new
       -> {
         x += 1
 
@@ -53,7 +53,7 @@ describe Proc do
           promise.resolve
         end
       }.every 0.3
-      promise
+      promise.for_rspec
     end
   end
 end

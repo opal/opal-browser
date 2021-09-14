@@ -7,29 +7,29 @@ describe Browser::Socket do
   ws = "ws://#{$window.location.host}/socket"
 
   it 'creates a socket' do
-    promise = Promise.new
+    promise = Browser::Promise.new
     Browser::Socket.new ws do |s|
       s.on :open do |e|
         expect(e.target).to be_a(Browser::Socket)
         promise.resolve
       end
     end
-    promise
+    promise.for_rspec
   end
 
   it 'receives messages' do
-    promise = Promise.new
+    promise = Browser::Promise.new
     Browser::Socket.new ws do |s|
       s.on :message do |e|
         expect(e.data).to eq('lol')
         promise.resolve
       end
     end
-    promise
+    promise.for_rspec
   end
 
   it 'sends messages' do
-    promise = Promise.new
+    promise = Browser::Promise.new
     Browser::Socket.new ws do |s|
       s.on :message do |e|
         e.off
@@ -42,6 +42,6 @@ describe Browser::Socket do
         end
       end
     end
-    promise
+    promise.for_rspec
   end
 end if Browser::Socket.supported?

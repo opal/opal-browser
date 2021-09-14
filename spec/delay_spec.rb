@@ -4,12 +4,12 @@ require 'browser/delay'
 describe Browser::Window do
   describe '#after' do
     it 'calls the block after the given time' do
-      promise = Promise.new
+      promise = Browser::Promise.new
       $window.after 0.3 do
         expect(true).to be_truthy
         promise.resolve
       end
-      promise
+      promise.for_rspec
     end
   end
 end
@@ -17,12 +17,12 @@ end
 describe Kernel do
   describe '#after' do
     it 'calls the block after the given time' do
-      promise = Promise.new
+      promise = Browser::Promise.new
       after 0.3 do
         expect(true).to be_truthy
         promise.resolve
       end
-      promise
+      promise.for_rspec
     end
   end
 end
@@ -30,12 +30,12 @@ end
 describe Proc do
   describe '#after' do
     it 'calls the block after the given time' do
-      promise = Promise.new
+      promise = Browser::Promise.new
       -> {
         expect(true).to be_truthy
         promise.resolve
       }.after 0.3
-      promise
+      promise.for_rspec
     end
   end
 end

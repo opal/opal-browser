@@ -24,7 +24,7 @@ describe Browser::History do
       $window.history.push('/wut')
       expect($window.history.current).to eq('/wut')
 
-      promise = Promise.new
+      promise = Browser::Promise.new
 
       $window.one 'pop:state' do |e|
         expect($window.history.current).to eq('/')
@@ -32,7 +32,7 @@ describe Browser::History do
       end
 
       $window.history.back
-      promise
+      promise.for_rspec
     end
   end
 
@@ -40,7 +40,7 @@ describe Browser::History do
     it 'gets the right state' do
       # XX: The previous test creates a race condition with this one.
       # Adding a delay fixes it.
-      promise = Promise.new
+      promise = Browser::Promise.new
 
       after 0.05 do
         $window.history.push('/wut', 42)
@@ -55,7 +55,7 @@ describe Browser::History do
 
         $window.history.back(2)
       end
-      promise
+      promise.for_rspec
     end
   end if Browser.supports? 'History.state'
 end if Browser::History.supported?

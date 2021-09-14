@@ -4,12 +4,12 @@ require 'browser/immediate'
 describe Proc do
   describe '#defer' do
     it 'defers the parameters' do
-      promise = Promise.new
+      promise = Browser::Promise.new
       proc {|a|
         expect(a).to eq(42)
         promise.resolve
       }.defer(42)
-      promise
+      promise.for_rspec
     end
   end
 end

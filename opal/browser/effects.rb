@@ -1,4 +1,3 @@
-require 'promise'
 require 'browser/animation_frame'
 
 module Browser; module DOM

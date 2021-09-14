@@ -44,7 +44,7 @@ describe Browser::Event do
     it "passes an event to the handler" do
       elem = $document["event-spec"]
 
-      promise = Promise.new
+      promise = Browser::Promise.new
 
       elem.on :click do |event|
         expect(event).to be_a(Browser::Event)
@@ -53,13 +53,13 @@ describe Browser::Event do
 
       elem.trigger :click
 
-      promise
+      promise.for_rspec
     end
 
     it "passes additional arguments to the handler" do
       elem = $document["event-spec"]
 
-      promise = Promise.new
+      promise = Browser::Promise.new
 
       elem.on :bazinga do |event, foo, bar, baz|
         expect(foo).to eq(1)
@@ -70,13 +70,13 @@ describe Browser::Event do
 
       elem.trigger :bazinga, 1, 2, 3
 
-      promise
+      promise.for_rspec
     end
 
     it "works with delegated events" do
       elem = $document["event-spec"]
 
-      promise = Promise.new
+      promise = Browser::Promise.new
 
       elem.on :bazinga, 'span.nami' do
         expect(true).to be_truthy
@@ -89,7 +89,7 @@ describe Browser::Event do
         elem.first_element_child.trigger :bazinga
       end
 
-      promise
+      promise.for_rspec
     end
   end
 
