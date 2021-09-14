@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "opal-sprockets"
-gem "roda-sprockets"
+gem "roda-sprockets", ">= 2.0.0a"
 gem "puma"
 gem "rake"
 gem "paggio", github: "hmdne/paggio"
