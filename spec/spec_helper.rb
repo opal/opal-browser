@@ -1,3 +1,4 @@
+require 'spec_helper_promise'
 require 'browser'
 require 'console'
 

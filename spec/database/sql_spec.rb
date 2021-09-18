@@ -27,23 +27,23 @@ describe Browser::Database::SQL do
     it 'calls the block with the transaction' do
       sql = SQL.new('test', size: SIZE)
 
-      promise = Promise.new
+      promise = Browser::Promise.new
       sql.transaction {|t|
         expect(t).to be_a(SQL::Transaction)
         promise.resolve
       }
-      promise
+      promise.for_rspec
     end
 
     it 'the transaction database is the right one' do
       sql = SQL.new('test', size: SIZE)
 
-      promise = Promise.new
+      promise = Browser::Promise.new
       sql.transaction {|t|
         expect(t.database).to eq(sql)
         promise.resolve
       }
-      promise
+      promise.for_rspec
     end
   end
 
@@ -52,38 +52,38 @@ describe Browser::Database::SQL do
       it 'returns a promise' do
         sql = SQL.new('test', size: SIZE)
 
-        promise = Promise.new
+        promise = Browser::Promise.new
         sql.transaction {|t|
           expect(t.query('hue')).to be_a(Promise)
           promise.resolve
         }
-        promise
+        promise.for_rspec
       end
 
       it 'resolves on success' do
         sql = SQL.new('test', size: SIZE)
 
-        promise = Promise.new
+        promise = Browser::Promise.new
         sql.transaction {|t|
           t.query('CREATE TABLE IF NOT EXISTS test(ID INTEGER PRIMARY KEY ASC, a TEXT)').then {|r|
             expect(r).to be_a(SQL::Result)
             promise.resolve
           }
         }
-        promise
+        promise.for_rspec
       end
 
       it 'rejects on failure' do
         sql = SQL.new('test', size: SIZE)
 
-        promise = Promise.new
+        promise = Browser::Promise.new
         sql.transaction {|t|
           t.query('huehue').rescue {|e|
             expect(e).to be_a(SQL::Error::Syntax)
             promise.resolve
           }
         }
-        promise
+        promise.for_rspec
       end
     end
   end
@@ -93,14 +93,14 @@ describe Browser::Database::SQL do
       it 'has the proper length' do
         sql = SQL.new('test', size: SIZE)
 
-        promise = Promise.new
+        promise = Browser::Promise.new
         sql.transaction {|t|
           t.query('SELECT 1').then {|r|
             expect(r.length).to eq(1)
             promise.resolve
           }
         }
-        promise
+        promise.for_rspec
       end
     end
 
@@ -108,7 +108,7 @@ describe Browser::Database::SQL do
       it 'returns a row' do
         sql = SQL.new('test', size: SIZE)
 
-        promise = Promise.new
+        promise = Browser::Promise.new
         sql.transaction {|t|
           t.query('SELECT 1, 2, 3').then {|r|
             expect(r[0]).to be_a(SQL::Row)
@@ -118,13 +118,13 @@ describe Browser::Database::SQL do
             promise.resolve
           }
         }
-        promise
+        promise.for_rspec
       end
 
       it 'returns nil on missing row' do
         sql = SQL.new('test', size: SIZE)
 
-        promise = Promise.new
+        promise = Browser::Promise.new
         sql.transaction {|t|
           t.query('SELECT 1, 2, 3').then {|r|
             expect(r[5]).to be_nil
@@ -132,7 +132,7 @@ describe Browser::Database::SQL do
             promise.resolve
           }
         }
-        promise
+        promise.for_rspec
       end
     end
   end

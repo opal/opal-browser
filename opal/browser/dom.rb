@@ -77,11 +77,13 @@ module Kernel
 
       what = what.to_dom(document) if Opal.respond_to? what, :to_dom
 
-      if native?(what)
+      if `typeof(#{what}) === 'undefined' || #{what} === null`
+        raise ArgumentError, 'argument is null'
+      elsif native?(what)
         Browser::DOM::Node.new(what)
       elsif Browser::DOM::Node === what
         what
-      elsif Browser::DOM::NodeSet === what
+      elsif Opal.respond_to? what, :each # eg. NodeSet, Array
         document.create_element("DIV").tap do |div|
           div << what
         end
@@ -93,7 +95,7 @@ module Kernel
           return #{DOM(`doc.childNodes.length == 1 ? doc.childNodes[0] : doc`)};
         }
       else
-        raise ArgumentError, "argument not DOM convertible"
+        raise ArgumentError, 'argument is not DOM convertible'
       end
     end
   end

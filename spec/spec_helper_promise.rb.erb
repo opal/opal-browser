@@ -1,0 +1,25 @@
+<% if ENV['OPAL_BROWSER_PROMISE'] == 'v2' %>
+  require 'promise'
+  require 'promise/v2'
+<% else %>
+  require 'promise'
+
+  # Polyfill #to_v1, which isn't present before Opal v1.3.0
+  class Promise
+    unless Promise.method_defined? :to_v1
+      alias to_v1 itself
+    end
+  end
+<% end %>
+
+require 'browser/utils'
+
+module Browser
+  class Promise
+    # Return a correct promise for opal-rspec, which for now is
+    # PromiseV1 until opal-rspec is ported.
+    def for_rspec
+      to_v1
+    end
+  end
+end

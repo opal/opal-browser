@@ -1,5 +1,3 @@
-require 'promise'
-
 require 'browser/canvas/style'
 require 'browser/canvas/text'
 require 'browser/canvas/data'

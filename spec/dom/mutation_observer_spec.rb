@@ -8,7 +8,7 @@ describe Browser::DOM::MutationObserver do
   HTML
 
   it 'notifies additions' do
-    promise = Promise.new
+    promise = Browser::Promise.new
     obs = Browser::DOM::MutationObserver.new {|mutations|
       expect(mutations.first.added.first.name).to eq('DIV')
       promise.resolve
@@ -20,11 +20,11 @@ describe Browser::DOM::MutationObserver do
 
     $document[:mutate].add_child $document.create_element('div')
 
-    promise
+    promise.for_rspec
   end
 
   it 'notifies removals' do
-    promise = Promise.new
+    promise = Browser::Promise.new
     obs = Browser::DOM::MutationObserver.new {|mutations|
       expect(mutations.first.removed.first.name).to eq('SPAN')
       promise.resolve
@@ -36,6 +36,6 @@ describe Browser::DOM::MutationObserver do
 
     $document[:mutate].first_element_child.remove
 
-    promise
+    promise.for_rspec
   end
 end if Browser::DOM::MutationObserver.supported?

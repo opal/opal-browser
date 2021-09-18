@@ -1,5 +1,3 @@
-require 'promise'
-
 require 'browser/http/binary'
 require 'browser/http/headers'
 require 'browser/http/request'

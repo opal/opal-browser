@@ -40,23 +40,23 @@ describe Browser::DOM::Document do
 
   describe "#ready" do
     it "calls the block when the document is ready" do
-      promise = Promise.new
+      promise = Browser::Promise.new
       $document.ready do
         expect(true).to be_truthy
         promise.resolve
       end
-      promise
+      promise.for_rspec
     end
   end
 
   describe "#ready?" do
     it "is true inside a #ready block" do
-      promise = Promise.new
+      promise = Browser::Promise.new
       $document.ready do
         expect($document.ready?).to be_truthy
         promise.resolve
       end
-      promise
+      promise.for_rspec
     end
   end
 end

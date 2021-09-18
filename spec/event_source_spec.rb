@@ -3,7 +3,7 @@ require 'browser/event_source'
 
 describe Browser::EventSource do
   it 'creates it' do
-    promise = Promise.new
+    promise = Browser::Promise.new
     Browser::EventSource.new '/events' do |es|
       es.on :open do |e|
         es.close
@@ -12,11 +12,11 @@ describe Browser::EventSource do
         promise.resolve
       end
     end
-    promise
+    promise.for_rspec
   end
 
   it 'receives an unnamed event' do
-    promise = Promise.new
+    promise = Browser::Promise.new
     Browser::EventSource.new '/events' do |es|
       es.on :message do |e|
         e.off
@@ -26,11 +26,11 @@ describe Browser::EventSource do
         promise.resolve
       end
     end
-    promise
+    promise.for_rspec
   end
 
   it 'receives a named event' do
-    promise = Promise.new
+    promise = Browser::Promise.new
     Browser::EventSource.new '/events' do |es|
       es.on :custom do |e|
         e.off
@@ -40,6 +40,6 @@ describe Browser::EventSource do
         promise.resolve
       end
     end
-    promise
+    promise.for_rspec
   end
 end if Browser::EventSource.supported?

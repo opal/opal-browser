@@ -1,4 +1,6 @@
 module Browser
+  Promise = defined?(PromiseV2) ? PromiseV2 : ::Promise
+
   Size     = Struct.new(:width, :height)
   Position = Struct.new(:x, :y)
 

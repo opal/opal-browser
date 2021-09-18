@@ -26,6 +26,8 @@ class Document < Element
   # @return [Element?] the body element of the document
   def body
     DOM(`#@native.body`)
+  rescue ArgumentError
+    raise '$document.body is not defined; try to wrap your code in $document.ready{}'
   end
 
   # Create a new element for the document.

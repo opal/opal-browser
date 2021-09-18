@@ -1,5 +1,3 @@
-require 'promise'
-
 module Browser
 
 # Class to easily create and dispatch an immediate call.
