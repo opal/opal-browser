@@ -196,7 +196,7 @@ class Storage
   #
   # @return [String] the JSON representation
   def to_json
-    io = StringIO.new("{")
+    io = StringIO.new << "{"
 
     io << JSON.create_id.to_json << ":" << self.class.name.to_json << ","
 
