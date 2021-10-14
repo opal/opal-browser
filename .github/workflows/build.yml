@@ -22,7 +22,7 @@ jobs:
           - name: Chromium/Linux/Opal-master/PromiseV2
             browser: chrome
             os: ubuntu-latest
-            opal: hmdne/async
+            opal: master
             promise: v2
           - name: Chromium/Linux/Opal-1.2
             browser: chrome
