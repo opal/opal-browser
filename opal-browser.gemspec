@@ -17,5 +17,5 @@ Gem::Specification.new {|s|
   s.require_paths = ['lib']
 
   s.add_dependency 'opal', ['>= 1.0', '< 2.0']
-  s.add_dependency 'paggio'
+  s.add_dependency 'paggio', '>= 0.3.0'
 }

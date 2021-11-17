@@ -1,5 +1,6 @@
 require "opal"
 require "console"
+require "promise"
 require "browser/setup/full"
 
 # Let's test some element before we have been initialized.
@@ -15,7 +16,7 @@ class MyCounter < Browser::DOM::Element::Custom
 
   self.observed_attributes = %w[value]
 
-  def initialize
+  def initialize(node)
     super
   end
 

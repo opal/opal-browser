@@ -4,13 +4,13 @@ module Browser
 # connection.
 #
 # @see https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
-class Socket
+class Socket < IO
   def self.supported?
     Browser.supports? :WebSocket
   end
 
   include Native::Wrapper
-  include IO::Writable
+  include IO::Writable if defined? IO::Writable
   include Event::Target
 
   target {|value|

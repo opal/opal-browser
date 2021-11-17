@@ -8,7 +8,7 @@ describe Browser::DOM::Element::Custom do
 
   def create_custom_class(name, observed_attrs = [])
     Class.new(Browser::DOM::Element::Custom) do
-      def initialize
+      def initialize(node)
         super
         $scratchpad[:initialized] = true
       end
