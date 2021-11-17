@@ -21,7 +21,6 @@ _Gemfile_
 ```ruby
 source 'https://rubygems.org/'
 
-gem 'paggio', github: 'hmdne/paggio'
 gem 'opal-browser'
 ```
 

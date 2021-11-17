@@ -27,6 +27,4 @@ when /\./
 else
   gem 'opal', github: 'opal/opal', ref: ENV['OPAL_VERSION']
 end
-# At this time, we need to use a branch. Please see:
-# https://github.com/meh/paggio/issues/7
-gem 'paggio', github: 'hmdne/paggio'
+
