@@ -38,6 +38,11 @@ class Node
     end
   end
 
+  def initialize(node)
+    raise ArgumentError, "Please ensure that #initialize of #{self.class} accepts one argument" unless node
+    super
+  end
+
   # Return true of the other element is the same underlying DOM node.
   #
   # @return [Boolean]
