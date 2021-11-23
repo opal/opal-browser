@@ -354,9 +354,8 @@ class Element < Node
 
   # Set the inner DOM of the element using the {Builder}.
   def inner_dom(builder=nil, &block)
-    clear
-
-    self << Builder.new(document, builder, &block).to_a
+    self.inner_dom = Builder.new(document, builder, &block).to_a
+    self
   end
 
   # Set the inner DOM with the given node.
