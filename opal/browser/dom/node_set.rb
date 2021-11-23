@@ -114,6 +114,8 @@ class NodeSet
   def to_ary
     @literal
   end
+
+  alias to_a to_ary
 end
 
 end; end
