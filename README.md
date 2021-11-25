@@ -4,6 +4,9 @@ Opal-Browser - Client side web development in pure Ruby, using Opal
 [![Gem Version](https://badge.fury.io/rb/opal-browser.svg)](http://badge.fury.io/rb/opal-browser)
 [![Code Climate](https://img.shields.io/codeclimate/maintainability-percentage/opal/opal-browser.svg)](https://codeclimate.com/github/opal/opal-browser)
 [![Build Status](https://github.com/opal/opal-browser/workflows/build/badge.svg)](https://github.com/opal/opal-browser/actions?query=workflow%3Abuild)
+[![Join Chat](https://img.shields.io/badge/slack-join%20chat-46BC99?logo=slack&style=flat)](https://slack.opalrb.com/)
+[![Stack Overflow](https://img.shields.io/badge/stackoverflow-%23opalrb-orange.svg?style=flat)](https://stackoverflow.com/questions/ask?tags=opalrb,opal-browser)
+[![Documentation](https://img.shields.io/badge/docs-updated-blue.svg)](https://rubydoc.info/gems/opal-browser)
 
 This library aims to be a full-blown wrapper for all the browser API as defined by
 HTML5.
@@ -70,7 +73,7 @@ _And load it in HTML!_
 </html>
 ```
 
-See the examples/integrations/ directory for various ideas on how to quickly start
+See the `examples/integrations/` directory for various ideas on how to quickly start
 development using opal-browser.
 
 Features
@@ -109,6 +112,7 @@ Add an event to a given element:
 ```ruby
 $document.at_css("button").on(:click) do |e|
   e.prevent # Prevent the default action (eg. form submission)
+  # You can also use `e.stop` to stop propagating the event to other handlers.
   alert "Button clicked!"
 end
 ```
@@ -200,6 +204,17 @@ end
 History
 -------
 The HTML5 History API has been fully wrapped.
+
+```ruby
+current = $window.history.current
+$window.history.replace("?get=params")
+$window.history.push("?get=params")
+$window.history.back
+
+$window.on :popstate do |e|
+  p "User clicked a back button! He is now on #{$window.history.current}"
+end
+```
 
 Storage
 -------
