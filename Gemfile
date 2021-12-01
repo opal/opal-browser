@@ -6,12 +6,12 @@ gem 'rake'
 gem 'rack'
 gem 'sinatra'
 gem 'sinatra-websocket'
-# For opal-rspec, a release is needed
-gem 'opal-rspec', github: 'hmdne/opal-rspec', branch: 'opal-1.3', submodules: true # '>= 0.8.0.alpha1'
+gem 'opal-rspec'
 gem 'opal-sprockets'
-# Force build of eventmachine on Windows
-gem 'eventmachine', github: 'eventmachine/eventmachine' if RUBY_PLATFORM =~ /mingw/
-
+# Force build of eventmachine... I wish we could find a way to not use
+# this unmaintained library anymore.
+gem 'eventmachine', github: 'eventmachine/eventmachine'
+gem 'thin', github: 'macournoyer/thin' unless RUBY_PLATFORM =~ /mingw/
 
 # runner
 gem 'selenium-webdriver', require: false
