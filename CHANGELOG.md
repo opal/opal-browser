@@ -1,3 +1,6 @@
+## 0.3.3
+* Compatibility fix for Opal 1.4
+
 ## 0.3.2
 * Cookie: refactor the module
   * Note in documentation it's available as `$document.cookies` and it's the preferred way to access it
