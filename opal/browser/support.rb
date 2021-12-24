@@ -75,16 +75,14 @@ module Browser
       when 'Window.send (Asynchronous)'
         if defined?(`window.postMessage`) && !defined?(`window.importScripts`)
           %x{
-            (function() {
-              var ok  = true,
-                  old = window.onmessage;
+            var ok  = true,
+                old = window.onmessage;
 
-              window.onmessage = function() { ok = false; };
-              window.postMessage("", "*")
-              window.onmessage = old;
+            window.onmessage = function() { ok = false; };
+            window.postMessage("", "*")
+            window.onmessage = old;
 
-              return ok;
-            })()
+            return ok;
           }
         end
 
@@ -108,12 +106,10 @@ module Browser
 
       when 'Attr.isId'
         %x{
-          (function() {
-            var div = document.createElement('div');
-                div.setAttribute('id', 'xxxxxxxxxxxxx');
+          var div = document.createElement('div');
+              div.setAttribute('id', 'xxxxxxxxxxxxx');
 
-            return typeof(div.attributes['id'].isId) !== "undefined";
-          })()
+          return typeof(div.attributes['id'].isId) !== "undefined";
         }
 
       when 'Element.addBehavior'
@@ -121,42 +117,34 @@ module Browser
 
       when 'Element.className'
         %x{
-          (function() {
-            var div = document.createElement("div");
-                div.setAttribute('className', 'x');
+          var div = document.createElement("div");
+              div.setAttribute('className', 'x');
 
-            return div.className === 'x';
-          })()
+          return div.className === 'x';
         }
 
       when 'Element.class'
         %x{
-          (function() {
-            var div = document.createElement("div");
-                div.setAttribute('class', 'x');
+          var div = document.createElement("div");
+              div.setAttribute('class', 'x');
 
-            return div.className === 'x';
-          })()
+          return div.className === 'x';
         }
 
       when 'Element.for'
         %x{
-          (function() {
-            var label = document.createElement("label");
-                label.setAttribute('for', 'x');
+          var label = document.createElement("label");
+              label.setAttribute('for', 'x');
 
-            return label.htmlFor === 'x';
-          })()
+          return label.htmlFor === 'x';
         }
 
       when 'Element.htmlFor'
         %x{
-          (function() {
-            var label = document.createElement("label");
-                label.setAttribute('htmlFor', 'x');
+          var label = document.createElement("label");
+              label.setAttribute('htmlFor', 'x');
 
-            return label.htmlFor === 'x';
-          })()
+          return label.htmlFor === 'x';
         }
 
       when 'Element.clientSize'
