@@ -28,6 +28,8 @@ jobs:
             opal: '1.0'
           - name: Chromium/Linux/Ruby-head
             ruby: head
+          - name: Chromium/Linux/Ruby-3.1
+            ruby: 3.1
           - name: Chromium/Linux/Ruby-2.7
             ruby: 2.7
           - name: Chromium/Linux/Ruby-2.6
