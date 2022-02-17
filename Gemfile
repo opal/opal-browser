@@ -22,6 +22,9 @@ gem 'rexml', require: false
 # browser
 case ENV['OPAL_VERSION']
 when nil
+  # noop
+when ->(path) { File.exist? path }
+  gem 'opal', path: ENV['OPAL_VERSION']
 when /\./
   gem 'opal', "~> #{ENV['OPAL_VERSION']}.0a"
 else
