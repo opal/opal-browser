@@ -23,6 +23,7 @@ gem 'selenium-webdriver', require: false
 gem 'rest-client', require: false
 gem 'webdrivers', require: false
 gem 'rexml', require: false
+gem 'ffi'
 
 # browser
 case ENV['OPAL_VERSION']
