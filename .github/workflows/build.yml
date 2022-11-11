@@ -17,10 +17,10 @@ jobs:
         combo:
           - name: Chromium/Linux/Opal-master
             opal: master
-            opal-rspec: 1.0
+            opal-rspec: '1.0'
           - name: Chromium/Linux/Opal-1.6
             opal: 1.6
-            opal-rspec: 1.0
+            opal-rspec: '1.0'
           - name: Chromium/Linux/Opal-1.5
             opal: 1.5
           - name: Chromium/Linux/Opal-1.5/PromiseV2
@@ -66,7 +66,7 @@ jobs:
       - name: set environment variables
         run: |
           echo "OPAL_VERSION=${{ matrix.combo.opal || '1.5' }}" >> $GITHUB_ENV
-          echo "OPAL_RSPEC_VERSION=${{ matrix.combo.opal-rspec || '0.8' }}" >> $GITHUB_ENV
+          echo "OPAL_RSPEC_VERSION=${{ matrix.combo.opal-rspec || '' }}" >> $GITHUB_ENV
           echo "OPAL_BROWSER_PROMISE=${{ matrix.combo.promise || 'v1' }}" >> $GITHUB_ENV
       - uses: ruby/setup-ruby@v1
         with:
