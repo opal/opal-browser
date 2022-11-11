@@ -10,9 +10,31 @@ class Form < Element
     FormData.create(self)
   end
 
-  # Submit a form. This will fire a submit event.
+  # Returns true if form is valid, false otherwise
+  def valid?
+    `#@native.reportValidity()`
+  end
+
+  # Submit a form. This will NOT fire a submit event.
   def submit
     `#@native.submit()`
+  end
+
+  # Submit a form, optionally with a button argument.
+  # This will fire a submit event.
+  def request_submit(submitter = nil)
+    if submitter
+      `#@native.requestSubmit(#{submitter.to_n})`
+    else
+      `#@native.requestSubmit()`
+    end
+  end
+
+  # Submit a form using AJAX.
+  def ajax_submit(&block)
+    data = form_data
+    data = data.to_h unless encoding == 'multipart/form-data'
+    HTTP.send(method, target, form_data, &block)
   end
 
   # Reset a form. This will fire a reset event.
