@@ -1,4 +1,6 @@
-<% if ENV['OPAL_BROWSER_PROMISE'] == 'v2' %>
+require 'opal/rspec/async'
+
+<% if ENV['OPAL_BROWSER_PROMISE'] == 'v2' || Opal::VERSION.to_f >= 1.6 %>
   require 'promise'
   require 'promise/v2'
 <% else %>
@@ -16,10 +18,14 @@ require 'browser/utils'
 
 module Browser
   class Promise
-    # Return a correct promise for opal-rspec, which for now is
-    # PromiseV1 until opal-rspec is ported.
+    # Return a correct promise for opal-rspec, which for RSpec
+    # < 1.0 is PromiseV1, and for >= 1.0 is PromiseV2.
     def for_rspec
-      to_v1
+      <% if Opal::RSpec::VERSION.to_f >= 1.0 %>
+        to_v2
+      <% else %>
+        to_v1
+      <% end %>
     end
   end
 end

@@ -17,6 +17,10 @@ jobs:
         combo:
           - name: Chromium/Linux/Opal-master
             opal: master
+            opal-rspec: 1.0
+          - name: Chromium/Linux/Opal-1.6
+            opal: 1.6
+            opal-rspec: 1.0
           - name: Chromium/Linux/Opal-1.5
             opal: 1.5
           - name: Chromium/Linux/Opal-1.5/PromiseV2
@@ -30,8 +34,8 @@ jobs:
             opal: '1.0'
           - name: Chromium/Linux/Ruby-head
             ruby: head
-          - name: Chromium/Linux/Ruby-3.1
-            ruby: 3.1
+          - name: Chromium/Linux/Ruby-3.0
+            ruby: '3.0'
           - name: Chromium/Linux/Ruby-2.7
             ruby: 2.7
           - name: Chromium/Linux/Ruby-2.6
@@ -62,20 +66,21 @@ jobs:
       - name: set environment variables
         run: |
           echo "OPAL_VERSION=${{ matrix.combo.opal || '1.5' }}" >> $GITHUB_ENV
+          echo "OPAL_RSPEC_VERSION=${{ matrix.combo.opal-rspec || '0.8' }}" >> $GITHUB_ENV
           echo "OPAL_BROWSER_PROMISE=${{ matrix.combo.promise || 'v1' }}" >> $GITHUB_ENV
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.combo.ruby || '3.0' }}
+          ruby-version: ${{ matrix.combo.ruby || '3.1' }}
       - run: bundle lock
       - uses: actions/cache@v2
         with:
           path: ./vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.combo.ruby || '3.0' }}-gems-${{ matrix.combo.opal || '1.5' }}-${{ github.ref }}-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ matrix.combo.ruby || '3.1' }}-gems-${{ matrix.combo.opal || '1.5' }}-${{ github.ref }}-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.combo.ruby || '3.0' }}-gems-${{ matrix.combo.opal || '1.5' }}-${{ github.ref }}
-            ${{ runner.os }}-${{ matrix.combo.ruby || '3.0' }}-gems-${{ matrix.combo.opal || '1.5' }}-master
-            ${{ runner.os }}-${{ matrix.combo.ruby || '3.0' }}-gems-${{ matrix.combo.opal || '1.5' }}-
-            ${{ runner.os }}-${{ matrix.combo.ruby || '3.0' }}-gems-
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.1' }}-gems-${{ matrix.combo.opal || '1.5' }}-${{ github.ref }}
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.1' }}-gems-${{ matrix.combo.opal || '1.5' }}-master
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.1' }}-gems-${{ matrix.combo.opal || '1.5' }}-
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.1' }}-gems-
       - name: bundle install
         run: |
           bundle config path $PWD/vendor/bundle

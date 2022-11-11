@@ -3,6 +3,8 @@ Bundler.require
 
 apps = []
 
+require 'opal/rspec/sprockets' if Opal::RSpec::VERSION.to_f >= 1.0
+
 sprockets_env = Opal::RSpec::SprocketsEnvironment.new(spec_pattern         = 'spec/**/*_spec.{rb,opal}',
                                                       spec_exclude_pattern = nil,
                                                       spec_files           = nil,

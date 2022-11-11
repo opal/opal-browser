@@ -6,7 +6,12 @@ gem 'rake'
 gem 'rack'
 gem 'sinatra'
 gem 'sinatra-websocket'
-gem 'opal-rspec'
+case ENV['OPAL_RSPEC_VERSION']
+when nil
+  gem 'opal-rspec'
+when /\./
+  gem 'opal-rspec', "~> #{ENV['OPAL_RSPEC_VERSION']}.0a"
+end
 gem 'opal-sprockets'
 # Force build of eventmachine... I wish we could find a way to not use
 # this unmaintained library anymore.
