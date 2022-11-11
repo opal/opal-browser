@@ -54,7 +54,7 @@ describe Browser::Database::SQL do
 
         promise = Browser::Promise.new
         sql.transaction {|t|
-          expect(t.query('hue')).to be_a(Promise)
+          expect(t.query('SELECT 1')).to be_a(Browser::Promise)
           promise.resolve
         }
         promise.for_rspec
