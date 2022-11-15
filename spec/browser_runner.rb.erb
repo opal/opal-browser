@@ -1,0 +1,14 @@
+# This file is used by Opal::SimpleServer to basically load all spec files that
+# can be found in the spec/ directory.
+
+require 'opal'
+require 'opal-rspec'
+
+<%
+$locator.get_opal_spec_requires.each do |s| %>
+require <%= s.split("/spec/").last.inspect %>
+<% end %>
+require 'opal/rspec/spec_opts'
+
+::RSpec::Core::Runner.autorun
+::Kernel.exit

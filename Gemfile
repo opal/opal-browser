@@ -14,7 +14,6 @@ when /\./
 else
   gem 'opal', github: 'opal/opal', ref: ENV['OPAL_VERSION']
 end
-gem 'opal-sprockets'
 # Force build of eventmachine... I wish we could find a way to not use
 # this unmaintained library anymore.
 gem 'eventmachine', github: 'eventmachine/eventmachine'
