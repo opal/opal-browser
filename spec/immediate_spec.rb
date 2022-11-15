@@ -12,4 +12,4 @@ describe Proc do
       promise.for_rspec
     end
   end
-end
+end if Opal::RSpec::VERSION.to_f >= 1.0

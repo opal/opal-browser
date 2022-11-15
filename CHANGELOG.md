@@ -1,3 +1,7 @@
+## 0.3.4
+* DOM::Element::Form: #valid?, #request_submit, #ajax_submit
+* Compatibility for Opal-RSpec 1.0
+
 ## 0.3.3
 * Compatibility fix for Opal 1.4
 

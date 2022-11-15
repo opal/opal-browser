@@ -3,17 +3,24 @@ Bundler.require
 
 apps = []
 
-sprockets_env = Opal::RSpec::SprocketsEnvironment.new(spec_pattern         = 'spec/**/*_spec.{rb,opal}',
-                                                      spec_exclude_pattern = nil,
-                                                      spec_files           = nil,
-                                                      default_path         = 'spec')
+require 'opal/rspec'
 
-apps << Opal::Sprockets::Server.new(sprockets: sprockets_env) { |s|
-  s.main = 'opal/rspec/sprockets_runner'
-  s.append_path 'spec'
-  s.index_path = 'index.html.erb'
-  s.debug = true
-}
+Opal::Config.arity_check_enabled = true
+Opal::Config.enable_source_location = true if Opal::Config.respond_to? :enable_file_source_location=
+Opal::Config.enable_file_source_embed = true if Opal::Config.respond_to? :enable_file_source_embed=
+
+Opal.append_path "#{__dir__}/spec"
+
+apps << Opal::SimpleServer.new do |s|
+  require_relative './spec/browser_runner_compat'
+
+  $locator = Opal::RSpec::Locator.new(
+    pattern:      'spec/**/*_spec.{rb,opal}',
+    default_path: 'spec'
+  )
+
+  s.index_path = 'spec/browser_runner_index.html.erb'
+end
 
 apps << Class.new(Sinatra::Base) {
   get '/http' do
@@ -78,4 +85,4 @@ apps << Class.new(Sinatra::Base) {
   end
 }
 
-run Rack::Cascade.new(apps)
+run Rack::Cascade.new(apps.reverse)
