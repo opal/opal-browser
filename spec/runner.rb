@@ -65,7 +65,8 @@ begin
   Selenium::WebDriver::Wait.new(timeout: 3000, interval: 30).until {
     print '.'
 
-    not browser['totals'].text.strip.empty?
+    ((not browser['totals'].text.strip.empty?) rescue false) &&
+      (browser[css: '#duration strong'] rescue false)
   }
 
   totals   = browser['totals'].text
