@@ -71,6 +71,10 @@ class Oscillator < Base
   def type
     `#@native.type`
   end
+
+  def when_finished(&block)
+    `#@native.onended = block()`
+  end
 end
 
 class Delay < Base
