@@ -12,7 +12,7 @@ when nil, ''
 when /\./
   gem 'opal-rspec', "~> #{ENV['OPAL_RSPEC_VERSION']}.0a"
 else
-  gem 'opal', github: 'opal/opal', ref: ENV['OPAL_VERSION']
+  gem 'opal-rspec', github: 'opal/opal-rspec', ref: ENV['OPAL_RSPEC_VERSION'], submodules: true
 end
 # Force build of eventmachine... I wish we could find a way to not use
 # this unmaintained library anymore.
