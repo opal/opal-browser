@@ -2,9 +2,6 @@ require 'bundler'
 Bundler.require
 require 'bundler/gem_tasks'
 
-require 'webdrivers'
-load 'webdrivers/Rakefile'
-
 require 'opal/rspec/rake_task'
 Opal::RSpec::RakeTask.new(:broken_rspec) do |_, task|
   task.default_path = 'spec'
@@ -14,12 +11,8 @@ end
 task(:nil) {}
 
 %w[chrome edge gecko safari].each do |i|
-  dependency = nil
-  if %w[chrome edge gecko].include? i
-    dependency = "webdrivers:#{i}driver:update"
-  end
   desc "Run Selenium tests with #{i}"
-  task :"selenium_#{i}" => dependency do
+  task :"selenium_#{i}" do
     server = Process.spawn("bundle", "exec", "rackup")
     at_exit { Process.kill(9, server) rescue nil }
     sleep 2

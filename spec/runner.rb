@@ -1,5 +1,4 @@
 #! /usr/bin/env ruby
-require 'webdrivers'
 require 'selenium/webdriver'
 require 'rest_client'
 require 'json'
@@ -23,7 +22,7 @@ else
   raise "Wrong web browser provided in BROWSER. Acceptable values: chrome, gecko, safari, edge"
 end
 
-browser = Selenium::WebDriver.for(browser, capabilities: options)
+browser = Selenium::WebDriver.for(browser, options: options)
 browser.navigate.to('http://localhost:9292')
 
 # if we don't quit the browser it will stall
