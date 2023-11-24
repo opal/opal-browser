@@ -1,4 +1,7 @@
 ## 0.3.4
+* Element#children=
+* Support more methods on Media
+* Event::Custom to support non-enumerable properties
 * DOM::Element::Form: #valid?, #request_submit, #ajax_submit
 * Compatibility for Opal-RSpec 1.0
 
