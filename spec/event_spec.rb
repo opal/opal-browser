@@ -162,12 +162,10 @@ describe Browser::Event do
 
       count = 0
       cb = elem.on :abcabc do |e|
-        p [:e, e]
         count += e.thing
       end
 
       elem.trigger :abcabc do |e|
-        p [:e, e]
         e.thing = 6
       end
 
