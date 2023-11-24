@@ -17,29 +17,29 @@ jobs:
         combo:
           - name: Chromium/Linux/Opal-master
             opal: master
-            opal-rspec: '1.0'
-          - name: Chromium/Linux/Opal-1.6
-            opal: 1.6
+            opal-rspec: '1.1'
+          - name: Chromium/Linux/Opal-1.8
+            opal: 1.8
+            opal-rspec: '1.1'
+          - name: Chromium/Linux/Opal-1.7
+            opal: 1.7
             opal-rspec: '1.0'
           - name: Chromium/Linux/Opal-1.5
             opal: 1.5
           - name: Chromium/Linux/Opal-1.5/PromiseV2
             opal: 1.5
             promise: v2
-          - name: Chromium/Linux/Opal-1.4
-            opal: 1.4
           - name: Chromium/Linux/Opal-1.3
             opal: 1.3
-          - name: Chromium/Linux/Opal-1.0
-            opal: '1.0'
+          - name: Chromium/Linux/Opal-1.0/Ruby-3.1
+            opal: 1.1
+            ruby: 3.1
           - name: Chromium/Linux/Ruby-head
             ruby: head
+          - name: Chromium/Linux/Ruby-3.1
+            ruby: '3.1'
           - name: Chromium/Linux/Ruby-3.0
             ruby: '3.0'
-          - name: Chromium/Linux/Ruby-2.7
-            ruby: 2.7
-          - name: Chromium/Linux/Ruby-2.6
-            ruby: 2.6
           - name: Firefox/Linux
             browser: gecko
           - name: Chromium/Windows
@@ -65,22 +65,22 @@ jobs:
       - uses: actions/checkout@v2
       - name: set environment variables
         run: |
-          echo "OPAL_VERSION=${{ matrix.combo.opal || '1.5' }}" >> $GITHUB_ENV
+          echo "OPAL_VERSION=${{ matrix.combo.opal || '1.8' }}" >> $GITHUB_ENV
           echo "OPAL_RSPEC_VERSION=${{ matrix.combo.opal-rspec || '' }}" >> $GITHUB_ENV
           echo "OPAL_BROWSER_PROMISE=${{ matrix.combo.promise || 'v1' }}" >> $GITHUB_ENV
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.combo.ruby || '3.1' }}
+          ruby-version: ${{ matrix.combo.ruby || '3.2' }}
       - run: bundle lock
       - uses: actions/cache@v2
         with:
           path: ./vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.combo.ruby || '3.1' }}-gems-${{ matrix.combo.opal || '1.5' }}-${{ github.ref }}-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ matrix.combo.ruby || '3.2' }}-gems-${{ matrix.combo.opal || '1.8' }}-${{ github.ref }}-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.combo.ruby || '3.1' }}-gems-${{ matrix.combo.opal || '1.5' }}-${{ github.ref }}
-            ${{ runner.os }}-${{ matrix.combo.ruby || '3.1' }}-gems-${{ matrix.combo.opal || '1.5' }}-master
-            ${{ runner.os }}-${{ matrix.combo.ruby || '3.1' }}-gems-${{ matrix.combo.opal || '1.5' }}-
-            ${{ runner.os }}-${{ matrix.combo.ruby || '3.1' }}-gems-
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.2' }}-gems-${{ matrix.combo.opal || '1.8' }}-${{ github.ref }}
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.2' }}-gems-${{ matrix.combo.opal || '1.8' }}-master
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.2' }}-gems-${{ matrix.combo.opal || '1.8' }}-
+            ${{ runner.os }}-${{ matrix.combo.ruby || '3.2' }}-gems-
       - name: bundle install
         run: |
           bundle config path $PWD/vendor/bundle

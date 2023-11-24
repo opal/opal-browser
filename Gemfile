@@ -12,7 +12,7 @@ when nil, ''
 when /\./
   gem 'opal-rspec', "~> #{ENV['OPAL_RSPEC_VERSION']}.0a"
 else
-  gem 'opal', github: 'opal/opal', ref: ENV['OPAL_VERSION']
+  gem 'opal-rspec', github: 'opal/opal-rspec', ref: ENV['OPAL_RSPEC_VERSION'], submodules: true
 end
 # Force build of eventmachine... I wish we could find a way to not use
 # this unmaintained library anymore.
@@ -20,9 +20,8 @@ gem 'eventmachine', github: 'eventmachine/eventmachine'
 gem 'thin', github: 'macournoyer/thin' unless RUBY_PLATFORM =~ /mingw/
 
 # runner
-gem 'selenium-webdriver', require: false
+gem 'selenium-webdriver', '>= 4.14.0', require: false
 gem 'rest-client', require: false
-gem 'webdrivers', require: false
 gem 'rexml', require: false
 gem 'ffi'
 
@@ -38,3 +37,4 @@ else
   gem 'opal', github: 'opal/opal', ref: ENV['OPAL_VERSION']
 end
 
+gem 'opal-sprockets'
