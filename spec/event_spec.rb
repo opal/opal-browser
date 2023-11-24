@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 require 'spec_helper'
 require 'browser/event'
 
@@ -151,6 +153,49 @@ describe Browser::Event do
       cb.off
       elem.trigger :click
       expect(count).to eq(3)
+    end
+  end
+
+  describe "#trigger" do
+    it "can set properties of custom events" do
+      elem  = $document["event-spec"]
+
+      count = 0
+      cb = elem.on :abcabc do |e|
+        p [:e, e]
+        count += e.thing
+      end
+
+      elem.trigger :abcabc do |e|
+        p [:e, e]
+        e.thing = 6
+      end
+
+      expect(count).to eq(6)
+
+      cb.off
+    end
+
+    it "works with non-enumerable properties" do
+      elem = $document["event-spec"]
+
+      count = 0
+      cb = elem.on :abcabcd do |e|
+        count += e.thing
+      end
+
+      elem.trigger :abcabcd do |e|
+        %x{
+          Object.defineProperty(e.native, "thing", {
+            value: 6,
+            enumerable: false
+          });
+        }
+      end
+
+      expect(count).to eq(6)
+
+      cb.off
     end
   end
 end
