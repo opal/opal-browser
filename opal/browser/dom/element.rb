@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 # Requires are moved to the bottom of this file.
 
 module Browser; module DOM
@@ -366,6 +368,8 @@ class Element < Node
 
     self << node
   end
+
+  alias children= inner_dom=
 
   # @!attribute inner_html
   # @return [String] the inner HTML of the element

@@ -1,5 +1,6 @@
 # use_strict: true
 # helpers: truthy
+# backtick_javascript: true
 
 module Browser; module DOM; class Element < Node
 

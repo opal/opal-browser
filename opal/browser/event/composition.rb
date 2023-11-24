@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class Composition < UI
@@ -8,13 +10,8 @@ class Composition < UI
   end
 
   class Definition < UI::Definition
-    def data=(value)
-      `#@native.data = #{value}`
-    end
-
-    def locale=(value)
-      `#@native.locale = #{value}`
-    end
+    alias_native :data=
+    alias_native :locale=
   end
 
   if Browser.supports? 'Event.constructor'

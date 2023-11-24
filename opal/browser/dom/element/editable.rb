@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; module DOM
 
 class Element < Node

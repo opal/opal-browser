@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class Mouse < UI
@@ -13,82 +15,51 @@ class Mouse < UI
     class Client
       include Native::Wrapper
 
-      def x=(value)
-        `#@native.clientX = #{value}`
-      end
-
-      def y=(value)
-        `#@native.clientY = #{value}`
-      end
+      alias_native :x=, :clientX=
+      alias_native :y=, :clientY=
     end
 
     class Layer
       include Native::Wrapper
 
-      def x=(value)
-        `#@native.layerX = #{value}`
-      end
-
-      def y=(value)
-        `#@native.layerY = #{value}`
-      end
+      alias_native :x=, :layerX=
+      alias_native :y=, :layerY=
     end
 
     class Offset
       include Native::Wrapper
 
-      def x=(value)
-        `#@native.offsetX = #{value}`
-      end
-
-      def y=(value)
-        `#@native.offsetY= #{value}`
-      end
+      alias_native :x=, :offsetX=
+      alias_native :y=, :offsetY=
     end
 
     class Page
       include Native::Wrapper
 
-      def x=(value)
-        `#@native.pageX = #{value}`
-      end
-
-      def y=(value)
-        `#@native.pageY = #{value}`
-      end
+      alias_native :x=, :pageX=
+      alias_native :y=, :pageY=
     end
 
     class Screen
       include Native::Wrapper
 
-      def x=(value)
-        `#@native.screenX = #{value}`
-      end
-
-      def y=(value)
-        `#@native.screenY = #{value}`
-      end
+      alias_native :x=, :screenX=
+      alias_native :y=, :screenY=
     end
 
     class Ancestor
       include Native::Wrapper
 
-      def x=(value)
-        `#@native.x = #{value}`
-      end
-
-      def y=(value)
-        `#@native.y = #{value}`
-      end
+      alias_native :x=
+      alias_native :y=
     end
 
-    def x=(value)
-      `#@native.screenX = #{value}`
-    end
-
-    def y=(value)
-      `#@native.screenY = #{value}`
-    end
+    alias_native :x=, :screenX=
+    alias_native :y=, :screenY=
+    alias_native :button=
+    alias_native :related=, :relatedTarget=
+    alias_native :from=, :fromElement=
+    alias_native :to=, :toElement=
 
     def alt!
       `#@native.altKey = true`
@@ -100,10 +71,6 @@ class Mouse < UI
 
     def meta!
       `#@native.metaKey = true`
-    end
-
-    def button=(value)
-      `#@native.button = #{value}`
     end
 
     def client
@@ -128,18 +95,6 @@ class Mouse < UI
 
     def ancestor
       Ancestor.new(@native)
-    end
-
-    def related=(elem)
-      `#@native.relatedTarget = #{Native.try_convert(elem)}`
-    end
-
-    def from=(elem)
-      `#@native.fromElement = #{Native.try_convert(elem)}`
-    end
-
-    def to=(elem)
-      `#@native.toElement = #{Native.try_convert(elem)}`
     end
   end
 

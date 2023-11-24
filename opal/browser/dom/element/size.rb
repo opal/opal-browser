@@ -1,6 +1,8 @@
 module Browser; module DOM; class Element < Node
 
 class Size
+  include Native::Wrapper
+
   attr_reader :element
 
   # @private
@@ -12,9 +14,7 @@ class Size
 
   # @!attribute width
   # @return [Integer] the element width
-  def width
-    `#@native.offsetWidth`
-  end
+  alias_native :width, :offsetWidth
 
   def width=(value)
     @element.style[:width] = value
@@ -22,9 +22,7 @@ class Size
 
   # @!attribute height
   # @return [Integer] the element height
-  def height
-    `#@native.offsetHeight`
-  end
+  alias_native :height, :offsetHeight
 
   def height=(value)
     @element.style[:height] = value
@@ -32,15 +30,11 @@ class Size
 
   # @!attribute client_width
   # @return [Integer] the content-box width of an element
-  def client_width
-    `#@native.clientWidth`
-  end
+  alias_native :client_width, :clientWidth
 
   # @!attribute client_height
   # @return [Integer] the content-box height of an element
-  def client_height
-    `#@native.clientHeight`
-  end
+  alias_native :client_height, :clientHeight
 end
 
 end; end; end

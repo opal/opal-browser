@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class Focus < UI
@@ -8,13 +10,8 @@ class Focus < UI
   end
 
   class Definition < UI::Definition
-    def view=(value)
-      `#@native.view = #{Native.convert(value)}`
-    end
-
-    def related=(elem)
-      `#@native.relatedTarget = #{Native.convert(elem)}`
-    end
+    alias_native :view=
+    alias_native :related=, :relatedTarget
   end
 
   if Browser.supports? 'Event.constructor'

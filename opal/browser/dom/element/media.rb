@@ -1,9 +1,10 @@
 module Browser; module DOM; class Element < Node
 
 class Media < Element
-  def play
-    `#@native.play()`
-  end
+  alias_native :play
+  alias_native :pause
+  alias_native :time, :currentTime
+  alias_native :time=, :currentTime
 end
 
 class Video < Media

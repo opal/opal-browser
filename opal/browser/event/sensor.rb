@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class Sensor < Event

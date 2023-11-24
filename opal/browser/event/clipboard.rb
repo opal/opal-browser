@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class Clipboard < Event
@@ -8,13 +10,8 @@ class Clipboard < Event
   end
 
   class Definition < Definition
-    def data=(value)
-      `#@native.data = #{value}`
-    end
-
-    def type=(value)
-      `#@native.dataType = #{value}`
-    end
+    alias_native :data=
+    alias_native :type=, :dataType=
   end
 
   if Browser.supports? 'Event.constructor'

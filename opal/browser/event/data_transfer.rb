@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 require 'browser/blob'
 
 module Browser; class Event

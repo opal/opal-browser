@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 require 'ostruct'
 
 module Browser; class Event
@@ -11,6 +13,8 @@ class Custom < Event
     def method_missing(name, value)
       if name.end_with? ?=
         `#@native[#{name[0 .. -2]}] = value`
+      else
+        super
       end
     end
   end
@@ -51,12 +55,10 @@ class Custom < Event
 
   def initialize(event, callback = nil)
     super(event, callback)
-
-    @detail = Hash.new(`#{event}.detail`)
   end
 
   def method_missing(id, *)
-    return @detail[id] if @detail.has_key?(id)
+    `if (#@native.detail != null && Object.hasOwn(#@native.detail, id)) return #@native.detail[id]`
 
     super
   end

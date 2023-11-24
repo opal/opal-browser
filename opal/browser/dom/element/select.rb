@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; module DOM; class Element < Node
 
 class Select < Element
@@ -14,9 +16,7 @@ class Select < Element
     }
   end
 
-  def value= value
-    `#@native.value = #{value.to_n}`
-  end
+  alias_native :value=
 
   def labels
     NodeSet[Native::Array.new(`#@native.labels`)]
@@ -30,10 +30,7 @@ class Select < Element
     DOM(`#@native.options[#@native.selectedIndex]`)
   end
 
-  def index
-    `#@native.selectedIndex`
-  end
-
+  alias_native :index, :selectedIndex
   alias_native :multiple?, :multiple
   alias_native :required?, :required
   alias_native :length

@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; module DOM; class Element < Node
 
 class Input < Element
@@ -14,21 +16,11 @@ class Input < Element
     }
   end
 
-  def value=(value)
-    `#@native.value = #{value}`
-  end
-
-  def name_
-    `#@native.name`
-  end
-
-  def type
-    `#@native.type`
-  end
-
-  def checked?
-    `#@native.checked`
-  end
+  alias_native :value=
+  alias_native :name_, :name
+  alias_native :type
+  alias_native :checked?, :checked
+  alias_native :enabled?, :enabled
 
   def check!
     `#@native.checked = 'checked'`
@@ -36,10 +28,6 @@ class Input < Element
 
   def uncheck!
     `#@native.checked = ''`
-  end
-
-  def enabled?
-    `#@native.enabled`
   end
 
   def disable!

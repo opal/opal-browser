@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class UI < Event
@@ -6,13 +8,8 @@ class UI < Event
   end
 
   class Definition < Definition
-    def detail=(value)
-      `#@native.detail = #{value}`
-    end
-
-    def view=(value)
-      `#@native.view = #{value}`
-    end
+    alias_native :detail=
+    alias_native :view=
   end
 
   if Browser.supports? 'Event.constructor'

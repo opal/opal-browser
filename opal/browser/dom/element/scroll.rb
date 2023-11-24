@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; module DOM; class Element < Node
 
 # @todo Consider using the new interfaces which allow for optional

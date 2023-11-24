@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class Progress < Event
@@ -8,17 +10,9 @@ class Progress < Event
   end
 
   class Definition < Definition
-    def computable=(value)
-      `#@native.computableLength = #{value}`
-    end
-
-    def loaded=(value)
-      `#@native.loaded = #{value}`
-    end
-
-    def total=(value)
-      `#@native.total = #{value}`
-    end
+    alias_native :computable=, :computableLength=
+    alias_native :loaded=
+    alias_native :total=
   end
 
   if Browser.supports? 'Event.constructor'

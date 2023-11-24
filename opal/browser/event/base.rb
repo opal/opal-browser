@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser
 
 class Event
@@ -16,14 +18,10 @@ class Event
     end
 
     # Set the event as bubbling.
-    def bubbles=(value)
-      `#@native.bubbles = #{value}`
-    end
+    alias_native :bubbles=
 
     # Set the event as cancelable.
-    def cancelable=(value)
-      `#@native.cancelable = #{value}`
-    end
+    alias_native :cancelable=
   end
 
   module Target

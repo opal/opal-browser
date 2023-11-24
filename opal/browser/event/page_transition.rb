@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class PageTransition < Event
@@ -8,9 +10,7 @@ class PageTransition < Event
   end
 
   class Definition < Definition
-    def persisted=(value)
-      `#@native.persisted = #{value}`
-    end
+    alias_native :persisted=
   end
 
   if Browser.supports? 'Event.PageTransition'
