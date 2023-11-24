@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class Wheel < UI
@@ -8,17 +10,9 @@ class Wheel < UI
   end
 
   class Definition < Definition
-    def x=(value)
-      `#@native.deltaX = #{value}`
-    end
-
-    def y=(value)
-      `#@native.deltaY = #{value}`
-    end
-
-    def z=(value)
-      `#@native.deltaZ = #{value}`
-    end
+    alias_native :x=, :deltaX=
+    alias_native :y=, :deltaY=
+    alias_native :z=, :deltaZ=
 
     def mode=(value)
       value = case value

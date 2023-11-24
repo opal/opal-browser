@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class DeviceProximity < Event
@@ -8,17 +10,9 @@ class DeviceProximity < Event
   end
 
   class Definition < Definition
-    def value=(value)
-      `#@native.value = #{value}`
-    end
-
-    def min=(value)
-      `#@native.min = #{value}`
-    end
-
-    def max=(value)
-      `#@native.max = #{value}`
-    end
+    alias_native :value=
+    alias_native :min=
+    alias_native :max=
   end
 
   if Browser.supports? 'Event.constructor'

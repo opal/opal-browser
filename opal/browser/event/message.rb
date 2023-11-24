@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 require 'buffer'
 
 module Browser; class Event
@@ -10,17 +12,9 @@ class Message < Event
   end
 
   class Definition < Definition
-    def data=(value)
-      `#@native.data = value`
-    end
-
-    def origin=(value)
-      `#@native.origin = value`
-    end
-
-    def source=(value)
-      `#@native.source = #{Native.convert(value)}`
-    end
+    alias_native :data=
+    alias_native :origin=
+    alias_native :source=
   end
 
   if Browser.supports? 'Event.constructor'

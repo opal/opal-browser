@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class Drag < Event
@@ -12,25 +14,15 @@ class Drag < Event
     class Client
       include Native::Wrapper
 
-      def x=(value)
-        `#@native.clientX = #{value}`
-      end
-
-      def y=(value)
-        `#@native.clientY = #{value}`
-      end
+      alias_native :x=, :clientX
+      alias_native :y=, :clientY
     end
 
     class Screen
       include Native::Wrapper
 
-      def x=(value)
-        `#@native.screenX = #{value}`
-      end
-
-      def y=(value)
-        `#@native.screenY = #{value}`
-      end
+      alias_native :x=, :screenX
+      alias_native :y=, :screenY
     end
 
     def alt!

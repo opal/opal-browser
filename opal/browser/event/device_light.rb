@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class DeviceLight < Event
@@ -8,9 +10,7 @@ class DeviceLight < Event
   end
 
   class Definition < Definition
-    def value=(value)
-      `#@native.value = #{value}`
-    end
+    alias_native :value
   end
 
   if Browser.supports? 'Event.constructor'

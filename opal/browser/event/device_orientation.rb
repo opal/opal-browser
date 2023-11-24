@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class DeviceOrientation < Event
@@ -8,21 +10,10 @@ class DeviceOrientation < Event
   end
 
   class Definition < Definition
-    def absolute=(value)
-      `#@native.absolute = #{value}`
-    end
-
-    def alpha=(value)
-      `#@native.alpha = #{value}`
-    end
-
-    def beta=(value)
-      `#@native.beta = #{value}`
-    end
-
-    def gamma=(value)
-      `#@native.gamma = #{value}`
-    end
+    alias_native :absolute=
+    alias_native :alpha=
+    alias_native :beta=
+    alias_native :gamma=
   end
 
   if Browser.supports? 'Event.constructor'

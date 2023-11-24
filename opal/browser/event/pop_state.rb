@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class PopState < Event
@@ -9,7 +11,7 @@ class PopState < Event
 
   class Definition < Definition
     def state=(value)
-      `#@native.state = #{value}`
+      alias_native :state=
     end
   end
 

@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class AudioProcessing < Event
@@ -8,17 +10,9 @@ class AudioProcessing < Event
   end
 
   class Definition < Definition
-    def time=(value)
-      `#@native.playbackTime = #{value}`
-    end
-
-    def input=(value)
-      `#@native.inputBuffer = #{value}`
-    end
-
-    def output=(value)
-      `#@native.outputBuffer = #{value}`
-    end
+    alias_native :time=, :playbackTime=
+    alias_native :input=, :inputBuffer=
+    alias_native :output=, :outputBuffer=
   end
 
   if Browser.supports? 'Event.constructor'

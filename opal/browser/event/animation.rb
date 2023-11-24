@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class Animation < Event
@@ -8,13 +10,9 @@ class Animation < Event
   end
 
   class Definition < Definition
-    def animation=(value)
-      `#@native.animationName = #{value}`
-    end
-
-    def elapsed=(value)
-      `#@native.elapsedTime = #{value}`
-    end
+    alias_native :name=, :animationName=
+    alias_native :animation=, :animationName=
+    alias_native :elapsed=, :elapsedTime=
   end
 
   if Browser.supports? 'Event.constructor'

@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class HashChange < Event
@@ -8,13 +10,8 @@ class HashChange < Event
   end
 
   class Definition < Definition
-    def old=(value)
-      `#@native.oldURL = #{value}`
-    end
-
-    def new=(value)
-      `#@native.newURL = #{value}`
-    end
+    alias_native :old=, :oldURL=
+    alias_native :new=, :newURL=
   end
 
   if Browser.supports? 'Event.constructor'

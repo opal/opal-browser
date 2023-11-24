@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; class Event
 
 class Close < Event
@@ -8,13 +10,8 @@ class Close < Event
   end
 
   class Definition < Definition
-    def code=(value)
-      `#@native.code = #{value}`
-    end
-
-    def reason=(value)
-      `#@native.reason = #{value}`
-    end
+    alias_native :code=
+    alias_native :reason=
 
     def clean!(value)
       `#@native.wasClean = true`
