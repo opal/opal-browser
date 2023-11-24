@@ -1,3 +1,5 @@
+# backtick_javascript: true
+
 module Browser; module DOM; class Element < Node
 
 class Textarea < Element
@@ -14,9 +16,7 @@ class Textarea < Element
     }
   end
 
-  def value=(value)
-    `#@native.value = #{value}`
-  end
+  alias_native :value=
 
   def clear
     `#@native.value = ''`
