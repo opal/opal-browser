@@ -1,3 +1,6 @@
+## 0.3.5
+* Add backtick_javascript magic comment to squelch warnings since Opal 1.8
+
 ## 0.3.4
 * Element#children=
 * Support more methods on Media
