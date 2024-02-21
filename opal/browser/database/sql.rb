@@ -1,3 +1,4 @@
+# backtick_javascript: true
 require 'ostruct'
 
 module Browser; module Database

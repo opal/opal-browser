@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; module DOM
 
 # Allows manipulation of a set of {Node}s.

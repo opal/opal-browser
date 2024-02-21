@@ -1,3 +1,4 @@
+# backtick_javascript: true
 # Firefox browsers need either a flag or a polyfill
 require "browser/polyfill/visual_viewport"
 

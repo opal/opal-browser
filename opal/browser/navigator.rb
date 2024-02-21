@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser
 
 # Representation of the navigator application.

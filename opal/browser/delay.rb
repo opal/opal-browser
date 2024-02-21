@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser
 
 # Allows you to delay the call to a function which gets called after the

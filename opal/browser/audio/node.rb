@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; module Audio; module Node
 
 class Base

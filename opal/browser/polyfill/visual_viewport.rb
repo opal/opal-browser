@@ -1,3 +1,4 @@
+# backtick_javascript: true
 # VisualViewport polyfill (mainly for Firefox browsers) taken from:
 # https://github.com/WICG/visual-viewport/blob/gh-pages/polyfill/visualViewport.js
 # Licensed under "W3C 3-clause BSD License".

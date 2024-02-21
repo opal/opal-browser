@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; module HTTP
 
 # Represents a binary result from a HTTP response.

@@ -1,3 +1,4 @@
+# backtick_javascript: true
 require 'json'
 
 module Browser; module HTTP

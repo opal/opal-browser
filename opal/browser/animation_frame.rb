@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser
 
 # Allows you to wrap a block to use in an animation rendering cycle.

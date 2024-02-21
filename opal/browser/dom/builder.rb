@@ -1,3 +1,4 @@
+# backtick_javascript: true
 # Temporary fix for a bug in String#scan
 module Paggio::Utils
   def self.heredoc(string)

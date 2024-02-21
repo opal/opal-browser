@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser
 
 # Implements (parts of) the web crypto interface

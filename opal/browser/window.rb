@@ -1,3 +1,4 @@
+# backtick_javascript: true
 require 'browser/window/view'
 require 'browser/window/size'
 

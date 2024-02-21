@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; module DOM
 
 # A {MutationObserver} is a performant way to observe changes in the DOM,

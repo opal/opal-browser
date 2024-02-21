@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser
 
 # Allows you to create an interval that executes the function every given

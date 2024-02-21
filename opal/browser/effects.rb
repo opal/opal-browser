@@ -1,3 +1,4 @@
+# backtick_javascript: true
 require 'browser/animation_frame'
 
 module Browser; module DOM

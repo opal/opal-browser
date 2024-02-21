@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; module DOM
 
 # Document and ShadowRoot have some methods and properties in common.

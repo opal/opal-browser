@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser
 
 # An {EventSource} allows you to receive events from a server in real-time,

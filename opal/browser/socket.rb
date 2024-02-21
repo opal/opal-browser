@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser
 
 # A {Socket} allows the browser and a server to have a bidirectional data

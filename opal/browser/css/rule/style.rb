@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; module CSS; class Rule
 
 class Style < Rule

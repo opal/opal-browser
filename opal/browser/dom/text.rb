@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; module DOM
 
 # Encapsulates a text node.

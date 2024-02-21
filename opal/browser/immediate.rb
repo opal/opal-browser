@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser
 
 # Class to easily create and dispatch an immediate call.

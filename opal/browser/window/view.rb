@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; class Window
 
 class View

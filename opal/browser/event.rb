@@ -1,3 +1,4 @@
+# backtick_javascript: true
 require 'browser/event/base'
 
 module Browser

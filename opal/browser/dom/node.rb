@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; module DOM
 
 # Abstract class for all DOM node types.

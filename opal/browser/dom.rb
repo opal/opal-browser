@@ -1,3 +1,4 @@
+# backtick_javascript: true
 require 'browser/dom/node_set'
 require 'browser/dom/node'
 require 'browser/dom/attribute'

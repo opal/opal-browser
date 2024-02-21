@@ -1,3 +1,4 @@
+# backtick_javascript: true
 require 'browser/audio/node'
 
 module Browser; module Audio
@@ -55,7 +56,7 @@ class Context
   end
 
   def periodic_wave(real, imaginary)
-    `#{@native}.createPeriodicWave(new Float32Array(#{real}), new Float32Array(#{imaginary}));`
+    `#{@native}.createPeriodicWave(new Float32Array(#{real}), new Float32Array(#{imaginary}))`
   end
 
   alias_native :suspend

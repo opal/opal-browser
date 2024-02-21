@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser
   Promise = defined?(PromiseV2) ? PromiseV2 : ::Promise
 

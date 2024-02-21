@@ -1,3 +1,4 @@
+# backtick_javascript: true
 # The engine the browser is running on.
 #
 # Keep in mind it uses the user agent to know, so it's not reliable in case of

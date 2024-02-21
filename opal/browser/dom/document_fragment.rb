@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; module DOM
 
 # TODO: DocumentFragment is not a subclass of Element, but

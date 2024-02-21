@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser
 
 # Allows manipulation of a location, usually from {Window} and {DOM::Document}.

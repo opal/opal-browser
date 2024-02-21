@@ -1,3 +1,4 @@
+# backtick_javascript: true
 warn "`console' has been moved to Opal's stdlib, please `require 'console'` instead." if RUBY_ENGINE_VERSION.to_f >= 0.9
 
 module Browser

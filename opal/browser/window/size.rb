@@ -1,3 +1,4 @@
+# backtick_javascript: true
 module Browser; class Window
 
 # Allows access and manipulation of the {Window} size.
